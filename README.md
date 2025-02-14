@@ -1,2 +1,2 @@
 # comicalyouthe.github.io
-こみかるのウェブサイト
+[こみかるのウェブサイト](comicalyouthe.github.io)
