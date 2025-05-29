@@ -1,91 +1,155 @@
-<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><link rel="icon" href="data:">
-<title>こみかる</title>  
-<!-- これはメモです。トップの写真とタイトル -->
 <!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>想い想いの居場所</title>
+  <title>こみかる - 想い想いの居場所</title>
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
-
     body, html {
       height: 100%;
       font-family: 'Arial', sans-serif;
       overflow: hidden;
     }
 
-    .slideshow {
+    .slideshow-container {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
       z-index: -1;
-      animation: fadeBackground 20s infinite;
+    }
+
+    .slide {
+      position: absolute;
+      width: 100%;
+      height: 100%;
       background-size: cover;
       background-position: center;
+      opacity: 0;
+      animation: fade 45s infinite;
     }
 
-    @keyframes fadeBackground {
-  0%    { background-image: url('comical1.jpg'); }
-  14%   { background-image: url('comical2.jpg'); }
-  28%   { background-image: url('comical3.jpg'); }
-  42%   { background-image: url('comical4.jpg'); }
-  57%   { background-image: url('comical5.jpg'); }
-  71%   { background-image: url('comical6.jpg'); }
-  85%   { background-image: url('comical7.jpg'); }
-  100%  { background-image: url('comical1.jpg'); }
-}
+    /* 各スライドに遅延をつけて切り替え */
+    .slide:nth-child(1) { background-image: url('comical1.jpg'); animation-delay: 0s; }
+    .slide:nth-child(2) { background-image: url('comical2.jpg'); animation-delay: 5s; }
+    .slide:nth-child(3) { background-image: url('comical3.jpg'); animation-delay: 10s; }
+    .slide:nth-child(4) { background-image: url('comical4.jpg'); animation-delay: 15s; }
+    .slide:nth-child(5) { background-image: url('comical5.jpg'); animation-delay: 20s; }
+    .slide:nth-child(6) { background-image: url('comical6.jpg'); animation-delay: 25s; }
+    .slide:nth-child(7) { background-image: url('comical7.jpg'); animation-delay: 30s; }
+    .slide:nth-child(8) { background-image: url('comical8.jpg'); animation-delay: 35s; }
+    .slide:nth-child(9) { background-image: url('comical9.jpg'); animation-delay: 40s; }
 
-    .center-text {
-      position: absolute;
-      top: 45%;
-      left: 50%;
-      transform: translate(-50%, -50%);
+    @keyframes fade {
+      0%   { opacity: 0; }
+      5%   { opacity: 1; }
+      15%  { opacity: 1; }
+      20%  { opacity: 0; }
+      100% { opacity: 0; }
+    }
+
+    header {
+      padding: 20px;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.6);
+    }
+
+    .nav-links a {
+      margin-left: 20px;
+      color: white;
+      text-decoration: none;
+      font-size: 0.95rem;
+    }
+
+    .title {
+      text-align: center;
       color: white;
       font-size: 2.5rem;
-      text-align: center;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+      margin-top: 20vh;
+      text-shadow: 2px 2px 5px rgba(0,0,0,0.6);
     }
 
-    .footer-links {
+    main {
+      padding: 40px;
+      color: white;
+      text-align: center;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.6);
+    }
+
+    footer {
       position: absolute;
       bottom: 20px;
       width: 100%;
       text-align: center;
-      font-size: 0.9rem;
+      font-size: 0.8rem;
+      color: white;
     }
 
-    .footer-links a {
+    footer a {
       color: white;
       margin: 0 10px;
       text-decoration: none;
-    }
-
-    .footer-links a:hover {
-      text-decoration: underline;
     }
   </style>
 </head>
 <body>
 
-  <div class="slideshow"></div>
-
-  <div class="center-text">
-    まちの中に<br>想い想いの居場所を
+  <!-- 背景フェードスライドショー -->
+  <div class="slideshow-container">
+    <div class="slide"></div>
+    <div class="slide"></div>
+    <div class="slide"></div>
+    <div class="slide"></div>
+    <div class="slide"></div>
+    <div class="slide"></div>
+    <div class="slide"></div>
+    <div class="slide"></div>
+    <div class="slide"></div>
   </div>
 
-  <div class="footer-links">
-    <a href="https://www.instagram.com/comicalyouth/">こみかる Instagram</a>
-    <a href="https://code4fukui.github.io/comical/">こみかるメンバー BINGO</a>
-    <a href="https://github.com/comicalyouth/comicalyouth.github.io">CC BY こみかる</a>
+  <!-- ヘッダー -->
+  <header>
+    <div class="logo">こみかる</div>
+    <div class="nav-links">
+      <a href="#about">私たちについて</a>
+      <a href="#project">プロジェクト</a>
+      <a href="#contact">お問い合わせ</a>
+    </div>
+  </header>
+
+  <!-- タイトル -->
+  <div class="title">
+    若者に<br>想い想いの居場所を
   </div>
+
+  <!-- 本文 -->
+  <main>
+    <p>
+      地域のなかに、ひとりひとりの「やってみたい」を育てる居場所を。<br>
+      福井発、若者の挑戦が芽吹く場づくりをしています。
+    </p>
+  </main>
+
+  <!-- フッター -->
+  <footer>
+    <a href="https://www.instagram.com/comicalyouth/">Instagram</a>
+    <a href="https://code4fukui.github.io/comical/">メンバーBINGO</a>
+    <a href="https://github.com/comicalyouth/comicalyouth.github.io">GitHub</a>
+  </footer>
 
 </body>
 </html>
