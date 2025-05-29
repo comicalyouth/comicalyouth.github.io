@@ -11,91 +11,79 @@
       box-sizing: border-box;
     }
     body, html {
-      height: 100%;
       font-family: 'Arial', sans-serif;
-      overflow: hidden;
-    }
-
-    .slideshow-container {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-    }
-
-    .slide {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      background-size: cover;
-      background-position: center;
-      opacity: 0;
-      animation: fade 45s infinite;
-    }
-
-    /* 各スライドに遅延をつけて切り替え */
-    .slide:nth-child(1) { background-image: url('comical1.jpg'); animation-delay: 0s; }
-    .slide:nth-child(2) { background-image: url('comical2.jpg'); animation-delay: 5s; }
-    .slide:nth-child(3) { background-image: url('comical3.jpg'); animation-delay: 10s; }
-    .slide:nth-child(4) { background-image: url('comical4.jpg'); animation-delay: 15s; }
-    .slide:nth-child(5) { background-image: url('comical5.jpg'); animation-delay: 20s; }
-    .slide:nth-child(6) { background-image: url('comical6.jpg'); animation-delay: 25s; }
-    .slide:nth-child(7) { background-image: url('comical7.jpg'); animation-delay: 30s; }
-    .slide:nth-child(8) { background-image: url('comical8.jpg'); animation-delay: 35s; }
-    .slide:nth-child(9) { background-image: url('comical9.jpg'); animation-delay: 40s; }
-
-    @keyframes fade {
-      0%   { opacity: 0; }
-      5%   { opacity: 1; }
-      15%  { opacity: 1; }
-      20%  { opacity: 0; }
-      100% { opacity: 0; }
     }
 
     header {
-      padding: 20px;
-      color: white;
+      background-color: #ffffff;
+      padding: 20px 40px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
     }
 
     .logo {
       font-size: 1.5rem;
       font-weight: bold;
-      text-shadow: 1px 1px 3px rgba(0,0,0,0.6);
+      color: #333;
     }
 
     .nav-links a {
-      margin-left: 20px;
-      color: white;
+      margin-left: 30px;
+      color: #333;
       text-decoration: none;
-      font-size: 0.95rem;
+      font-size: 1rem;
     }
 
-    .title {
-      text-align: center;
+    .hero-section {
+      position: relative;
+      width: 100%;
+      height: 70vh;
+      overflow: hidden;
+    }
+
+    .hero-section img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .hero-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
       color: white;
-      font-size: 2.5rem;
-      margin-top: 20vh;
-      text-shadow: 2px 2px 5px rgba(0,0,0,0.6);
+      text-align: center;
+      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.6);
+    }
+
+    .hero-text h1 {
+      font-size: 2.8rem;
+      margin-bottom: 10px;
+    }
+
+    .hero-text p {
+      font-size: 1rem;
     }
 
     main {
-      padding: 40px;
-      color: white;
+      padding: 60px 20px;
       text-align: center;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.6);
+      background-color: #f9f9f9;
+      color: #333;
     }
 
     footer {
-      position: absolute;
-      bottom: 20px;
-      width: 100%;
       text-align: center;
-      font-size: 0.8rem;
+      padding: 20px;
+      font-size: 0.9rem;
+      background-color: #222;
       color: white;
     }
 
@@ -108,20 +96,6 @@
 </head>
 <body>
 
-  <!-- 背景フェードスライドショー -->
-  <div class="slideshow-container">
-    <div class="slide"></div>
-    <div class="slide"></div>
-    <div class="slide"></div>
-    <div class="slide"></div>
-    <div class="slide"></div>
-    <div class="slide"></div>
-    <div class="slide"></div>
-    <div class="slide"></div>
-    <div class="slide"></div>
-  </div>
-
-  <!-- ヘッダー -->
   <header>
     <div class="logo">こみかる</div>
     <div class="nav-links">
@@ -131,20 +105,21 @@
     </div>
   </header>
 
-  <!-- タイトル -->
-  <div class="title">
-    若者に<br>想い想いの居場所を
-  </div>
+  <section class="hero-section">
+    <img src="comical1.jpg" alt="ヒーロー画像">
+    <div class="hero-text">
+      <h1>若者に<br>想い想いの居場所を</h1>
+      <p>地域のなかに、ひとりひとりの「やってみたい」を育てる居場所を。</p>
+    </div>
+  </section>
 
-  <!-- 本文 -->
   <main>
     <p>
-      地域のなかに、ひとりひとりの「やってみたい」を育てる居場所を。<br>
-      福井発、若者の挑戦が芽吹く場づくりをしています。
+      福井発、若者の挑戦が芽吹く場づくりをしています。<br>
+      自分の好きや好奇心を大切に、仲間とつながりながら未来を描いていける場所を。
     </p>
   </main>
 
-  <!-- フッター -->
   <footer>
     <a href="https://www.instagram.com/comicalyouth/">Instagram</a>
     <a href="https://code4fukui.github.io/comical/">メンバーBINGO</a>
