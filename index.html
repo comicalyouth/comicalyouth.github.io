@@ -46,11 +46,38 @@
       overflow: hidden;
     }
 
-    .hero-section img {
+    .hero-slideshow {
+      position: absolute;
       width: 100%;
       height: 100%;
-      object-fit: cover;
-      display: block;
+    }
+
+    .slide {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      opacity: 0;
+      animation: fade 45s infinite;
+    }
+
+    .slide:nth-child(1) { background-image: url('comical1.jpg'); animation-delay: 0s; }
+    .slide:nth-child(2) { background-image: url('comical2.jpg'); animation-delay: 5s; }
+    .slide:nth-child(3) { background-image: url('comical3.jpg'); animation-delay: 10s; }
+    .slide:nth-child(4) { background-image: url('comical4.jpg'); animation-delay: 15s; }
+    .slide:nth-child(5) { background-image: url('comical5.jpg'); animation-delay: 20s; }
+    .slide:nth-child(6) { background-image: url('comical6.jpg'); animation-delay: 25s; }
+    .slide:nth-child(7) { background-image: url('comical7.jpg'); animation-delay: 30s; }
+    .slide:nth-child(8) { background-image: url('comical8.jpg'); animation-delay: 35s; }
+    .slide:nth-child(9) { background-image: url('comical9.jpg'); animation-delay: 40s; }
+
+    @keyframes fade {
+      0%   { opacity: 0; }
+      5%   { opacity: 1; }
+      15%  { opacity: 1; }
+      20%  { opacity: 0; }
+      100% { opacity: 0; }
     }
 
     .hero-text {
@@ -61,6 +88,7 @@
       color: white;
       text-align: center;
       text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.6);
+      z-index: 1;
     }
 
     .hero-text h1 {
@@ -106,7 +134,17 @@
   </header>
 
   <section class="hero-section">
-    <img src="comical1.jpg" alt="ヒーロー画像">
+    <div class="hero-slideshow">
+      <div class="slide"></div>
+      <div class="slide"></div>
+      <div class="slide"></div>
+      <div class="slide"></div>
+      <div class="slide"></div>
+      <div class="slide"></div>
+      <div class="slide"></div>
+      <div class="slide"></div>
+      <div class="slide"></div>
+    </div>
     <div class="hero-text">
       <h1>若者に<br>想い想いの居場所を</h1>
       <p>地域のなかに、ひとりひとりの「やってみたい」を育てる居場所を。</p>
