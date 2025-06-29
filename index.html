@@ -6,78 +6,63 @@
   <title>こみかるユース福井</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    /* スライド全体のスタイル */
-    .slide {
-      position: absolute; /* 他の要素と重ねるために絶対配置 */
-      width: 100%;         /* 横幅いっぱいに広げる */
-      height: 100%;        /* 高さも全体に広げる */
-      background-size: cover;         /* 画像を枠いっぱいに表示（切り抜きあり） */
-      background-position: center;    /* 画像の中心を表示 */
-      opacity: 0;         /* 最初は非表示 */
-      animation: fade 45s infinite;  /* アニメーション（45秒のループ） */
+    .scrolling-wrapper {
+      display: flex;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      animation: scroll 30s linear infinite;
     }
 
-    /* 画像ごとに表示タイミングをずらす */
-    .slide:nth-child(1) { background-image: url('comical1.jpg'); animation-delay: 0s; }
-    .slide:nth-child(2) { background-image: url('comical2.jpg'); animation-delay: 5s; }
-    .slide:nth-child(3) { background-image: url('comical3.jpg'); animation-delay: 10s; }
-    .slide:nth-child(4) { background-image: url('comical4.jpg'); animation-delay: 15s; }
-    .slide:nth-child(5) { background-image: url('comical5.jpg'); animation-delay: 20s; }
-    .slide:nth-child(6) { background-image: url('comical6.jpg'); animation-delay: 25s; }
-    .slide:nth-child(7) { background-image: url('comical7.jpg'); animation-delay: 30s; }
-    .slide:nth-child(8) { background-image: url('comical8.jpg'); animation-delay: 35s; }
-    .slide:nth-child(9) { background-image: url('comical9.jpg'); animation-delay: 40s; }
+    .scrolling-wrapper::-webkit-scrollbar {
+      display: none;
+    }
 
-    /* スライドがふわっと現れて消えるアニメーション */
-    @keyframes fade {
-      0%   { opacity: 0; }   /* はじめ非表示 */
-      5%   { opacity: 1; }   /* ちょっとずつ現れる */
-      15%  { opacity: 1; }   /* 表示された状態をキープ */
-      20%  { opacity: 0; }   /* 消えていく */
-      100% { opacity: 0; }   /* 次の画像にバトンタッチ */
+    @keyframes scroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
     }
   </style>
 </head>
 <body class="bg-white text-gray-800 font-sans">
-  <!-- ヘッダー（ページ上部に常に表示されるメニュー） -->
+  <!-- ヘッダー -->
   <header class="fixed top-0 w-full bg-white shadow z-50 flex items-center justify-between px-6 py-4">
     <img src="logo_header-01.svg" alt="こみかるロゴ" class="h-16">
     <nav class="space-x-6 text-sm font-medium">
       <a href="#top" class="text-gray-600 hover:text-pink-500">はじめに</a>
-      <a href="#about" class="text-gray-600 hover:text-pink-500">コンセプト</a>
+      <a href="#about" class="text-gray-600 hover:text-pink-500">こみかるのコンセプト</a>
       <a href="#projects" class="text-gray-600 hover:text-pink-500">活動レポート</a>
-      <a href="#join" class="text-gray-600 hover:text-pink-500">開催拠点</a>
+      <a href="#join" class="text-gray-600 hover:text-pink-500">開催場所 / 時間</a>
       <a href="#contact" class="text-gray-600 hover:text-pink-500">お問い合わせ</a>
     </nav>
   </header>
 
-  <!-- メイン部分（ヘッダーの下に表示されるコンテンツ） -->
-  <main class="pt-[80px]"> <!-- ヘッダーの高さ分だけ上に余白をつける -->
-
-    <!-- スライドショー部分（全画面の写真切り替え） -->
-    <section class="relative h-screen" id="top">
-      <div class="absolute inset-0">
-        <div class="slide"></div>
-        <div class="slide"></div>
-        <div class="slide"></div>
-        <div class="slide"></div>
-        <div class="slide"></div>
-        <div class="slide"></div>
-        <div class="slide"></div>
-        <div class="slide"></div>
-        <div class="slide"></div>
-      </div>
-
-      <!-- スライド上に重ねるメッセージテキスト -->
-<div class="absolute inset-0 flex items-center justify-center text-white text-center px-4 z-10">
-  <div class="bg-black/50 px-6 py-4 rounded-md">
-    <h2 class="text-2xl sm:text-4xl font-bold">若者に想い想いの居場所を。</h2>
-    <p class="mt-2 text-sm sm:text-lg">ショッピングモールから何かが始まる！？出入り自由な新しい”よりどころ”</p>
-  </div>
-</div>
+  <!-- メインコンテンツ -->
+  <main class="pt-[80px]">
+    <!-- キャッチコピーセクション -->
+    <section class="bg-white py-16 px-4 text-center">
+      <h2 class="text-3xl sm:text-4xl font-bold text-gray-800">若者に想い想いの居場所を。</h2>
+      <p class="mt-4 text-base sm:text-lg text-gray-600">ショッピングモールから何かが始まる！？出入り自由な新しい“よりどころ”</p>
     </section>
 
-    <!-- 以下、Aboutなど他のセクションをここに追加していく予定 -->
+    <!-- 写真スライダー風ギャラリー -->
+    <section class="overflow-hidden">
+      <div class="scrolling-wrapper space-x-4 px-4 py-6">
+        <img src="comical1.jpg" alt="comical1" class="h-48 rounded shadow-md">
+        <img src="comical2.jpg" alt="comical2" class="h-48 rounded shadow-md">
+        <img src="comical3.jpg" alt="comical3" class="h-48 rounded shadow-md">
+        <img src="comical4.jpg" alt="comical4" class="h-48 rounded shadow-md">
+        <img src="comical5.jpg" alt="comical5" class="h-48 rounded shadow-md">
+        <img src="comical6.jpg" alt="comical6" class="h-48 rounded shadow-md">
+        <img src="comical7.jpg" alt="comical7" class="h-48 rounded shadow-md">
+        <img src="comical8.jpg" alt="comical8" class="h-48 rounded shadow-md">
+        <img src="comical9.jpg" alt="comical9" class="h-48 rounded shadow-md">
+        <img src="comical1.jpg" alt="comical1-dup" class="h-48 rounded shadow-md">
+        <img src="comical2.jpg" alt="comical2-dup" class="h-48 rounded shadow-md">
+        <img src="comical3.jpg" alt="comical3-dup" class="h-48 rounded shadow-md">
+      </div>
+    </section>
+
+    <!-- 以下、Aboutなどのセクションへ続く -->
 
   </main>
 </body>
