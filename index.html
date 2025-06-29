@@ -5,104 +5,78 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>こみかるユース福井</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* スライド全体のスタイル */
+    .slide {
+      position: absolute; /* 他の要素と重ねるために絶対配置 */
+      width: 100%;         /* 横幅いっぱいに広げる */
+      height: 100%;        /* 高さも全体に広げる */
+      background-size: cover;         /* 画像を枠いっぱいに表示（切り抜きあり） */
+      background-position: center;    /* 画像の中心を表示 */
+      opacity: 0;         /* 最初は非表示 */
+      animation: fade 45s infinite;  /* アニメーション（45秒のループ） */
+    }
+
+    /* 画像ごとに表示タイミングをずらす */
+    .slide:nth-child(1) { background-image: url('comical1.jpg'); animation-delay: 0s; }
+    .slide:nth-child(2) { background-image: url('comical2.jpg'); animation-delay: 5s; }
+    .slide:nth-child(3) { background-image: url('comical3.jpg'); animation-delay: 10s; }
+    .slide:nth-child(4) { background-image: url('comical4.jpg'); animation-delay: 15s; }
+    .slide:nth-child(5) { background-image: url('comical5.jpg'); animation-delay: 20s; }
+    .slide:nth-child(6) { background-image: url('comical6.jpg'); animation-delay: 25s; }
+    .slide:nth-child(7) { background-image: url('comical7.jpg'); animation-delay: 30s; }
+    .slide:nth-child(8) { background-image: url('comical8.jpg'); animation-delay: 35s; }
+    .slide:nth-child(9) { background-image: url('comical9.jpg'); animation-delay: 40s; }
+
+    /* スライドがふわっと現れて消えるアニメーション */
+    @keyframes fade {
+      0%   { opacity: 0; }   /* はじめ非表示 */
+      5%   { opacity: 1; }   /* ちょっとずつ現れる */
+      15%  { opacity: 1; }   /* 表示された状態をキープ */
+      20%  { opacity: 0; }   /* 消えていく */
+      100% { opacity: 0; }   /* 次の画像にバトンタッチ */
+    }
+  </style>
 </head>
 <body class="bg-white text-gray-800 font-sans">
+  <!-- ヘッダー（ページ上部に常に表示されるメニュー） -->
+  <header class="fixed top-0 w-full bg-white shadow z-50 flex items-center justify-between px-6 py-4">
+    <h1 class="text-2xl font-bold text-pink-500">こみかる</h1>
+    <nav class="space-x-6 text-sm font-medium">
+      <a href="#top" class="text-gray-600 hover:text-pink-500">はじめに</a>
+      <a href="#about" class="text-gray-600 hover:text-pink-500">コンセプト</a>
+      <a href="#projects" class="text-gray-600 hover:text-pink-500">活動レポート</a>
+      <a href="#join" class="text-gray-600 hover:text-pink-500">開催拠点</a>
+      <a href="#contact" class="text-gray-600 hover:text-pink-500">お問い合わせ</a>
+    </nav>
+  </header>
 
-  <!-- ヒーローセクション -->
-  <section class="text-center py-16 px-4 bg-gradient-to-r from-pink-300 via-purple-300 to-blue-300">
-    <img src="comical1.jpg" alt="こみかるロゴ" class="mx-auto w-40 mb-6">
-    <h1 class="text-2xl sm:text-3xl font-bold leading-relaxed">学校でも家でもない、もうひとつの場所</h1>
-    <p class="mt-4 text-lg">こみかるは、ショッピングモールを中心に若者の“やってみたい”を応援する、<br>出入り自由な新しい居場所です!</p>
-    <div class="mt-6 space-x-4">
-      <a href="#about" class="bg-white text-pink-500 px-4 py-2 rounded-full border border-pink-400">こみかるとは？</a>
-      <a href="#join" class="bg-orange-400 text-white px-4 py-2 rounded-full">参加するには？</a>
-    </div>
-  </section>
+  <!-- メイン部分（ヘッダーの下に表示されるコンテンツ） -->
+  <main class="pt-[80px]"> <!-- ヘッダーの高さ分だけ上に余白をつける -->
 
-  <!-- 3つの軸紹介 -->
-  <section class="py-16 px-6 max-w-5xl mx-auto" id="about">
-    <h2 class="text-2xl font-bold text-center mb-12">こみかるの3つのキーワード</h2>
-    <div class="grid gap-8 sm:grid-cols-3 text-center">
-      <div>
-        <div class="text-3xl">🏡</div>
-        <h3 class="font-semibold mt-2">Community</h3>
-        <p class="mt-1 text-sm">地域での子どもの居場所づくり</p>
+    <!-- スライドショー部分（全画面の写真切り替え） -->
+    <section class="relative h-screen" id="top">
+      <div class="absolute inset-0">
+        <div class="slide"></div>
+        <div class="slide"></div>
+        <div class="slide"></div>
+        <div class="slide"></div>
+        <div class="slide"></div>
+        <div class="slide"></div>
+        <div class="slide"></div>
+        <div class="slide"></div>
+        <div class="slide"></div>
       </div>
-      <div>
-        <div class="text-3xl">🤝</div>
-        <h3 class="font-semibold mt-2">Social</h3>
-        <p class="mt-1 text-sm">気軽に話せる相談の場</p>
-      </div>
-      <div>
-        <div class="text-3xl">🩺</div>
-        <h3 class="font-semibold mt-2">Medical</h3>
-        <p class="mt-1 text-sm">健康や心の不安を話せる安心感</p>
-      </div>
-    </div>
-  </section>
 
-  <!-- 活動スナップ（仮写真） -->
-  <section class="bg-gray-50 py-16 px-6">
-    <h2 class="text-2xl font-bold text-center mb-8">こんな活動、してます！</h2>
-    <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-4 max-w-6xl mx-auto">
-      <div class="bg-white shadow rounded overflow-hidden">
-        <img src="comical5.jpg" alt="ご飯会" class="w-full h-40 object-cover">
-        <p class="p-4 text-sm">誰かと食べるご飯って、おいしいね</p>
+      <!-- スライド上に重ねるメッセージテキスト -->
+      <div class="absolute inset-0 flex flex-col items-center justify-center text-white text-center px-4 z-10">
+        <h2 class="text-3xl sm:text-4xl font-bold drop-shadow">若者に想い想いの居場所を。</h2>
+        <p class="mt-4 text-lg drop-shadow">若者の“やってみたい”を応援する、出入り自由な居場所です。</p>
       </div>
-      <div class="bg-white shadow rounded overflow-hidden">
-        <img src="comical4.jpg" alt="VR体験" class="w-full h-40 object-cover">
-        <p class="p-4 text-sm">テクノロジーに触れるドキドキ</p>
-      </div>
-      <div class="bg-white shadow rounded overflow-hidden">
-        <img src="./dummy3.jpg" alt="手芸部" class="w-full h-40 object-cover">
-        <p class="p-4 text-sm">ふんわりつながる、まったり時間</p>
-      </div>
-      <div class="bg-white shadow rounded overflow-hidden">
-        <img src="./dummy4.jpg" alt="相談室" class="w-full h-40 object-cover">
-        <p class="p-4 text-sm">“やってみたい”が動き出すきっかけ</p>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- 参加者の声＆実績 -->
-  <section class="py-16 px-6 max-w-5xl mx-auto">
-    <h2 class="text-2xl font-bold text-center mb-10">こんな声が届いています</h2>
-    <div class="text-center mb-8">
-      <p class="italic">「ここに来て、自分のやってみたいが少し見えてきた」</p>
-      <p class="italic">「学校とは違うつながりができた」</p>
-    </div>
-    <div class="grid grid-cols-2 sm:grid-cols-3 text-center gap-6">
-      <div>
-        <div class="text-xl font-bold text-pink-500">1500+</div>
-        <p class="text-sm">累計参加者数</p>
-      </div>
-      <div>
-        <div class="text-xl font-bold text-purple-500">80+</div>
-        <p class="text-sm">1on1相談件数</p>
-      </div>
-      <div>
-        <div class="text-xl font-bold text-blue-500">20+</div>
-        <p class="text-sm">実現した企画</p>
-      </div>
-    </div>
-  </section>
+    <!-- 以下、Aboutなど他のセクションをここに追加していく予定 -->
 
-  <!-- CTAセクション -->
-  <section class="bg-orange-100 py-12 text-center px-4" id="join">
-    <h2 class="text-xl font-bold mb-4">気になったら、まずは見にきてみてね！</h2>
-    <p class="mb-6">出入り自由！ ふらっと来ても、OK</p>
-    <div class="space-x-4">
-      <a href="#about" class="px-4 py-2 bg-white border border-orange-400 rounded-full text-orange-500">こみかるをもっと知る</a>
-      <a href="#join" class="px-4 py-2 bg-orange-400 text-white rounded-full">参加してみたい</a>
-      <a href="#contact" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-full">応援・寄付する</a>
-    </div>
-  </section>
-
-  <!-- フッター -->
-  <footer class="text-center text-sm text-gray-500 py-6">
-    <img src="./logo.png" alt="こみかるロゴ" class="mx-auto w-16 mb-2">
-    <p>@comicalyouth / GitHub Pages 公開中</p>
-  </footer>
-
+  </main>
 </body>
 </html>
