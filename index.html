@@ -14,7 +14,7 @@
       background-position: center;
       opacity: 0;
       animation: fade 45s linear infinite;
-      filter: brightness(0.6) sepia(0.3) contrast(1.1);
+      filter: sepia(0.2) brightness(1.15) saturate(1.2);
     }
 
     .slide:nth-child(1) { background-image: url('comical1.jpg'); animation-delay: 0s; }
@@ -51,7 +51,7 @@
 
   <!-- メインビジュアル（キャッチ＋スライド） -->
   <main class="pt-[80px]">
-    <section class="relative h-screen text-white text-center px-4" id="top">
+    <section class="relative h-screen text-center px-4" id="top">
       <!-- スライドショー背景 -->
       <div class="absolute inset-0">
         <div class="slide"></div>
@@ -67,10 +67,10 @@
 
       <!-- キャッチコピー -->
       <div class="absolute inset-0 flex flex-col items-center justify-center z-10 px-6">
-        <h2 class="text-3xl sm:text-5xl font-extrabold drop-shadow-lg tracking-wide text-white">
+        <h2 class="text-3xl sm:text-5xl font-extrabold drop-shadow-sm tracking-wide text-yellow-50">
           若者に想い想いの居場所を。
         </h2>
-        <p class="mt-4 text-base sm:text-xl font-medium text-white drop-shadow">
+        <p class="mt-4 text-base sm:text-xl font-medium text-pink-50 drop-shadow-sm">
           ショッピングモールから何かが始まる！？<br class="hidden sm:block">出入り自由な新しい“よりどころ”
         </p>
       </div>
