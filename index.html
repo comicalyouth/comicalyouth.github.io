@@ -14,7 +14,7 @@
       background-position: center;
       opacity: 0;
       animation: fade 45s linear infinite;
-      filter: sepia(0.1) brightness(1.1) contrast(0.9) saturate(1.1);
+      filter: sepia(0.15) brightness(1.1) saturate(1.1);
     }
 
     .slide:nth-child(1) { background-image: url('comical1.jpg'); animation-delay: 0s; }
@@ -38,15 +38,29 @@
 </head>
 <body class="bg-white text-gray-800 font-sans">
   <!-- ヘッダー -->
-  <header class="fixed top-0 w-full bg-white shadow z-50 flex items-center justify-between px-6 py-4">
-    <img src="logo_header-01.svg" alt="こみかるロゴ" class="h-16">
-    <nav class="space-x-6 text-sm font-medium">
+  <header class="fixed top-0 w-full bg-white shadow z-50">
+    <div class="flex items-center justify-between px-6 py-4">
+      <img src="logo_header-01.svg" alt="こみかるロゴ" class="h-14">
+      <button id="menu-toggle" class="sm:hidden focus:outline-none">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </button>
+      <nav id="menu" class="hidden sm:flex space-x-6 text-sm font-medium">
+        <a href="#top" class="text-gray-600 hover:text-pink-500">はじめに</a>
+        <a href="#about" class="text-gray-600 hover:text-pink-500">こみかるのコンセプト</a>
+        <a href="#projects" class="text-gray-600 hover:text-pink-500">活動レポート</a>
+        <a href="#join" class="text-gray-600 hover:text-pink-500">開催場所 / 時間</a>
+        <a href="#contact" class="text-gray-600 hover:text-pink-500">お問い合わせ</a>
+      </nav>
+    </div>
+    <div id="mobile-menu" class="sm:hidden hidden px-6 pb-4 flex flex-col space-y-2">
       <a href="#top" class="text-gray-600 hover:text-pink-500">はじめに</a>
       <a href="#about" class="text-gray-600 hover:text-pink-500">こみかるのコンセプト</a>
       <a href="#projects" class="text-gray-600 hover:text-pink-500">活動レポート</a>
       <a href="#join" class="text-gray-600 hover:text-pink-500">開催場所 / 時間</a>
       <a href="#contact" class="text-gray-600 hover:text-pink-500">お問い合わせ</a>
-    </nav>
+    </div>
   </header>
 
   <!-- メインビジュアル（キャッチ＋スライド） -->
@@ -67,14 +81,22 @@
 
       <!-- キャッチコピー -->
       <div class="absolute inset-0 flex flex-col items-center justify-center z-10 px-6">
-        <h2 class="text-3xl sm:text-5xl font-extrabold tracking-wide drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)] text-white">
-          若者に想い想いの居場所を。
+        <h2 class="text-3xl sm:text-5xl font-extrabold tracking-wide text-white drop-shadow-md">
+          若者が“自分らしく”いられる居場所を。
         </h2>
-        <p class="mt-4 text-base sm:text-xl font-medium text-white drop-shadow-[0_1px_3px_rgba(0,0,0,0.3)]">
+        <p class="mt-4 text-base sm:text-xl font-medium text-white drop-shadow-md">
           ショッピングモールから何かが始まる！？<br class="hidden sm:block">出入り自由な新しい“よりどころ”
         </p>
       </div>
     </section>
   </main>
+
+  <script>
+    const toggle = document.getElementById('menu-toggle');
+    const menu = document.getElementById('mobile-menu');
+    toggle.addEventListener('click', () => {
+      menu.classList.toggle('hidden');
+    });
+  </script>
 </body>
 </html>
