@@ -3,165 +3,105 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>こみかる - 想い想いの居場所</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    body, html {
-      font-family: 'Arial', sans-serif;
-    }
-
-    header {
-      background-color: #ffffff;
-      padding: 20px 40px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-    }
-
-    .logo {
-      font-size: 1.5rem;
-      font-weight: bold;
-      color: #333;
-    }
-
-    .nav-links a {
-      margin-left: 30px;
-      color: #333;
-      text-decoration: none;
-      font-size: 1rem;
-    }
-
-    .hero-section {
-      position: relative;
-      width: 100%;
-      height: 100vh;
-      overflow: hidden;
-    }
-
-    .hero-slideshow {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-    }
-
-    .slide {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      background-size: cover;
-      background-position: center;
-      opacity: 0;
-      animation: fade 45s infinite;
-    }
-
-    .slide:nth-child(1) { background-image: url('comical1.jpg'); animation-delay: 0s; }
-    .slide:nth-child(2) { background-image: url('comical2.jpg'); animation-delay: 5s; }
-    .slide:nth-child(3) { background-image: url('comical3.jpg'); animation-delay: 10s; }
-    .slide:nth-child(4) { background-image: url('comical4.jpg'); animation-delay: 15s; }
-    .slide:nth-child(5) { background-image: url('comical5.jpg'); animation-delay: 20s; }
-    .slide:nth-child(6) { background-image: url('comical6.jpg'); animation-delay: 25s; }
-    .slide:nth-child(7) { background-image: url('comical7.jpg'); animation-delay: 30s; }
-    .slide:nth-child(8) { background-image: url('comical8.jpg'); animation-delay: 35s; }
-    .slide:nth-child(9) { background-image: url('comical9.jpg'); animation-delay: 40s; }
-
-    @keyframes fade {
-      0%   { opacity: 0; }
-      5%   { opacity: 1; }
-      15%  { opacity: 1; }
-      20%  { opacity: 0; }
-      100% { opacity: 0; }
-    }
-
-    .hero-text {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      color: white;
-      text-align: center;
-      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.6);
-      z-index: 1;
-    }
-
-    .hero-text h1 {
-      font-size: 2.8rem;
-      margin-bottom: 10px;
-    }
-
-    .hero-text p {
-      font-size: 1rem;
-    }
-
-    main {
-      padding: 60px 20px;
-      text-align: center;
-      background-color: #f9f9f9;
-      color: #333;
-    }
-
-    footer {
-      text-align: center;
-      padding: 20px;
-      font-size: 0.9rem;
-      background-color: #222;
-      color: white;
-    }
-
-    footer a {
-      color: white;
-      margin: 0 10px;
-      text-decoration: none;
-    }
-  </style>
+  <title>こみかるユース福井</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="bg-white text-gray-800 font-sans">
 
-  <header>
-    <div class="logo">こみかる</div>
-    <div class="nav-links">
-      <a href="#about">私たちについて</a>
-      <a href="#project">プロジェクト</a>
-      <a href="#contact">お問い合わせ</a>
-    </div>
-  </header>
-
-  <section class="hero-section">
-    <div class="hero-slideshow">
-      <div class="slide"></div>
-      <div class="slide"></div>
-      <div class="slide"></div>
-      <div class="slide"></div>
-      <div class="slide"></div>
-      <div class="slide"></div>
-      <div class="slide"></div>
-      <div class="slide"></div>
-      <div class="slide"></div>
-    </div>
-    <div class="hero-text">
-      <h1>若者に<br>想い想いの居場所を</h1>
-      <p>地域のなかに、ひとりひとりの「やってみたい」を育てる居場所を。</p>
+  <!-- ヒーローセクション -->
+  <section class="text-center py-16 px-4 bg-gradient-to-r from-pink-300 via-purple-300 to-blue-300">
+    <img src="./logo.png" alt="こみかるロゴ" class="mx-auto w-40 mb-6">
+    <h1 class="text-2xl sm:text-3xl font-bold leading-relaxed">学校でも家でもない、もうひとつの場所</h1>
+    <p class="mt-4 text-lg">こみかるは、ショッピングモールを中心に若者の“やってみたい”を応援する、<br>出入り自由な新しい居場所です!</p>
+    <div class="mt-6 space-x-4">
+      <a href="#about" class="bg-white text-pink-500 px-4 py-2 rounded-full border border-pink-400">こみかるとは？</a>
+      <a href="#join" class="bg-orange-400 text-white px-4 py-2 rounded-full">参加するには？</a>
     </div>
   </section>
 
-  <main>
-    <p>
-      福井発、若者の挑戦が芽吹く場づくりをしています。<br>
-      自分の好きや好奇心を大切に、仲間とつながりながら未来を描いていける場所を。
-    </p>
-  </main>
+  <!-- 3つの軸紹介 -->
+  <section class="py-16 px-6 max-w-5xl mx-auto" id="about">
+    <h2 class="text-2xl font-bold text-center mb-12">こみかるの3つのキーワード</h2>
+    <div class="grid gap-8 sm:grid-cols-3 text-center">
+      <div>
+        <div class="text-3xl">🏡</div>
+        <h3 class="font-semibold mt-2">Community</h3>
+        <p class="mt-1 text-sm">地域での子どもの居場所づくり</p>
+      </div>
+      <div>
+        <div class="text-3xl">🤝</div>
+        <h3 class="font-semibold mt-2">Social</h3>
+        <p class="mt-1 text-sm">気軽に話せる相談の場</p>
+      </div>
+      <div>
+        <div class="text-3xl">🩺</div>
+        <h3 class="font-semibold mt-2">Medical</h3>
+        <p class="mt-1 text-sm">健康や心の不安を話せる安心感</p>
+      </div>
+    </div>
+  </section>
 
-  <footer>
-    <a href="https://www.instagram.com/comicalyouth/">Instagram</a>
-    <a href="https://code4fukui.github.io/comical/">メンバーBINGO</a>
-    <a href="https://github.com/comicalyouth/comicalyouth.github.io">GitHub</a>
+  <!-- 活動スナップ（仮写真） -->
+  <section class="bg-gray-50 py-16 px-6">
+    <h2 class="text-2xl font-bold text-center mb-8">こんな活動、してます！</h2>
+    <div class="grid gap-6 sm:grid-cols-2 md:grid-cols-4 max-w-6xl mx-auto">
+      <div class="bg-white shadow rounded overflow-hidden">
+        <img src="./dummy1.jpg" alt="ご飯会" class="w-full h-40 object-cover">
+        <p class="p-4 text-sm">誰かと食べるご飯って、おいしいね</p>
+      </div>
+      <div class="bg-white shadow rounded overflow-hidden">
+        <img src="./dummy2.jpg" alt="VR体験" class="w-full h-40 object-cover">
+        <p class="p-4 text-sm">テクノロジーに触れるドキドキ</p>
+      </div>
+      <div class="bg-white shadow rounded overflow-hidden">
+        <img src="./dummy3.jpg" alt="手芸部" class="w-full h-40 object-cover">
+        <p class="p-4 text-sm">ふんわりつながる、まったり時間</p>
+      </div>
+      <div class="bg-white shadow rounded overflow-hidden">
+        <img src="./dummy4.jpg" alt="相談室" class="w-full h-40 object-cover">
+        <p class="p-4 text-sm">“やってみたい”が動き出すきっかけ</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 参加者の声＆実績 -->
+  <section class="py-16 px-6 max-w-5xl mx-auto">
+    <h2 class="text-2xl font-bold text-center mb-10">こんな声が届いています</h2>
+    <div class="text-center mb-8">
+      <p class="italic">「ここに来て、自分のやってみたいが少し見えてきた」</p>
+      <p class="italic">「学校とは違うつながりができた」</p>
+    </div>
+    <div class="grid grid-cols-2 sm:grid-cols-3 text-center gap-6">
+      <div>
+        <div class="text-xl font-bold text-pink-500">1500+</div>
+        <p class="text-sm">累計参加者数</p>
+      </div>
+      <div>
+        <div class="text-xl font-bold text-purple-500">80+</div>
+        <p class="text-sm">1on1相談件数</p>
+      </div>
+      <div>
+        <div class="text-xl font-bold text-blue-500">20+</div>
+        <p class="text-sm">実現した企画</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTAセクション -->
+  <section class="bg-orange-100 py-12 text-center px-4" id="join">
+    <h2 class="text-xl font-bold mb-4">気になったら、まずは見にきてみてね！</h2>
+    <p class="mb-6">出入り自由！ ふらっと来ても、OK</p>
+    <div class="space-x-4">
+      <a href="#about" class="px-4 py-2 bg-white border border-orange-400 rounded-full text-orange-500">こみかるをもっと知る</a>
+      <a href="#join" class="px-4 py-2 bg-orange-400 text-white rounded-full">参加してみたい</a>
+      <a href="#contact" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-full">応援・寄付する</a>
+    </div>
+  </section>
+
+  <!-- フッター -->
+  <footer class="text-center text-sm text-gray-500 py-6">
+    <img src="./logo.png" alt="こみかるロゴ" class="mx-auto w-16 mb-2">
+    <p>@comicalyouth / GitHub Pages 公開中</p>
   </footer>
 
 </body>
