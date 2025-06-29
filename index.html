@@ -6,20 +6,32 @@
   <title>こみかるユース福井</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    .scrolling-wrapper {
-      display: flex;
-      flex-wrap: nowrap;
-      overflow-x: auto;
-      animation: scroll 30s linear infinite;
+    .slide {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      opacity: 0;
+      animation: fade 45s linear infinite;
     }
 
-    .scrolling-wrapper::-webkit-scrollbar {
-      display: none;
-    }
+    .slide:nth-child(1) { background-image: url('comical1.jpg'); animation-delay: 0s; }
+    .slide:nth-child(2) { background-image: url('comical2.jpg'); animation-delay: 5s; }
+    .slide:nth-child(3) { background-image: url('comical3.jpg'); animation-delay: 10s; }
+    .slide:nth-child(4) { background-image: url('comical4.jpg'); animation-delay: 15s; }
+    .slide:nth-child(5) { background-image: url('comical5.jpg'); animation-delay: 20s; }
+    .slide:nth-child(6) { background-image: url('comical6.jpg'); animation-delay: 25s; }
+    .slide:nth-child(7) { background-image: url('comical7.jpg'); animation-delay: 30s; }
+    .slide:nth-child(8) { background-image: url('comical8.jpg'); animation-delay: 35s; }
+    .slide:nth-child(9) { background-image: url('comical9.jpg'); animation-delay: 40s; }
 
-    @keyframes scroll {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
+    @keyframes fade {
+      0%   { opacity: 0; }
+      5%   { opacity: 1; }
+      15%  { opacity: 1; }
+      20%  { opacity: 0; }
+      100% { opacity: 0; }
     }
   </style>
 </head>
@@ -36,34 +48,28 @@
     </nav>
   </header>
 
-  <!-- メインコンテンツ -->
+  <!-- メインビジュアル（キャッチ＋スライド） -->
   <main class="pt-[80px]">
-    <!-- キャッチコピーセクション -->
-    <section class="bg-white py-16 px-4 text-center">
-      <h2 class="text-3xl sm:text-4xl font-bold text-gray-800">若者に想い想いの居場所を。</h2>
-      <p class="mt-4 text-base sm:text-lg text-gray-600">ショッピングモールから何かが始まる！？出入り自由な新しい“よりどころ”</p>
+    <!-- キャッチコピーセクション（独立表示） -->
+    <section class="bg-gradient-to-r from-pink-200 via-purple-200 to-blue-200 py-16 px-4 text-center">
+      <h2 class="text-2xl sm:text-4xl font-bold text-white leading-relaxed">若者に想い想いの居場所を。</h2>
+      <p class="mt-2 text-sm sm:text-lg text-white">ショッピングモールから何かが始まる！？出入り自由な新しい“よりどころ”</p>
     </section>
 
-    <!-- 写真スライダー風ギャラリー -->
-    <section class="overflow-hidden">
-      <div class="scrolling-wrapper space-x-4 px-4 py-6">
-        <img src="comical1.jpg" alt="comical1" class="h-48 rounded shadow-md">
-        <img src="comical2.jpg" alt="comical2" class="h-48 rounded shadow-md">
-        <img src="comical3.jpg" alt="comical3" class="h-48 rounded shadow-md">
-        <img src="comical4.jpg" alt="comical4" class="h-48 rounded shadow-md">
-        <img src="comical5.jpg" alt="comical5" class="h-48 rounded shadow-md">
-        <img src="comical6.jpg" alt="comical6" class="h-48 rounded shadow-md">
-        <img src="comical7.jpg" alt="comical7" class="h-48 rounded shadow-md">
-        <img src="comical8.jpg" alt="comical8" class="h-48 rounded shadow-md">
-        <img src="comical9.jpg" alt="comical9" class="h-48 rounded shadow-md">
-        <img src="comical1.jpg" alt="comical1-dup" class="h-48 rounded shadow-md">
-        <img src="comical2.jpg" alt="comical2-dup" class="h-48 rounded shadow-md">
-        <img src="comical3.jpg" alt="comical3-dup" class="h-48 rounded shadow-md">
+    <!-- スライドショー単体表示 -->
+    <section class="relative h-screen">
+      <div class="absolute inset-0">
+        <div class="slide"></div>
+        <div class="slide"></div>
+        <div class="slide"></div>
+        <div class="slide"></div>
+        <div class="slide"></div>
+        <div class="slide"></div>
+        <div class="slide"></div>
+        <div class="slide"></div>
+        <div class="slide"></div>
       </div>
     </section>
-
-    <!-- 以下、Aboutなどのセクションへ続く -->
-
   </main>
 </body>
 </html>
