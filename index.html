@@ -14,6 +14,7 @@
       background-position: center;
       opacity: 0;
       animation: fade 45s linear infinite;
+      filter: brightness(0.6) sepia(0.3) contrast(1.1);
     }
 
     .slide:nth-child(1) { background-image: url('comical1.jpg'); animation-delay: 0s; }
@@ -50,14 +51,8 @@
 
   <!-- メインビジュアル（キャッチ＋スライド） -->
   <main class="pt-[80px]">
-    <!-- キャッチコピーセクション（独立表示） -->
-    <section class="bg-gradient-to-r from-pink-200 via-purple-200 to-blue-200 py-16 px-4 text-center">
-      <h2 class="text-2xl sm:text-4xl font-bold text-white leading-relaxed">若者に想い想いの居場所を。</h2>
-      <p class="mt-2 text-sm sm:text-lg text-white">ショッピングモールから何かが始まる！？出入り自由な新しい“よりどころ”</p>
-    </section>
-
-    <!-- スライドショー単体表示 -->
-    <section class="relative h-screen">
+    <section class="relative h-screen text-white text-center px-4" id="top">
+      <!-- スライドショー背景 -->
       <div class="absolute inset-0">
         <div class="slide"></div>
         <div class="slide"></div>
@@ -68,6 +63,16 @@
         <div class="slide"></div>
         <div class="slide"></div>
         <div class="slide"></div>
+      </div>
+
+      <!-- キャッチコピー -->
+      <div class="absolute inset-0 flex flex-col items-center justify-center z-10 px-6">
+        <h2 class="text-3xl sm:text-5xl font-extrabold drop-shadow-lg tracking-wide text-white">
+          若者に想い想いの居場所を。
+        </h2>
+        <p class="mt-4 text-base sm:text-xl font-medium text-white drop-shadow">
+          ショッピングモールから何かが始まる！？<br class="hidden sm:block">出入り自由な新しい“よりどころ”
+        </p>
       </div>
     </section>
   </main>
