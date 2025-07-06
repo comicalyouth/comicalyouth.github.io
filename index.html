@@ -18,7 +18,7 @@
       background-size: contain;
     }
 
-    @media (min-width: 641px) {
+    @media (min-width: 640px) {
       .slide {
         background-size: cover;
       }
@@ -32,7 +32,6 @@
       100% { opacity: 0; }
     }
 
-    /* ✅ アンカーリンク対策 */
     html {
       scroll-padding-top: 100px;
     }
@@ -52,7 +51,6 @@
         </svg>
       </button>
       <nav id="menu" class="hidden sm:flex space-x-6 text-sm font-medium">
-        <a href="#top" class="hidden">はじめに</a>
         <a href="#about" class="text-gray-600 hover:text-pink-500">コンセプト</a>
         <a href="#members" class="text-gray-600 hover:text-pink-500">こみかるメンバー</a>
         <a href="#regular" class="text-gray-600 hover:text-pink-500">いつもの活動</a>
@@ -62,7 +60,6 @@
       </nav>
     </div>
     <div id="mobile-menu" class="sm:hidden hidden px-6 pb-4 flex flex-col space-y-2">
-      <a href="#top" class="hidden">はじめに</a>
       <a href="#about" class="text-gray-600 hover:text-pink-500">コンセプト</a>
       <a href="#members" class="text-gray-600 hover:text-pink-500">こみかるメンバー</a>
       <a href="#regular" class="text-gray-600 hover:text-pink-500">いつもの活動</a>
@@ -72,8 +69,8 @@
     </div>
   </header>
 
-  <!-- メインビジュアル（キャッチ＋スライド） -->
-  <main class="pt-[80px]">
+  <!-- メインビジュアル（スライドのみ） -->
+  <main class="pt-[100px] sm:pt-[80px]">
     <section class="relative min-h-[280px] sm:h-screen text-center px-4" id="top">
       <div class="absolute inset-0">
         <div class="slide bg-center bg-no-repeat bg-contain sm:bg-cover" style="background-image:url('comical1.jpg'); animation-delay:0s;"></div>
@@ -98,6 +95,7 @@
   </script>
 </body>
 </html>
+
 
 <!👇コンセプト>
 
