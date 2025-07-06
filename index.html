@@ -8,10 +8,9 @@
   <style>
     .slide {
       position: absolute;
-     width: 100%;
-     height: 100%;
-     /* 横幅に合わせて縦横比を保ちながら全体表示 */
-      background-size: contain;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
       background-position: center;
       opacity: 0;
       animation: fade 45s linear infinite;
@@ -35,15 +34,6 @@
       20%  { opacity: 0; }
       100% { opacity: 0; }
     }
-     /* ↓ ここから追加（</style> の直前に貼り付け） */
-  html {
-    /* ヘッダー高さと同じ80px分、スクロール余白を確保 */
-    scroll-padding-top: 80px;
-  }
-  section[id] {
-    /* 各セクション先頭がヘッダーに隠れないように */
-    scroll-margin-top: 80px;
-  }
   </style>
 </head>
 <body class="bg-white text-gray-800 font-sans">
@@ -78,9 +68,8 @@
   </header>
 
   <!-- メインビジュアル（キャッチ＋スライド） -->
-    <main class="pt-[80px]">
-  <!-- モバイル時は h-48（約192px）、タブレット以上でフル画面 -->
-   <section class="relative h-48 sm:h-screen text-center px-4" id="top">
+  <main class="pt-[80px]">
+    <section class="relative h-screen text-center px-4" id="top">
       <!-- スライドショー背景 -->
       <div class="absolute inset-0">
         <div class="slide"></div>
@@ -211,7 +200,7 @@
       <ul class="text-xs text-gray-500">
         <li>📍場所： エルパ / ベル / ヴィオ / アルプラザ敦賀</li>
         <li>🎯対象： 22歳以下、大人も参加OK</li>
-        <li>🏷 ジャンル：Community / Social</li>
+        <li>🏷ジャンル：Community / Social</li>
       </ul>
     </div>
 
@@ -225,7 +214,7 @@
       <ul class="text-xs text-gray-500">
         <li>📍場所： エルパ（不定期）</li>
         <li>🎯対象： 小学生～大学生</li>
-        <li>🏷 ジャンル：Community</li>
+        <li>🏷ジャンル：Community</li>
       </ul>
     </div>
 
@@ -239,7 +228,7 @@
       <ul class="text-xs text-gray-500">
         <li>📍場所： 全拠点</li>
         <li>🎯対象： 中高生・大学生</li>
-        <li>🏷 ジャンル：Social</li>
+        <li>🏷ジャンル：Social</li>
       </ul>
     </div>
 
@@ -253,7 +242,7 @@
       <ul class="text-xs text-gray-500">
         <li>📍場所： エルパ</li>
         <li>🎯対象： 小学生〜大人</li>
-        <li>🏷 ジャンル：Community</li>
+        <li>🏷ジャンル：Community</li>
       </ul>
     </div>
 
@@ -267,7 +256,7 @@
       <ul class="text-xs text-gray-500">
         <li>📍場所： ヴィオ（不定期）</li>
         <li>🎯対象： 小学生～大学生</li>
-        <li>🏷 ジャンル：Community / Social</li>
+        <li>🏷ジャンル：Community / Social</li>
       </ul>
     </div>
 
@@ -281,7 +270,7 @@
       <ul class="text-xs text-gray-500">
         <li>📍場所： こみかる全拠点</li>
         <li>🎯対象： 全年齢</li>
-        <li>🏷 ジャンル：Community / Social</li>
+        <li>🏷ジャンル：Community / Social</li>
       </ul>
     </div>
 
@@ -295,7 +284,7 @@
       <ul class="text-xs text-gray-500">
         <li>📍場所： エルパ / ヴィオ</li>
         <li>🎯対象： 小学生～高校生</li>
-        <li>🏷 ジャンル：Community / Social</li>
+        <li>🏷ジャンル：Community / Social</li>
       </ul>
     </div>
 
@@ -309,7 +298,7 @@
       <ul class="text-xs text-gray-500">
         <li>📍場所： エルパ</li>
         <li>🎯対象： 全年齢</li>
-        <li>🏷 ジャンル：Community / Social</li>
+        <li>🏷ジャンル：Community / Social</li>
         <li>🤝 協力：akushu</li>
       </ul>
    <a href="https://www.instagram.com/keyanswer_tsuruga" target="_blank"
@@ -329,7 +318,7 @@
         <ul class="text-xs text-gray-500 mb-3">
           <li>📍場所： アルプラザ敦賀</li>
           <li>🎯対象： 全年齢</li>
-          <li>🏷 ジャンル：Community / Social</li>
+          <li>🏷ジャンル：Community / Social</li>
           <li>🤝 協力：Key Answer</li>
         </ul>
       </div>
@@ -362,7 +351,7 @@
         </p>
         <ul class="text-xs text-gray-500 mb-3">
           <li>🎯対象： 全年齢</li>
-          <li>🏷 ジャンル：Social</li>
+          <li>🏷ジャンル：Social</li>
         </ul>
       </div>
       <a href="https://open.spotify.com/show/33JAGOyhB36fDWyj7a7udC?si=1c4f2c1d16534a60" target="_blank" rel="noopener noreferrer"
@@ -382,7 +371,7 @@
         <ul class="text-xs text-gray-500 mb-3">
           <li>📍場所： 福井駅周辺</li>
           <li>🎯対象： 20代</li>
-          <li>🏷 ジャンル：Community</li>
+          <li>🏷ジャンル：Community</li>
           <li>🤝 協力：ひよっこ</li>
         </ul>
       </div>
@@ -403,7 +392,7 @@
         <ul class="text-xs text-gray-500 mb-3">
           <li>📍場所： 田んぼ：坂井市 / 酒造：福井市</li>
           <li>🎯対象： 全年齢</li>
-          <li>🏷 ジャンル：Community / Social</li>
+          <li>🏷ジャンル：Community / Social</li>
         </ul>
       </div>
       <a href="https://www.instagram.com/ofuzake_2025" target="_blank" rel="noopener noreferrer"
@@ -422,7 +411,7 @@
         <p class="text-sm text-gray-600 mb-2">「経験格差をなくし、未来の可能性を広げる」ために、ひとり親の家庭支援を中心に活動中。塾の運営もスタート！</p>
         <ul class="text-xs text-gray-500">
           <li>🎯対象： ひとり親</li>
-          <li>🏷 ジャンル：Community / Social</li>
+          <li>🏷ジャンル：Community / Social</li>
         </ul>
       </div>
       <a href="https://www.instagram.com/yorido_official?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer"
@@ -443,7 +432,7 @@
         <ul class="text-xs text-gray-500 mb-3">
           <li>📍場所： 福井駅前</li>
           <li>🎯対象： 中高生</li>
-          <li>🏷 ジャンル：Community / Social</li>
+          <li>🏷ジャンル：Community / Social</li>
         </ul>
       </div>
       <a href="https://www.instagram.com/heisei.retoro__exhibition?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer"
@@ -462,7 +451,7 @@
         <p class="text-sm text-gray-800 mb-2">学生団体FUaNによる粘土ワークショップをエルパで開催！</p>
         <ul class="text-xs text-gray-500 mb-3">
           <li>🎯対象： 小学生～大人</li>
-          <li>🏷 ジャンル：Community / Social</li>
+          <li>🏷ジャンル：Community / Social</li>
         </ul>
       </div>
       <a href="https://www.instagram.com/fuan296?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="target="_blank" rel="noopener noreferrer"
@@ -481,7 +470,7 @@
     <p class="text-sm text-gray-600 mb-2">みんなでぬいぐるみを持ち寄って、ぬいぐるみ愛を語ろう！</p>
     <ul class="text-xs text-gray-500 mb-3">
       <li>🎯対象： 小学生～大人</li>
-      <li>🏷 ジャンル：Community</li>
+      <li>🏷ジャンル：Community</li>
     </ul>
   </div>
 </div>
@@ -497,7 +486,7 @@
     <ul class="text-xs text-gray-500 mb-3">
       <li>📍場所： エルパ</li>
       <li>🎯対象： 中学生～大学生</li>
-      <li>🏷 ジャンル：Community / Social</li>
+      <li>🏷ジャンル：Community / Social</li>
     </ul>
   </div>
 </div>
@@ -513,7 +502,7 @@
     <ul class="text-xs text-gray-500 mb-3">
       <li>📍場所： エルパ</li>
       <li>🎯対象： 中学生～大人</li>
-      <li>🏷 ジャンル：Community / Social</li>
+      <li>🏷ジャンル：Community / Social</li>
     </ul>
   </div>
 </div>
@@ -529,7 +518,7 @@
     <ul class="text-xs text-gray-500 mb-3">
       <li>📍場所： ヴィオ</li>
       <li>🎯対象： 小学生～大人</li>
-      <li>🏷 ジャンル：Community / Social</li>
+      <li>🏷ジャンル：Community / Social</li>
     </ul>
   </div>
 </div>
@@ -545,7 +534,7 @@
     <ul class="text-xs text-gray-500 mb-3">
       <li>📍場所： ベル</li>
       <li>🎯対象： 中学生～大学生</li>
-      <li>🏷 ジャンル：Community</li>
+      <li>🏷ジャンル：Community</li>
     </ul>
   </div>
 </div>
@@ -562,7 +551,7 @@
         </p>
         <ul class="text-xs text-gray-500 mb-3">
           <li>🎯対象： 全年齢</li>
-          <li>🏷 ジャンル：Social</li>
+          <li>🏷ジャンル：Social</li>
         </ul>
       </div>
       <a href="https://open.spotify.com/show/4nVMOxm2lzAKaYitoli3VT?si=6595a43c60a34627" target="_blank" rel="noopener noreferrer"
@@ -583,7 +572,7 @@
         </p>
         <ul class="text-xs text-gray-500 mb-3">
           <li>🎯対象： 全年齢</li>
-          <li>🏷 ジャンル：Social</li>
+          <li>🏷ジャンル：Social</li>
         </ul>
       </div>
       <a href="https://www.instagram.com/reel/DJ_jK3GTrtQ/?utm_source=ig_web_button_share_sheet&igsh=MzRlODBiNWFlZA==" target="_blank" rel="noopener noreferrer"
@@ -604,7 +593,7 @@
         </p>
         <ul class="text-xs text-gray-500 mb-3">
           <li>🎯対象： 全年齢</li>
-          <li>🏷 ジャンル：Social</li>
+          <li>🏷ジャンル：Social</li>
         </ul>
       </div>
       <a href="https://www.instagram.com/tripductionjitennsya?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer"
@@ -625,7 +614,7 @@
         </p>
         <ul class="text-xs text-gray-500 mb-3">
           <li>🎯対象： 全年齢</li>
-          <li>🏷 ジャンル：Social</li>
+          <li>🏷ジャンル：Social</li>
         </ul>
       </div>
       <a href="https://www.instagram.com/katteni_awara?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer"target="_blank"
@@ -646,7 +635,7 @@
         </p>
         <ul class="text-xs text-gray-500 mb-3">
           <li>🎯対象：誰でも参加OK！</li>
-          <li>🏷 ジャンル：Social / Medical</li>
+          <li>🏷ジャンル：Social / Medical</li>
         </ul>
       </div>
     </div>
@@ -663,7 +652,7 @@
         </p>
         <ul class="text-xs text-gray-500 mb-3">
           <li>🎯対象：誰でも参加OK！</li>
-          <li>🏷 ジャンル：Social / Medical</li>
+          <li>🏷ジャンル：Social / Medical</li>
         </ul>
       </div>
     </div>
@@ -680,7 +669,7 @@
         </p>
         <ul class="text-xs text-gray-500 mb-3">
           <li>🎯対象：高校生,20代</li>
-          <li>🏷 ジャンル：community / social</li>
+          <li>🏷ジャンル：community / social</li>
           <li>🤝協力：a.cafe</li>
         </ul>
       </div>
@@ -698,7 +687,7 @@
         </p>
         <ul class="text-xs text-gray-500 mb-3">
           <li>🎯対象：誰でも参加OK</li>
-          <li>🏷 ジャンル：Social / Medical</li>
+          <li>🏷ジャンル：Social / Medical</li>
         </ul>
       </div>
     </div>
@@ -715,7 +704,7 @@
         </p>
         <ul class="text-xs text-gray-500 mb-3">
           <li>🎯対象：誰でも参加OK</li>
-          <li>🏷 ジャンル：Social / Medical</li>
+          <li>🏷ジャンル：Social / Medical</li>
         </ul>
       </div>
     </div>
@@ -732,7 +721,7 @@
         </p>
         <ul class="text-xs text-gray-500 mb-3">
           <li>🎯対象：中学生～大学生</li>
-          <li>🏷 ジャンル：Social</li>
+          <li>🏷ジャンル：Social</li>
           <li>🤝協力：FWI（福井県若者情報発信局）</li>
         </ul>
       </div>
@@ -754,7 +743,7 @@
     </p>
     <ul class="text-xs text-gray-500 mb-3">
       <li>🎯 対象：誰でも参加OK</li>
-      <li>🏷 ジャンル：social</li>
+      <li>🏷ジャンル：social</li>
       <li>🤝 協力：ヨリバ</li>
     </ul>
   </div>
@@ -776,7 +765,7 @@
     </p>
     <ul class="text-xs text-gray-500 mb-3">
       <li>🎯 対象：誰でも参加OK</li>
-      <li>🏷 ジャンル：Community</li>
+      <li>🏷ジャンル：Community</li>
     </ul>
   </div>
 </div>
