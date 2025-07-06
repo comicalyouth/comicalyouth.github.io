@@ -32,12 +32,20 @@
       100% { opacity: 0; }
     }
 
-    html {
-      scroll-padding-top: 100px;
-    }
-    section[id] {
-      scroll-margin-top: 100px;
-    }
+   /* ───────── ヘッダー高さを変数管理 ───────── */
+   :root {
+     --header-height: 88px;        /* PC版のヘッダー高さ */
+   }
+   @media (max-width: 640px) {
+     :root {
+       --header-height: 60px;      /* モバイル版のヘッダー高さ */
+     }
+   }
+
+   /* ───────── 各セクションのスクロール補正クラス ───────── */
+   section.scroll-adjust {
+     scroll-margin-top: var(--header-height);
+   }
   </style>
 </head>
 <body class="bg-white text-gray-800 font-sans">
@@ -55,7 +63,7 @@
         <a href="#members" class="text-gray-600 hover:text-pink-500">こみかるメンバー</a>
         <a href="#regular" class="text-gray-600 hover:text-pink-500">いつもの活動</a>
         <a href="#projects" class="text-gray-600 hover:text-pink-500">みんなのプロジェクト</a>
-        <a href="#join" class="text-gray-600 hover:text-pink-500">開催場所</a>
+        <a href="#place" class="text-gray-600 hover:text-pink-500">開催場所</a>
         <a href="#contact" class="hidden">お問い合わせ</a>
       </nav>
     </div>
@@ -64,7 +72,7 @@
       <a href="#members" class="text-gray-600 hover:text-pink-500">こみかるメンバー</a>
       <a href="#regular" class="text-gray-600 hover:text-pink-500">いつもの活動</a>
       <a href="#projects" class="text-gray-600 hover:text-pink-500">みんなのプロジェクト</a>
-      <a href="#join" class="text-gray-600 hover:text-pink-500">開催場所</a>
+      <a href="#place" class="text-gray-600 hover:text-pink-500">開催場所</a>
       <a href="#contact" class="hidden">お問い合わせ</a>
     </div>
   </header>
@@ -92,6 +100,12 @@
     toggle.addEventListener('click', () => {
       menu.classList.toggle('hidden');
     });
+    // モバイルメニュー内のアンカーリンクをクリックしたら閉じる
+ document.querySelectorAll('#mobile-menu a[href^="#"]').forEach(link => {
+   link.addEventListener('click', () => {
+     mobileMenu.classList.add('hidden');
+   });
+ });
   </script>
 </body>
 </html>
@@ -99,7 +113,7 @@
 
 <!👇コンセプト>
 
-<section id="about" class="scroll-mt-[60px] sm:scroll-mt-[100px] lg:scroll-mt-[88px] py-20 px-6 bg-pink-50 text-gray-800">
+<section id="about" class="scroll-adjust py-20 px-6 bg-pink-50 text-gray-800">
   <div class="max-w-4xl mx-auto text-center">
     <h2 class="text-3xl sm:text-4xl font-bold mb-6">まちのなかに、若者が想い想いに過ごせる居場所を。</h2>
     <p class="text-base sm:text-lg text-gray-700 leading-relaxed">
@@ -150,7 +164,7 @@
   
 <!👇メンバー>
 </section>
-<section id="members" class="scroll-mt-[60px] sm:scroll-mt-[100px] lg:scroll-mt-[88px] bg-[#fffaf0] py-16 px-6 sm:px-12 text-gray-800">
+<section id="members" class="scroll-adjust bg-[#fffaf0] py-16 px-6 sm:px-12 text-gray-800">
   <div class="max-w-5xl mx-auto text-center mb-12">
     <h2 class="text-3xl sm:text-4xl font-bold text-[#5e4ab1] mb-4">こみかるユースの仲間たち</h2>
     <p class="text-base sm:text-lg text-gray-700 leading-relaxed">
@@ -195,7 +209,7 @@
 </section>
 
 <!👇いつもの活動 -->
-<section id="regular" class="scroll-mt-[60px] sm:scroll-mt-[100px] lg:scroll-mt-[88px] py-16 px-6 sm:px-12 bg-white text-gray-800">
+<section id="regular" class="scroll-adjust py-16 px-6 sm:px-12 bg-white text-gray-800">
   <h2 class="text-3xl font-bold text-pink-600 text-center mb-8">🌀 いつもの活動</h2>
   <p class="text-center text-gray-600 mb-10">
     こみかるで毎週・毎月おこなっている、続けて楽しい定番プログラムたち。
@@ -344,7 +358,7 @@
 </section>
   
 <!-- 👇 みんなのプロジェクト -->
-<section id="projects" class="scroll-mt-[60px] sm:scroll-mt-[100px] lg:scroll-mt-[88px] py-16 px-6 sm:px-12 bg-blue-50 text-gray-800">
+<section id="projects" class="scroll-adjust py-16 px-6 sm:px-12 bg-blue-50 text-gray-800">
   <h2 class="text-3xl font-bold text-pink-600 text-center mb-8">🚀 みんなのプロジェクト</h2>
   <p class="text-center text-gray-600 mb-10">
     「やってみたい！」から始まった、若者たちのチャレンジを紹介します。
@@ -785,7 +799,7 @@
 </section>
   
 <!👇開催場所>
-<section id="places" class="scroll-mt-[60px] sm:scroll-mt-[100px] lg:scroll-mt-[88px] py-16 px-6 sm:px-12 bg-pink-100 text-gray-800">
+<section id="place" class="scroll-adjust py-16 px-6 sm:px-12 bg-pink-100 text-gray-800">
   <div class="max-w-6xl mx-auto px-4">
     <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">開催場所</h2>
     <p class="text-center text-gray-600 mb-10">
