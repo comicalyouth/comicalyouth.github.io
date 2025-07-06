@@ -8,9 +8,10 @@
   <style>
     .slide {
       position: absolute;
-      width: 100%;
-      height: 100%;
-      background-size: cover;
+     width: 100%;
+     height: 100%;
+     /* 横幅に合わせて縦横比を保ちながら全体表示 */
+      background-size: contain;
       background-position: center;
       opacity: 0;
       animation: fade 45s linear infinite;
@@ -34,6 +35,15 @@
       20%  { opacity: 0; }
       100% { opacity: 0; }
     }
+     /* ↓ ここから追加（</style> の直前に貼り付け） */
+  html {
+    /* ヘッダー高さと同じ80px分、スクロール余白を確保 */
+    scroll-padding-top: 80px;
+  }
+  section[id] {
+    /* 各セクション先頭がヘッダーに隠れないように */
+    scroll-margin-top: 80px;
+  }
   </style>
 </head>
 <body class="bg-white text-gray-800 font-sans">
@@ -68,8 +78,9 @@
   </header>
 
   <!-- メインビジュアル（キャッチ＋スライド） -->
-  <main class="pt-[80px]">
-    <section class="relative h-screen text-center px-4" id="top">
+    <main class="pt-[80px]">
+  <!-- モバイル時は h-48（約192px）、タブレット以上でフル画面 -->
+   <section class="relative h-48 sm:h-screen text-center px-4" id="top">
       <!-- スライドショー背景 -->
       <div class="absolute inset-0">
         <div class="slide"></div>
