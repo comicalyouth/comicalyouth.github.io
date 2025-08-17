@@ -3,9 +3,149 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="こみかるユース福井 - まちのなかに、若者が想い想いに過ごせる居場所を。福井のショッピングモールで展開する若者コミュニティ。">
+  <meta name="keywords" content="こみかる,福井,若者,居場所,コミュニティ,イベント,チャレンジ">
+  
   <title>こみかるユース福井</title>
+  
+  <!-- Tailwind CSS for proper styling -->
   <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- クリティカルCSS - しっかりとしたレイアウト -->
   <style>
+    /* Reset & Base */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      line-height: 1.6;
+      color: #1f2937;
+      background: #fff;
+    }
+    
+    /* Variables */
+    :root {
+      --header-height: 88px;
+      --primary-color: #ec4899;
+      --secondary-color: #8b5cf6;
+      --text-primary: #1f2937;
+      --text-secondary: #6b7280;
+    }
+    
+    @media (max-width: 640px) {
+      :root {
+        --header-height: 60px;
+      }
+    }
+    
+    /* Header */
+    .header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: white;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      z-index: 50;
+    }
+    
+    .header-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.5rem;
+    }
+    
+    .logo {
+      height: 3.5rem;
+    }
+    
+    .nav {
+      display: none;
+      gap: 1.5rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+    
+    .nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+    
+    .nav a:hover {
+      color: var(--primary-color);
+    }
+    
+    @media (min-width: 640px) {
+      .nav {
+        display: flex;
+      }
+    }
+    
+    /* Mobile Menu */
+    .mobile-menu-toggle {
+      display: block;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.5rem;
+    }
+    
+    @media (min-width: 640px) {
+      .mobile-menu-toggle {
+        display: none;
+      }
+    }
+    
+    .mobile-menu {
+      display: none;
+      flex-direction: column;
+      gap: 0.5rem;
+      padding: 1.5rem;
+      padding-top: 0;
+    }
+    
+    .mobile-menu.active {
+      display: flex;
+    }
+    
+    .mobile-menu a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      padding: 0.5rem 0;
+      transition: color 0.2s ease;
+    }
+    
+    .mobile-menu a:hover {
+      color: var(--primary-color);
+    }
+    
+    /* Hero */
+    .hero {
+      position: relative;
+      min-height: 280px;
+      text-align: center;
+      padding: 1rem;
+      padding-top: 100px;
+    }
+    
+    @media (min-width: 640px) {
+      .hero {
+        height: 100vh;
+        padding-top: 80px;
+      }
+    }
+    
+    .hero-content {
+      position: absolute;
+      inset: 0;
+    }
+    
+    /* Slides */
     .slide {
       position: absolute;
       width: 100%;
@@ -17,905 +157,380 @@
       background-repeat: no-repeat;
       background-size: contain;
     }
-
+    
     @media (min-width: 640px) {
       .slide {
         background-size: cover;
       }
     }
-
+    
     @keyframes fade {
-      0%   { opacity: 0; }
-      5%   { opacity: 1; }
-      15%  { opacity: 1; }
-      20%  { opacity: 0; }
-      100% { opacity: 0; }
+      0%, 100% { opacity: 0; }
+      5% { opacity: 1; }
+      15% { opacity: 1; }
+      20% { opacity: 0; }
     }
-
-   /* ───────── ヘッダー高さを変数管理 ───────── */
-   :root {
-     --header-height: 88px;        /* PC版のヘッダー高さ */
-   }
-   @media (max-width: 640px) {
-     :root {
-       --header-height: 60px;      /* モバイル版のヘッダー高さ */
-     }
-   }
-
-   /* ───────── 各セクションのスクロール補正クラス ───────── */
-   section.scroll-adjust {
-     scroll-margin-top: var(--header-height);
-   }
+    
+    /* Section styles */
+    .section {
+      padding: 4rem 1.5rem;
+    }
+    
+    @media (min-width: 640px) {
+      .section {
+        padding: 4rem 3rem;
+      }
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+    
+    .section-title {
+      font-size: 1.875rem;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    
+    @media (min-width: 640px) {
+      .section-title {
+        font-size: 2.25rem;
+      }
+    }
+    
+    .section-subtitle {
+      text-align: center;
+      color: var(--text-secondary);
+      margin-bottom: 2.5rem;
+      font-size: 1rem;
+    }
+    
+    @media (min-width: 640px) {
+      .section-subtitle {
+        font-size: 1.125rem;
+      }
+    }
+    
+    /* Performance indicator */
+    .perf {
+      position: fixed;
+      top: 100px;
+      right: 10px;
+      background: #000;
+      color: #fff;
+      padding: 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      z-index: 999;
+      font-family: monospace;
+    }
+    
+    .perf.hide {
+      display: none;
+    }
+    
+    /* Fade-in animation */
+    @keyframes fadeIn {
+      from { 
+        opacity: 0; 
+        transform: translateY(20px); 
+      }
+      to { 
+        opacity: 1; 
+        transform: translateY(0); 
+      }
+    }
+    
+    .fade-in {
+      animation: fadeIn 0.5s ease-out;
+    }
+    
+    /* Loading state */
+    .loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      color: var(--text-secondary);
+    }
+    
+    .spinner {
+      border: 2px solid #f3f4f6;
+      border-top: 2px solid var(--primary-color);
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      animation: spin 1s linear infinite;
+      margin-right: 8px;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
   </style>
+  
+  <!-- プリロード -->
+  <link rel="preload" href="logo_header-01.svg" as="image">
+  <link rel="preload" href="comical1.jpg" as="image" importance="high">
 </head>
-<body class="bg-white text-gray-800 font-sans">
-  <!-- ヘッダー -->
-  <header class="fixed top-0 w-full bg-white shadow z-50">
-    <div class="flex items-center justify-between px-6 py-4">
-      <img src="logo_header-01.svg" alt="こみかるロゴ" class="h-14">
-      <button id="menu-toggle" class="sm:hidden focus:outline-none">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+
+<body>
+  <!-- Performance Indicator -->
+  <div id="perf-indicator" class="perf">
+    <div>🚀 Loading...</div>
+    <div id="perf-details">FCP: - | LCP: -</div>
+  </div>
+
+  <!-- Header - Instant Display -->
+  <header class="header">
+    <div class="header-content">
+      <img src="logo_header-01.svg" alt="こみかるロゴ" class="logo">
+      <button id="menu-toggle" class="mobile-menu-toggle" aria-label="メニュー" aria-expanded="false">
+        <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
         </svg>
       </button>
-      <nav id="menu" class="hidden sm:flex space-x-6 text-sm font-medium">
-        <a href="#about" class="text-gray-600 hover:text-pink-500">コンセプト</a>
-        <a href="#members" class="text-gray-600 hover:text-pink-500">こみかるメンバー</a>
-        <a href="#regular" class="text-gray-600 hover:text-pink-500">いつもの活動</a>
-        <a href="#projects" class="text-gray-600 hover:text-pink-500">みんなのプロジェクト</a>
-        <a href="#place" class="text-gray-600 hover:text-pink-500">開催場所</a>
-        <a href="#contact" class="hidden">お問い合わせ</a>
+      <nav class="nav">
+        <a href="#about">コンセプト</a>
+        <a href="#members">メンバー</a>
+        <a href="#regular">活動</a>
+        <a href="#projects">プロジェクト</a>
+        <a href="#place">場所</a>
       </nav>
     </div>
-    <div id="mobile-menu" class="sm:hidden hidden px-6 pb-4 flex flex-col space-y-2">
-      <a href="#about" class="text-gray-600 hover:text-pink-500">コンセプト</a>
-      <a href="#members" class="text-gray-600 hover:text-pink-500">こみかるメンバー</a>
-      <a href="#regular" class="text-gray-600 hover:text-pink-500">いつもの活動</a>
-      <a href="#projects" class="text-gray-600 hover:text-pink-500">みんなのプロジェクト</a>
-      <a href="#place" class="text-gray-600 hover:text-pink-500">開催場所</a>
-      <a href="#contact" class="hidden">お問い合わせ</a>
+    <div id="mobile-menu" class="mobile-menu">
+      <a href="#about">コンセプト</a>
+      <a href="#members">メンバー</a>
+      <a href="#regular">活動</a>
+      <a href="#projects">プロジェクト</a>
+      <a href="#place">場所</a>
     </div>
   </header>
 
-  <!-- メインビジュアル（スライドのみ） -->
-  <main class="pt-[100px] sm:pt-[80px]">
-    <section class="relative min-h-[280px] sm:h-screen text-center px-4" id="top">
-      <div class="absolute inset-0">
-        <div class="slide bg-center bg-no-repeat bg-contain sm:bg-cover" style="background-image:url('comical1.jpg'); animation-delay:0s;"></div>
-        <div class="slide bg-center bg-no-repeat bg-contain sm:bg-cover" style="background-image:url('comical2.jpg'); animation-delay:5s;"></div>
-        <div class="slide bg-center bg-no-repeat bg-contain sm:bg-cover" style="background-image:url('comical12.jpg'); animation-delay:10s;"></div>
-        <div class="slide bg-center bg-no-repeat bg-contain sm:bg-cover" style="background-image:url('comical10.jpg'); animation-delay:15s;"></div>
-        <div class="slide bg-center bg-no-repeat bg-contain sm:bg-cover" style="background-image:url('comical5.jpg'); animation-delay:20s;"></div>
-        <div class="slide bg-center bg-no-repeat bg-contain sm:bg-cover" style="background-image:url('comical6.jpg'); animation-delay:25s;"></div>
-        <div class="slide bg-center bg-no-repeat bg-contain sm:bg-cover" style="background-image:url('comical11.jpg'); animation-delay:30s;"></div>
-        <div class="slide bg-center bg-no-repeat bg-contain sm:bg-cover" style="background-image:url('comical4.jpg'); animation-delay:35s;"></div>
-        <div class="slide bg-center bg-no-repeat bg-contain sm:bg-cover" style="background-image:url('comical3.jpg'); animation-delay:40s;"></div>
-      </div>
-    </section>
+  <!-- Hero - Instant Display -->
+  <main class="hero" id="top">
+    <div class="hero-content">
+      <!-- First slide visible immediately -->
+      <div class="slide" style="background-image:url('comical1.jpg');opacity:1;animation-delay:0s"></div>
+      <div class="slide" style="background-image:url('comical2.jpg');animation-delay:5s"></div>
+      <div class="slide" style="background-image:url('comical12.jpg');animation-delay:10s"></div>
+      <div class="slide" style="background-image:url('comical10.jpg');animation-delay:15s"></div>
+      <div class="slide" style="background-image:url('comical5.jpg');animation-delay:20s"></div>
+      <div class="slide" style="background-image:url('comical6.jpg');animation-delay:25s"></div>
+      <div class="slide" style="background-image:url('comical11.jpg');animation-delay:30s"></div>
+      <div class="slide" style="background-image:url('comical4.jpg');animation-delay:35s"></div>
+      <div class="slide" style="background-image:url('comical3.jpg');animation-delay:40s"></div>
+    </div>
   </main>
 
+  <!-- Progressive Load Containers -->
+  <div id="about-container">
+    <div class="loading">
+      <div class="spinner"></div>
+      コンセプトを読み込み中...
+    </div>
+  </div>
+  
+  <div id="members-container">
+    <div class="loading">
+      <div class="spinner"></div>
+      メンバー情報を読み込み中...
+    </div>
+  </div>
+  
+  <div id="activities-container">
+    <div class="loading">
+      <div class="spinner"></div>
+      活動情報を読み込み中...
+    </div>
+  </div>
+  
+  <div id="places-container">
+    <div class="loading">
+      <div class="spinner"></div>
+      場所情報を読み込み中...
+    </div>
+  </div>
+  
+  <div id="footer-container">
+    <div class="loading">
+      <div class="spinner"></div>
+      フッターを読み込み中...
+    </div>
+  </div>
+
+  <!-- Core JavaScript -->
   <script>
-   const toggle     = document.getElementById('menu-toggle');
-   const mobileMenu = document.getElementById('mobile-menu');
-    toggle.addEventListener('click', () => {
-      mobileMenu.classList.toggle('hidden');
-    });
-   // モバイルメニュー内のアンカーリンクをクリックしたら閉じる
-   document.querySelectorAll('#mobile-menu a[href^="#"]').forEach(link => {
-     link.addEventListener('click', () => {
-       mobileMenu.classList.add('hidden');
-     });
-   });
-  </script>
-</body>
-</html>
+    // Performance measurement
+    window.perfStart = performance.now();
+    window.perfMetrics = {
+      navigationStart: performance.now(),
+      firstPaint: null,
+      firstContentfulPaint: null,
+      largestContentfulPaint: null,
+      domContentLoaded: null,
+      loadComplete: null
+    };
 
+    function updatePerf() {
+      const fcp = window.perfMetrics.firstContentfulPaint;
+      const lcp = window.perfMetrics.largestContentfulPaint;
+      const perfDetails = document.getElementById('perf-details');
+      if (perfDetails) {
+        const fcpText = fcp ? Math.round(fcp) + 'ms' : '-';
+        const lcpText = lcp ? Math.round(lcp) + 'ms' : '-';
+        perfDetails.textContent = `FCP: ${fcpText} | LCP: ${lcpText}`;
+      }
+    }
 
-<!👇コンセプト>
-
-<section id="about" class="scroll-adjust py-20 px-6 bg-pink-50 text-gray-800">
-  <div class="max-w-4xl mx-auto text-center">
-    <h2 class="text-3xl sm:text-4xl font-bold mb-6">まちのなかに、若者が想い想いに過ごせる居場所を。</h2>
-    <p class="text-base sm:text-lg text-gray-700 leading-relaxed">
-      こみかるは、福井のショッピングモールなどを舞台に、若者の「やってみたい」を応援する<br>
-      出入り自由な新しい居場所です。
-    </p>
-    <p class="text-base sm:text-lg text-gray-700 leading-relaxed mt-4">
-      学校や家庭では見つけにくい“リアルなつながり”を、地域とともに育てていく。<br>
-      そんな空間を、若者自身の手で、少しずつ広げています。
-    </p>
-  </div>
-</section>
-
-  <div class="max-w-5xl mx-auto mt-16 space-y-16">
-    <div class="bg-white shadow rounded-xl p-6">
-      <h3 class="text-2xl font-semibold text-pink-500 mb-3">Community｜若者のための居場所</h3>
-      <p class="text-base sm:text-lg leading-relaxed">
-        中高生・大学生など、さまざまな年代が集まって、ただしゃべったり、一緒にごはんを食べたり、時には一緒に勉強したり。<br>
-        ぬいぐるみ会やおしゃべり会など、ゆるい交流の中から自然とつながりが生まれる場所です。
-      </p>
-    </div>
-
-    <div class="bg-white shadow rounded-xl p-6">
-      <h3 class="text-2xl font-semibold text-orange-500 mb-3">Social｜学校外のリアルな体験</h3>
-      <p class="text-base sm:text-lg leading-relaxed">
-        赤ちゃん抱っこ体験や、社長とのクロストーク、プログラミング、VR体験、ポッドキャスト配信など。<br>
-        学校では得られないような体験を、地域の大人や企業とつながって実現しています。
-      </p>
-    </div>
-
-    <div class="bg-white shadow rounded-xl p-6">
-      <h3 class="text-2xl font-semibold text-purple-500 mb-3">Medical｜ちょっとした悩みも相談できる</h3>
-      <p class="text-base sm:text-lg leading-relaxed">
-        助産師・保健師・看護師・理学療法士など、医療の専門職がこみかるに関わり、<br>
-        「性のこと」「体のこと」「心のこと」など、ふだん話しにくいテーマも気軽に話せる機会をつくっています。<br>
-        血圧測定による健康対話、医療機器体験、LGBTQ+などの対話も行い、誰もが安心して参加できる空気を大切にしています。
-      </p>
-    </div>
-
-    <div class="bg-white shadow rounded-xl p-6">
-      <h3 class="text-2xl font-semibold text-blue-500 mb-3">チャレンジ応援も</h3>
-      <p class="text-base sm:text-lg leading-relaxed">
-        こみかるは、若者が「やってみたい」と言ったことに寄り添い、企画・場所・人のつながりを通じて実行までサポートします。<br>
-        相談から1on1、企業とのマッチングまで、いろんな形でチャレンジに伴走しています。
-      </p>
-    </div>
-  </div>
-  
-<!👇メンバー>
-</section>
-<section id="members" class="scroll-adjust bg-[#fffaf0] py-16 px-6 sm:px-12 text-gray-800">
-  <div class="max-w-5xl mx-auto text-center mb-12">
-    <h2 class="text-3xl sm:text-4xl font-bold text-[#5e4ab1] mb-4">こみかるユースの仲間たち</h2>
-    <p class="text-base sm:text-lg text-gray-700 leading-relaxed">
-      それぞれの“好き”や“想い”を持ち寄って活動する、高校生・大学生・社会人のゆるやかなチームです。
-    </p>
-  </div>
-    <p class="text-base sm:text-lg text-gray-700 leading-relaxed">
-      コミュニティナース、地域おこし協力隊、福井県庁職員、看護師、保健師、助産師、理学療法士、IT企業創業者、<br class="hidden sm:inline">キャリアコンサルタント、フリータレント、大学院生、大学生、高校生など。<br>
-      さまざまな個性を持つメンバー(約50名）が、ちょっとずつ力を合わせて運営するコミュニティです。
-    </p>
-    <p class="mt-6 text-sm text-gray-500">
-      現在の拠点：<strong class="text-[#ff7b63]">エルパ（福井市）／ベル（福井市）／ヴィオ（大野市）／アルプラザ武生／アルプラザ敦賀</strong> など
-    </p>
-  </div>
-
-  <div class="grid gap-8 sm:grid-cols-2 md:grid-cols-3 max-w-6xl mx-auto mt-12">
-    <!-- 付箋風カード：加藤 -->
-    <div class="bg-yellow-100 rounded-xl shadow-md p-6 text-center rotate-[-2deg]">
-      <img src="member_kato.jpg" alt="加藤瑞穂" class="mx-auto mb-4 rounded-full w-24 h-24 object-cover border-4 border-white shadow">
-      <h3 class="text-lg font-bold text-gray-800">加藤 瑞穂（みーちゃん）</h3>
-      <p class="text-sm text-pink-500 font-semibold">共同代表</p>
-      <p class="text-sm text-gray-600">看護師／保健師／コミュニティナース<br>株式会社AllINUS代表取締役<br>#趣味は看護 #SKY-HI</p>
-    </div>
-
-    <!-- 付箋風カード：塚原 -->
-    <div class="bg-pink-100 rounded-xl shadow-md p-6 text-center rotate-[2deg]">
-      <img src="member_tsukahara.jpg" alt="塚原康平" class="mx-auto mb-4 rounded-full w-24 h-24 object-cover border-4 border-white shadow">
-      <h3 class="text-lg font-bold text-gray-800">塚原 康平（つかちゃん）</h3>
-      <p class="text-sm text-pink-500 font-semibold">共同代表</p>
-      <p class="text-sm text-gray-600">地域おこし協力隊／チャレンジ応援コーディネーター<br>#福井で転生 #聴く #将棋</p>
-    </div>
-
-    <!-- 付箋風カード：サンプル -->
-    <div class="bg-blue-100 rounded-xl shadow-md p-6 text-center rotate-[-1deg]">
-      <img src="member_terai.jpg" alt="メンバー" class="mx-auto mb-4 rounded-full w-24 h-24 object-cover border-4 border-white shadow">
-      <h3 class="text-lg font-bold text-gray-800">寺井 優介（寺井COD）</h3>
-      <p class="text-sm text-gray-500">福井県庁／チャレンジ応援ディレクター<br>#サウナ #ランニング #Mr.children</p>
-    </div>
-
-    <!-- 他のメンバーは同じ形式で追加可 -->
-    </div>
-</section>
-
-<!👇いつもの活動 -->
-<section id="regular" class="scroll-adjust py-16 px-6 sm:px-12 bg-white text-gray-800">
-  <h2 class="text-3xl font-bold text-pink-600 text-center mb-8">🌀 いつもの活動</h2>
-  <p class="text-center text-gray-600 mb-10">
-    こみかるで毎週・毎月おこなっている、続けて楽しい定番プログラムたち。
-  </p>
- <div class="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-4">
-   
-    <!-- ご飯会 -->
-    <div class="bg-gray-50 rounded-2xl shadow p-4 h-full flex flex-col justify-between">
-      <div class="h-40 bg-gray-200 rounded mb-4 overflow-hidden flex items-center justify-center">
-        <img src="comical1.jpg" alt="ご飯会の様子" class="w-full h-full object-cover">
-      </div>
-      <h3 class="text-lg font-semibold text-gray-800 mb-1">🥢 こみかるご飯会</h3>
-      <p class="text-sm text-gray-600 mb-2">毎月1回みんなでご飯を食べながら、初対面の人とも自然とつながれる人気企画。22歳以下には「500円食事券」or「食事提供」！<br>詳細はInstaramをチェック！</p>
-      <ul class="text-xs text-gray-500">
-        <li>📍場所： エルパ / ベル / ヴィオ / アルプラザ敦賀</li>
-        <li>🎯対象： 22歳以下、大人も参加OK</li>
-        <li>🏷ジャンル：Community / Social</li>
-      </ul>
-    </div>
-
-    <!-- VR体験 -->
-    <div class="bg-gray-50 rounded-2xl shadow p-4 h-full flex flex-col justify-between">
-      <div class="h-40 bg-gray-200 rounded mb-4 overflow-hidden flex items-center justify-center">
-        <img src="comical4.jpg" alt="VR体験の様子" class="w-full h-full object-cover">
-      </div>
-      <h3 class="text-lg font-semibold text-blue-600 mb-1">⚡VR体験</h3>
-      <p class="text-sm text-gray-600 mb-2">VRゴーグルで、学校ではできない刺激的な体験。</p>
-      <ul class="text-xs text-gray-500">
-        <li>📍場所： エルパ（不定期）</li>
-        <li>🎯対象： 小学生～大学生</li>
-        <li>🏷ジャンル：Community</li>
-      </ul>
-    </div>
-
-    <!-- チャレンジ相談室 -->
-    <div class="bg-gray-50 rounded-2xl shadow p-4 h-full flex flex-col justify-between">
-      <div class="h-40 bg-gray-200 rounded mb-4 overflow-hidden flex items-center justify-center">
-        <img src="soudan2.jpg" alt="チャレンジ相談室の様子" class="w-full h-full object-cover">
-      </div>
-      <h3 class="text-lg font-semibold text-green-600 mb-1">🚀 チャレンジ相談室</h3>
-      <p class="text-sm text-gray-600 mb-2">「やってみたい！」に、大人が本気で応える場所。イベントづくりを一緒にサポート。</p>
-      <ul class="text-xs text-gray-500">
-        <li>📍場所： 全拠点</li>
-        <li>🎯対象： 中高生・大学生</li>
-        <li>🏷ジャンル：Social</li>
-      </ul>
-    </div>
-
-    <!-- こみかる手芸部 -->
-    <div class="bg-gray-50 rounded-2xl shadow p-4 h-full flex flex-col justify-between">
-      <div class="h-40 bg-gray-200 rounded mb-4 overflow-hidden flex items-center justify-center">
-        <img src="syugei.jpg" alt="こみかる手芸部の様子" class="w-full h-full object-cover">
-      </div>
-      <h3 class="text-lg font-semibold text-purple-600 mb-1">🧵 こみかる手芸部</h3>
-      <p class="text-sm text-gray-600 mb-2">リボンやフェルトで飾り付けをしながら、ゆるっとつながる時間。</p>
-      <ul class="text-xs text-gray-500">
-        <li>📍場所： エルパ</li>
-        <li>🎯対象： 小学生〜大人</li>
-        <li>🏷ジャンル：Community</li>
-      </ul>
-    </div>
-
-    <!-- セグウェイ体験 -->
-    <div class="bg-gray-50 rounded-2xl shadow p-4 h-full flex flex-col justify-between">
-      <div class="h-40 bg-gray-200 rounded mb-4 overflow-hidden flex items-center justify-center">
-        <img src="segwey.jpg" alt="セグウェイ体験の様子" class="w-full h-full object-cover">
-      </div>
-      <h3 class="text-lg font-semibold text-blue-600 mb-1">🛹 セグウェイ体験</h3>
-      <p class="text-sm text-gray-600 mb-2">セグウェイを使って、ショッピングモールで滑走！</p>
-      <ul class="text-xs text-gray-500">
-        <li>📍場所： ヴィオ（不定期）</li>
-        <li>🎯対象： 小学生～大学生</li>
-        <li>🏷ジャンル：Community / Social</li>
-      </ul>
-    </div>
-
-    <!-- チェックイン -->
-    <div class="bg-gray-50 rounded-2xl shadow p-4 h-full flex flex-col justify-between">
-      <div class="h-40 bg-gray-200 rounded mb-4 overflow-hidden flex items-center justify-center">
-        <img src="checkin3.jpg" alt="チェックイン" class="w-full h-full object-cover">
-      </div>
-      <h3 class="text-lg font-semibold text-yellow-600 mb-1">✔️ こみかるチェックイン</h3>
-      <p class="text-sm text-gray-600 mb-2">受付をして、こみかるスタンプを集めよう！6個集めたらこみかるシール2枚プレゼント</p>
-      <ul class="text-xs text-gray-500">
-        <li>📍場所： こみかる全拠点</li>
-        <li>🎯対象： 全年齢</li>
-        <li>🏷ジャンル：Community / Social</li>
-      </ul>
-    </div>
-
-    <!-- キーホルダー -->
-    <div class="bg-gray-50 rounded-2xl shadow p-4 h-full flex flex-col justify-between">
-      <div class="h-40 bg-gray-200 rounded mb-4 overflow-hidden flex items-center justify-center">
-        <img src="keyholder.jpg" alt="キーホルダー" class="w-full h-full object-cover">
-      </div>
-      <h3 class="text-lg font-semibold text-yellow-600 mb-1">🔑 オリジナルキーホルダー</h3>
-      <p class="text-sm text-gray-600 mb-2">レーザープリンターを使ってオリジナルキーホルダーを作ろう！</p>
-      <ul class="text-xs text-gray-500">
-        <li>📍場所： エルパ / ヴィオ</li>
-        <li>🎯対象： 小学生～高校生</li>
-        <li>🏷ジャンル：Community / Social</li>
-      </ul>
-    </div>
-
-    <!-- 本の交換市 -->
-    <div class="bg-gray-50 rounded-2xl shadow p-4 h-full flex flex-col justify-between">
-      <div class="h-40 bg-gray-200 rounded mb-4 overflow-hidden flex items-center justify-center">
-        <img src="comical7.jpg" alt="本の交換市" class="w-full h-full object-cover">
-      </div>
-      <h3 class="text-lg font-semibold text-yellow-600 mb-1">📚 本の交換市</h3>
-      <p class="text-sm text-gray-600 mb-2">もう読まなくなった本を持ってきて、別の本と交換しよう！</p>
-      <ul class="text-xs text-gray-500">
-        <li>📍場所： エルパ</li>
-        <li>🎯対象： 全年齢</li>
-        <li>🏷ジャンル：Community / Social</li>
-        <li>🤝 協力：akushu</li>
-      </ul>
-   <a href="https://www.instagram.com/keyanswer_tsuruga" target="_blank"
-         class="inline-block px-3 py-1 text-white bg-pink-500 hover:bg-pink-600 rounded-full text-xs font-semibold transition self-start">
-        ▶︎ akushuの詳細はこちらから
-      </a>
-    </div>
-   
-   <!-- クイズ体験 -->
-    <div class="bg-gray-50 rounded-2xl shadow p-4 h-full flex flex-col justify-between">
-      <div>
-        <div class="h-40 bg-gray-200 rounded mb-4 overflow-hidden flex items-center justify-center">
-          <img src="kuiz.jpg" alt="クイズ" class="w-full h-full object-cover">
-        </div>
-        <h3 class="text-lg font-semibold text-blue-600 mb-1">❔ こみかるクイズ大会</h3>
-        <p class="text-sm text-gray-600 mb-2">参加者でチームを組んでわいわい楽しめる、敦賀こみかるの名物企画。</p>
-        <ul class="text-xs text-gray-500 mb-3">
-          <li>📍場所： アルプラザ敦賀</li>
-          <li>🎯対象： 全年齢</li>
-          <li>🏷ジャンル：Community / Social</li>
-          <li>🤝 協力：Key Answer</li>
-        </ul>
-      </div>
-      <a href="https://www.instagram.com/keyanswer_tsuruga" target="_blank"
-         class="inline-block px-3 py-1 text-white bg-pink-500 hover:bg-pink-600 rounded-full text-xs font-semibold transition self-start">
-        ▶︎ Key Answerのinstagramはこちらから
-      </a>
-    </div>
-
-  </div>
-</section>
-  
-<!-- 👇 みんなのプロジェクト -->
-<section id="projects" class="scroll-adjust py-16 px-6 sm:px-12 bg-blue-50 text-gray-800">
-  <h2 class="text-3xl font-bold text-pink-600 text-center mb-8">🚀 みんなのプロジェクト</h2>
-  <p class="text-center text-gray-600 mb-10">
-    「やってみたい！」から始まった、若者たちのチャレンジを紹介します。
-  </p>
-  <div class="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-4">
-
-   <!-- 福井で転生 -->
-    <div class="bg-gray-50 rounded-2xl shadow p-4 h-full flex flex-col justify-between">
-      <div>
-        <div class="h-40 bg-gray-50 rounded mb-4 overflow-hidden flex items-center justify-center">
-          <img src="fukuitensei.png" alt="福井で転生" class="w-auto h-40 mx-auto object-contain">
-        </div>
-        <h3 class="text-lg font-semibold text-gray-800 mb-1">🎧 福井で転生～都会を離れた移住者が出会った、ちょっとおもしろすぎる人たち～<br>（ポッドキャスト）</h3>
-        <p class="text-sm text-gray-600 mb-2">
-          都会を離れた地域おこし協力隊のつかちゃんが、福井で出会ったちょっとおもしろすぎる人たちと対話する人生探求型ポットキャスト。<br>「仕事」「生い立ち」「ターニングポイント」のキーワードからゲストの人生を深堀ります。
-        </p>
-        <ul class="text-xs text-gray-500 mb-3">
-          <li>🎯対象： 全年齢</li>
-          <li>🏷ジャンル：Social</li>
-        </ul>
-      </div>
-      <a href="https://open.spotify.com/show/33JAGOyhB36fDWyj7a7udC?si=1c4f2c1d16534a60" target="_blank" rel="noopener noreferrer"
-         class="inline-block px-3 py-1 text-white bg-pink-500 hover:bg-pink-600 rounded-full text-xs font-semibold transition self-start">
-        ▶︎ 視聴はこちらから
-      </a>
-    </div>
-
-    <!-- ひよっこ -->
-    <div class="bg-gray-50 rounded-2xl shadow p-4 h-full flex flex-col justify-between">
-      <div>
-        <div class="h-40 bg-gray-200 rounded mb-4 overflow-hidden flex items-center justify-center">
-          <img src="hiyokko.jpg" alt="ひよっこ" class="w-full h-full object-cover">
-        </div>
-        <h3 class="text-lg font-semibold text-gray-800 mb-1">🐤 ひよっこ</h3>
-        <p class="text-sm text-gray-600 mb-2">20代がゆるくつながるコミュニティ。月1回交流イベントを中心に活動中。</p>
-        <ul class="text-xs text-gray-500 mb-3">
-          <li>📍場所： 福井駅周辺</li>
-          <li>🎯対象： 20代</li>
-          <li>🏷ジャンル：Community</li>
-          <li>🤝 協力：ひよっこ</li>
-        </ul>
-      </div>
-      <a href="https://www.instagram.com/hiyokko20_29" target="_blank" rel="noopener noreferrer"
-         class="inline-block px-3 py-1 text-white bg-pink-500 hover:bg-pink-600 rounded-full text-xs font-semibold transition self-start">
-        ▶︎ instagramはこちらから
-      </a>
-    </div>
-
-    <!-- おふざけ -->
-    <div class="bg-gray-50 rounded-2xl shadow p-4 h-full flex flex-col justify-between">
-      <div>
-        <div class="h-40 bg-gray-200 rounded mb-4 overflow-hidden flex items-center justify-center">
-          <img src="ofuzake.jpg" alt="おふざけ" class="w-full h-full object-cover">
-        </div>
-        <h3 class="text-lg font-semibold text-gray-800 mb-1">🍶 おふ酒（おふざけ）</h3>
-        <p class="text-sm text-gray-600 mb-2">20代が始めた日本酒制作プロジェクト。酒米づくりから、酒蔵での日本酒製作まで！田植えから瓶詰めまで、体験と学びが詰まった”おふざけ”時間。</p>
-        <ul class="text-xs text-gray-500 mb-3">
-          <li>📍場所： 田んぼ：坂井市 / 酒造：福井市</li>
-          <li>🎯対象： 全年齢</li>
-          <li>🏷ジャンル：Community / Social</li>
-        </ul>
-      </div>
-      <a href="https://www.instagram.com/ofuzake_2025" target="_blank" rel="noopener noreferrer"
-         class="inline-block px-3 py-1 text-white bg-pink-500 hover:bg-pink-600 rounded-full text-xs font-semibold transition self-start">
-        ▶︎ instagramはこちらから
-      </a>
-    </div>
-
-    <!-- Yorido（仮） -->
-    <div class="bg-gray-50 rounded-2xl shadow p-4 h-full flex flex-col justify-between">
-      <div>
-        <div class="h-40 bg-gray-200 rounded mb-4 overflow-hidden flex items-center justify-center">
-          <img src="yorido.jpg" alt="Yorido" class="w-full h-full object-cover">
-        </div>
-        <h3 class="text-lg font-semibold text-gray-800 mb-1">🏠 Yorido</h3>
-        <p class="text-sm text-gray-600 mb-2">「経験格差をなくし、未来の可能性を広げる」ために、ひとり親の家庭支援を中心に活動中。塾の運営もスタート！</p>
-        <ul class="text-xs text-gray-500">
-          <li>🎯対象： ひとり親</li>
-          <li>🏷ジャンル：Community / Social</li>
-        </ul>
-      </div>
-      <a href="https://www.instagram.com/yorido_official?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer"
-         class="inline-block px-3 py-1 text-white bg-pink-500 hover:bg-pink-600 rounded-full text-xs font-semibold transition self-start">
-        ▶︎ instagramはこちらから
-      </a>
-    </div>
-
-
-    <!-- 平成レトロ -->
-    <div class="bg-gray-50 rounded-2xl shadow p-4 h-full flex flex-col justify-between">
-      <div>
-        <div class="h-40 bg-gray-50 rounded mb-4 overflow-hidden flex items-center justify-center">
-          <img src="heisei2.jpg" alt="平成レトロ" class="w-auto h-40 mx-auto object-contain">
-        </div>
-        <h3 class="text-lg font-semibold text-gray-800 mb-1">🍸 平成レトロ展覧会</h3>
-        <p class="text-sm text-gray-600 mb-2">高校生による”まちなかハイスクール”の一企画。平成レトログッズの展覧会＆オークション！売り上げはチャリティーしました</p>
-        <ul class="text-xs text-gray-500 mb-3">
-          <li>📍場所： 福井駅前</li>
-          <li>🎯対象： 中高生</li>
-          <li>🏷ジャンル：Community / Social</li>
-        </ul>
-      </div>
-      <a href="https://www.instagram.com/heisei.retoro__exhibition?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer"
-         class="inline-block px-3 py-1 text-white bg-pink-500 hover:bg-pink-600 rounded-full text-xs font-semibold transition self-start">
-        ▶︎ instagramはこちらから
-      </a>
-    </div>
-
-  <!-- 粘土 -->
-    <div class="bg-gray-50 rounded-2xl shadow p-4 h-full flex flex-col justify-between">
-      <div>
-        <div class="h-40 bg-gray-50 rounded mb-4 overflow-hidden flex items-center justify-center">
-          <img src="nendo.jpg" alt="粘土" class="w-full h-full object-cover">
-        </div>
-        <h3 class="text-lg font-semibold text-Blue-600 mb-1">🧱 親子で楽しむ粘土ワークショップ</h3>
-        <p class="text-sm text-gray-800 mb-2">学生団体FUaNによる粘土ワークショップをエルパで開催！</p>
-        <ul class="text-xs text-gray-500 mb-3">
-          <li>🎯対象： 小学生～大人</li>
-          <li>🏷ジャンル：Community / Social</li>
-        </ul>
-      </div>
-      <a href="https://www.instagram.com/fuan296?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="target="_blank" rel="noopener noreferrer"
-         class="inline-block px-3 py-1 text-white bg-pink-500 hover:bg-pink-600 rounded-full text-xs font-semibold transition self-start">
-        ▶︎ 学生団体FuaNのinstagramはこちらから
-      </a>
-    </div>
-
- <!-- ぬいぐるみ -->
-<div class="bg-gray-50 rounded-2xl shadow p-4 h-full flex flex-col justify-between">
-  <div>
-    <div class="h-40 bg-gray-50 rounded mb-4 overflow-hidden flex items-center justify-center">
-      <img src="nuigurumi.jpg" alt="ぬいぐるみ" class="w-full h-full object-cover">
-    </div>
-    <h3 class="text-lg font-semibold text-gray-800 mb-1">🧸 ぬいぐるみお話会！</h3>
-    <p class="text-sm text-gray-600 mb-2">みんなでぬいぐるみを持ち寄って、ぬいぐるみ愛を語ろう！</p>
-    <ul class="text-xs text-gray-500 mb-3">
-      <li>🎯対象： 小学生～大人</li>
-      <li>🏷ジャンル：Community</li>
-    </ul>
-  </div>
-</div>
-
-<!-- クレーンゲーム体験会 -->
-<div class="bg-gray-50 rounded-2xl shadow p-4 h-full flex flex-col justify-between">
-  <div>
-    <div class="h-40 bg-gray-50 rounded mb-4 overflow-hidden flex items-center justify-center">
-      <img src="ufo.jpg" alt="クレーン🎮" class="w-full h-full object-cover">
-    </div>
-    <h3 class="text-lg font-semibold text-gray-800 mb-1">🎮 クレーンゲーム講習会</h3>
-    <p class="text-sm text-gray-600 mb-2">エルパwakuwakuさんとコラボして、クレーンゲームの講習会を実施！</p>
-    <ul class="text-xs text-gray-500 mb-3">
-      <li>📍場所： エルパ</li>
-      <li>🎯対象： 中学生～大学生</li>
-      <li>🏷ジャンル：Community / Social</li>
-    </ul>
-  </div>
-</div>
-
-<!-- welbeing -->
-<div class="bg-gray-50 rounded-2xl shadow p-4 h-full flex flex-col justify-between">
-  <div>
-    <div class="h-40 bg-gray-50 rounded mb-4 overflow-hidden flex items-center justify-center">
-      <img src="welbeing.jpg" alt="welbeing" class="w-full h-full object-cover">
-    </div>
-    <h3 class="text-lg font-semibold text-gray-800 mb-1">🏞️ ウェルビーイングを語ろう</h3>
-    <p class="text-sm text-gray-600 mb-2">福井県庁の幸福実感実感ディレクターとウェルビーイングコーディネーター（地域おこし協力隊）とコラボして、ウェルビーイングの哲学対話を実施。</p>
-    <ul class="text-xs text-gray-500 mb-3">
-      <li>📍場所： エルパ</li>
-      <li>🎯対象： 中学生～大人</li>
-      <li>🏷ジャンル：Community / Social</li>
-    </ul>
-  </div>
-</div>
-
-<!-- モール会議 -->
-<div class="bg-gray-50 rounded-2xl shadow p-4 h-full flex flex-col justify-between">
-  <div>
-    <div class="h-40 bg-gray-50 rounded mb-4 overflow-hidden flex items-center justify-center">
-      <img src="wakuwaku.jpg" alt="モール会議" class="w-full h-full object-cover">
-    </div>
-    <h3 class="text-lg font-semibold text-gray-800 mb-1">💭 わくわくモール会議！</h3>
-    <p class="text-sm text-gray-600 mb-2">大野ヴィオの空きスペースの活用法を中学生～大人まで自由な意見をぶつけ合うブレスト会議！総勢60名が参加！</p>
-    <ul class="text-xs text-gray-500 mb-3">
-      <li>📍場所： ヴィオ</li>
-      <li>🎯対象： 小学生～大人</li>
-      <li>🏷ジャンル：Community / Social</li>
-    </ul>
-  </div>
-</div>
-
-<!-- お勉強会 -->
-<div class="bg-gray-50 rounded-2xl shadow p-4 h-full flex flex-col justify-between">
-  <div>
-    <div class="h-40 bg-gray-50 rounded mb-4 overflow-hidden flex items-center justify-center">
-      <img src="benkyou.jpg" alt="勉強会" class="w-auto h-40 mx-auto object-contain">
-    </div>
-    <h3 class="text-lg font-semibold text-gray-800 mb-1">📘 こみかる勉強会！</h3>
-    <p class="text-sm text-gray-600 mb-2">テスト前には色んな学校の高校生が集まって勉強会！わからないところは教え合おう</p>
-    <ul class="text-xs text-gray-500 mb-3">
-      <li>📍場所： ベル</li>
-      <li>🎯対象： 中学生～大学生</li>
-      <li>🏷ジャンル：Community</li>
-    </ul>
-  </div>
-</div>
-
-    <!-- エキラジ -->
-    <div class="bg-gray-50 rounded-2xl shadow p-4 h-full flex flex-col justify-between">
-      <div>
-        <div class="h-40 bg-gray-50 rounded mb-4 overflow-hidden flex items-center justify-center">
-          <img src="ekiradi.png" alt="エキラジ" class="w-auto h-40 mx-auto object-contain">
-        </div>
-        <h3 class="text-lg font-semibold text-gray-800 mb-1">🎧 エキセントリックラジオ（ポッドキャスト）</h3>
-        <p class="text-sm text-gray-600 mb-2">
-          福井県内のエキセントリックな人を紹介するポットキャスト
-        </p>
-        <ul class="text-xs text-gray-500 mb-3">
-          <li>🎯対象： 全年齢</li>
-          <li>🏷ジャンル：Social</li>
-        </ul>
-      </div>
-      <a href="https://open.spotify.com/show/4nVMOxm2lzAKaYitoli3VT?si=6595a43c60a34627" target="_blank" rel="noopener noreferrer"
-         class="inline-block px-3 py-1 text-white bg-pink-500 hover:bg-pink-600 rounded-full text-xs font-semibold transition self-start">
-        ▶︎ 視聴はこちらから
-      </a>
-    </div>
-
-     <!-- trip -->
-    <div class="bg-gray-50 rounded-2xl shadow p-4 h-full flex flex-col justify-between">
-      <div>
-        <div class="h-40 bg-gray-50 rounded mb-4 overflow-hidden flex items-center justify-center">
-          <img src="trip.jpg" alt="トリップ" class="w-auto h-40 mx-auto object-contain">
-        </div>
-        <h3 class="text-lg font-semibold text-gray-800 mb-1">🚲　Trip Duction </h3>
-        <p class="text-sm text-gray-600 mb-2">
-           Trip（旅）×Introduction（紹介）をテーマに、高校生が福井県内の写真や映像を撮って、紹介します！
-        </p>
-        <ul class="text-xs text-gray-500 mb-3">
-          <li>🎯対象： 全年齢</li>
-          <li>🏷ジャンル：Social</li>
-        </ul>
-      </div>
-      <a href="https://www.instagram.com/reel/DJ_jK3GTrtQ/?utm_source=ig_web_button_share_sheet&igsh=MzRlODBiNWFlZA==" target="_blank" rel="noopener noreferrer"
-         class="inline-block px-3 py-1 text-white bg-pink-500 hover:bg-pink-600 rounded-full text-xs font-semibold transition self-start">
-        ▶︎ エルパの紹介動画はこちらから
-      </a>
-    </div>
-
-      <!-- 自転車 -->
-    <div class="bg-gray-50 rounded-2xl shadow p-4 h-full flex flex-col justify-between">
-      <div>
-        <div class="h-40 bg-gray-50 rounded mb-4 overflow-hidden flex items-center justify-center">
-          <img src="bike2.png" alt="トリップ" class="w-auto h-40 mx-auto object-contain">
-        </div>
-        <h3 class="text-lg font-semibold text-gray-800 mb-1">🚲　Trip Duction 自転車同好会</h3>
-        <p class="text-sm text-gray-600 mb-2">
-         高校生が、自転車で福井県内をどこまでもサイクリング！併せて動画撮影も！
-        </p>
-        <ul class="text-xs text-gray-500 mb-3">
-          <li>🎯対象： 全年齢</li>
-          <li>🏷ジャンル：Social</li>
-        </ul>
-      </div>
-      <a href="https://www.instagram.com/tripductionjitennsya?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer"
-         class="inline-block px-3 py-1 text-white bg-pink-500 hover:bg-pink-600 rounded-full text-xs font-semibold transition self-start">
-        ▶︎ instagramはこちらから
-      </a>
-    </div>
-
-       <!-- 地方創生ライター -->
-    <div class="bg-gray-50 rounded-2xl shadow p-4 h-full flex flex-col justify-between">
-      <div>
-        <div class="h-40 bg-gray-50 rounded mb-4 overflow-hidden flex items-center justify-center">
-          <img src="rino.png" alt="rino" class="w-auto h-40 mx-auto object-contain">
-        </div>
-        <h3 class="text-lg font-semibold text-gray-800 mb-1">🗒️ りの|あわら市地域創生ライター</h3>
-        <p class="text-sm text-gray-600 mb-2">
-         卒業までの半年、高校3年生の挑戦🔥<br>高校生の目線で、あわらの”まちの空気”や"人のぬくもり”を切り取ります
-        </p>
-        <ul class="text-xs text-gray-500 mb-3">
-          <li>🎯対象： 全年齢</li>
-          <li>🏷ジャンル：Social</li>
-        </ul>
-      </div>
-      <a href="https://www.instagram.com/katteni_awara?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer"target="_blank"
-         class="inline-block px-3 py-1 text-white bg-pink-500 hover:bg-pink-600 rounded-full text-xs font-semibold transition self-start">
-        ▶︎ instagramはこちらから
-      </a>
-    </div>
-
-     <!-- 女子の生態 -->
-    <div class="bg-gray-50 rounded-2xl shadow p-4 h-full flex flex-col justify-between">
-      <div>
-        <div class="h-40 bg-gray-50 rounded mb-4 overflow-hidden flex items-center justify-center">
-          <img src="zyoshi.jpg" alt="女子の生態" class="w-auto h-40 mx-auto object-contain">
-        </div>
-        <h3 class="text-lg font-semibold text-gray-800 mb-1">👀 女子の生態について話す会</h3>
-        <p class="text-sm text-gray-600 mb-2">
-         助産師まきちゃんと一緒に、老若男女問わず”女子の生態”を学んでみよう！
-        </p>
-        <ul class="text-xs text-gray-500 mb-3">
-          <li>🎯対象：誰でも参加OK！</li>
-          <li>🏷ジャンル：Social / Medical</li>
-        </ul>
-      </div>
-    </div>
-
-       <!-- LGBTQ -->
-    <div class="bg-gray-50 rounded-2xl shadow p-4 h-full flex flex-col justify-between">
-      <div>
-        <div class="h-40 bg-gray-50 rounded mb-4 overflow-hidden flex items-center justify-center">
-          <img src="LGBTQ.jpg" alt="LGBTQ" class="w-auto h-40 mx-auto object-contain">
-        </div>
-        <h3 class="text-lg font-semibold text-gray-800 mb-1">💭 LGBTQ+深堀り会</h3>
-        <p class="text-sm text-gray-600 mb-2">
-         こみかる高校生3人が企画・運営する、こみかるイベント！<br>LGBTQ+ってすんごい身近にいるし、SOGIEって200種類あんねん
-        </p>
-        <ul class="text-xs text-gray-500 mb-3">
-          <li>🎯対象：誰でも参加OK！</li>
-          <li>🏷ジャンル：Social / Medical</li>
-        </ul>
-      </div>
-    </div>
+    // Measure Web Vitals
+    if ('PerformanceObserver' in window) {
+      // First Contentful Paint
+      new PerformanceObserver((list) => {
+        for (const entry of list.getEntries()) {
+          if (entry.name === 'first-contentful-paint') {
+            window.perfMetrics.firstContentfulPaint = entry.startTime;
+            updatePerf();
+          }
+        }
+      }).observe({entryTypes: ['paint']});
       
-       <!-- 20代 -->
-    <div class="bg-gray-50 rounded-2xl shadow p-4 h-full flex flex-col justify-between">
-      <div>
-        <div class="h-40 bg-gray-50 rounded mb-4 overflow-hidden flex items-center justify-center">
-          <img src="20dai.jpg" alt="20代" class="w-auto h-40 mx-auto object-contain">
-        </div>
-        <h3 class="text-lg font-semibold text-gray-800 mb-1">🧸 高校生×20代の交流会！</h3>
-        <p class="text-sm text-gray-600 mb-2">
-         武生こみかるに参加した高校生が企画！<br>高校生×20代でお互いに気になることを質問し合う交流会！
-        </p>
-        <ul class="text-xs text-gray-500 mb-3">
-          <li>🎯対象：高校生,20代</li>
-          <li>🏷ジャンル：community / social</li>
-          <li>🤝協力：a.cafe</li>
-        </ul>
-      </div>
-     </div>
+      // Largest Contentful Paint
+      new PerformanceObserver((list) => {
+        const entries = list.getEntries();
+        const lastEntry = entries[entries.length - 1];
+        window.perfMetrics.largestContentfulPaint = lastEntry.startTime;
+        updatePerf();
+      }).observe({entryTypes: ['largest-contentful-paint']});
+    }
 
-     <!-- 現役ナース① -->
-    <div class="bg-gray-50 rounded-2xl shadow p-4 h-full flex flex-col justify-between">
-      <div>
-        <div class="h-40 bg-gray-50 rounded mb-4 overflow-hidden flex items-center justify-center">
-          <img src="medical3.jpg" alt="現役ナース①" class="w-auto h-40 mx-auto object-contain">
-        </div>
-        <h3 class="text-lg font-semibold text-gray-800 mb-1">💉 現役ナースと話そう in大野</h3>
-        <p class="text-sm text-gray-600 mb-2">
-          大野こみかるに岡山県のナースが出張！現役ナースと話して、聴診器に耳を当てて。医療機器を触れるイベント開催！
-        </p>
-        <ul class="text-xs text-gray-500 mb-3">
-          <li>🎯対象：誰でも参加OK</li>
-          <li>🏷ジャンル：Social / Medical</li>
-        </ul>
-      </div>
-    </div>
+    // Critical functionality - immediate execution
+    document.addEventListener('DOMContentLoaded', function() {
+      window.perfMetrics.domContentLoaded = performance.now();
+      
+      // Mobile menu functionality
+      const toggle = document.getElementById('menu-toggle');
+      const mobileMenu = document.getElementById('mobile-menu');
+      
+      if (toggle && mobileMenu) {
+        toggle.addEventListener('click', () => {
+          mobileMenu.classList.toggle('active');
+          const isOpen = mobileMenu.classList.contains('active');
+          toggle.setAttribute('aria-expanded', isOpen);
+        });
+        
+        // Close menu on link click
+        mobileMenu.addEventListener('click', (e) => {
+          if (e.target.tagName === 'A') {
+            mobileMenu.classList.remove('active');
+            toggle.setAttribute('aria-expanded', 'false');
+          }
+        });
+      }
+      
+      // Start progressive loading
+      setTimeout(startProgressiveLoad, 100);
+    });
+    
+    // Progressive load function
+    function startProgressiveLoad() {
+      console.log('🚀 Progressive load started');
+      
+      // Load components in order of importance
+      const loadQueue = [
+        { name: 'about', delay: 0 },
+        { name: 'members', delay: 200 },
+        { name: 'activities', delay: 400 },
+        { name: 'places', delay: 600 },
+        { name: 'footer', delay: 800 }
+      ];
+      
+      loadQueue.forEach(item => {
+        setTimeout(() => loadComponent(item.name), item.delay);
+      });
+      
+      // Hide performance indicator after loading
+      setTimeout(() => {
+        const perfIndicator = document.getElementById('perf-indicator');
+        if (perfIndicator) perfIndicator.classList.add('hide');
+      }, 3000);
+    }
+    
+    // Component loader with proper error handling
+    async function loadComponent(name) {
+      const container = document.getElementById(`${name}-container`);
+      if (!container) return;
+      
+      try {
+        const response = await fetch(`components/${name}.html`);
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+        
+        const html = await response.text();
+        container.innerHTML = html;
+        container.classList.add('fade-in');
+        
+        // Execute any inline scripts
+        const scripts = container.querySelectorAll('script');
+        scripts.forEach(script => {
+          if (script.textContent.trim()) {
+            try {
+              new Function(script.textContent)();
+            } catch(e) {
+              console.warn(`Script execution error in ${name}:`, e);
+            }
+          }
+        });
+        
+        console.log(`✅ ${name} component loaded successfully`);
+        
+      } catch (error) {
+        console.warn(`⚠️ Failed to load ${name} component:`, error.message);
+        
+        // Show error state
+        container.innerHTML = `
+          <div class="section bg-red-50">
+            <div class="container text-center">
+              <p class="text-red-600">このセクションの読み込みに失敗しました</p>
+              <button onclick="loadComponent('${name}')" class="mt-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
+                再試行
+              </button>
+            </div>
+          </div>
+        `;
+      }
+    }
 
-    <!-- 現役ナース2 -->
-    <div class="bg-gray-50 rounded-2xl shadow p-4 h-full flex flex-col justify-between">
-      <div>
-        <div class="h-40 bg-gray-50 rounded mb-4 overflow-hidden flex items-center justify-center">
-          <img src="cpr.jpg" alt="現役ナース②" class="w-auto h-40 mx-auto object-contain">
-        </div>
-        <h3 class="text-lg font-semibold text-gray-800 mb-1">💉 現役ナースと話そう in福井</h3>
-        <p class="text-sm text-gray-600 mb-2">
-          東京のコミュニティナースがCPRディスコを持ってにエルパに登場！流れる曲に合わせて心肺蘇生を学ぼう！
-        </p>
-        <ul class="text-xs text-gray-500 mb-3">
-          <li>🎯対象：誰でも参加OK</li>
-          <li>🏷ジャンル：Social / Medical</li>
-        </ul>
-      </div>
-    </div>
+    // Load completion tracking
+    window.addEventListener('load', () => {
+      window.perfMetrics.loadComplete = performance.now();
+      const totalTime = window.perfMetrics.loadComplete - window.perfMetrics.navigationStart;
+      console.log(`⚡ Total page load time: ${Math.round(totalTime)}ms`);
+    });
 
-      <!-- クロスセッション -->
-    <div class="bg-gray-50 rounded-2xl shadow p-4 h-full flex flex-col justify-between">
-      <div>
-        <div class="h-40 bg-gray-50 rounded mb-4 overflow-hidden flex items-center justify-center">
-          <img src="session.jpg" alt="クロスセッション" class="w-auto h-40 mx-auto object-contain">
-        </div>
-        <h3 class="text-lg font-semibold text-gray-800 mb-1">🏭　社長と話そう！リアルクロスセッション</h3>
-        <p class="text-sm text-gray-600 mb-2">
-          OOKABE GLASS(株)、(株)ホリタ、(株)NYUTECの社長がこみかるに登場！社長と若者が気軽に話すリアルセッション
-        </p>
-        <ul class="text-xs text-gray-500 mb-3">
-          <li>🎯対象：中学生～大学生</li>
-          <li>🏷ジャンル：Social</li>
-          <li>🤝協力：FWI（福井県若者情報発信局）</li>
-        </ul>
-      </div>
-      <a href="https://fwi.fukui.jp/" target="_blank" rel="noopener noreferrer"
-         class="inline-block px-3 py-1 text-white bg-pink-500 hover:bg-pink-600 rounded-full text-xs font-semibold transition self-start">
-        ▶︎ FWIの詳細はこちらから
-      </a>
-    </div>
-
-  <!-- 星空モクテル -->
-<div class="bg-gray-50 rounded-2xl shadow p-4 h-full flex flex-col justify-between">
-  <div>
-    <div class="h-40 bg-gray-50 rounded mb-4 overflow-hidden flex items-center justify-center">
-      <img src="hosi.jpg" alt="mokutel" class="w-auto h-40 mx-auto object-contain">
-    </div>
-    <h3 class="text-lg font-semibold text-gray-800 mb-1">☆ 星空モクテルNIGHT</h3>
-    <p class="text-sm text-gray-600 mb-2">
-      福井の高校生が主催する星空モクテルnight✨🍹<br>屋内ではノンアルコールジュース(モクテル)の販売、屋上では天体観測を行いました！！
-    </p>
-    <ul class="text-xs text-gray-500 mb-3">
-      <li>🎯 対象：誰でも参加OK</li>
-      <li>🏷ジャンル：social</li>
-      <li>🤝 協力：ヨリバ</li>
-    </ul>
-  </div>
-  <a href="https://www.instagram.com/hosizora_mokuteru?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer"
-     class="inline-block px-3 py-1 text-white bg-pink-500 hover:bg-pink-600 rounded-full text-xs font-semibold transition self-start">
-    ▶︎ instagramはこちらから
-     </a>
-</div>
-
-<!-- 東京こみかる -->
-<div class="bg-gray-50 rounded-2xl shadow p-4 h-full flex flex-col justify-between">
-  <div>
-    <div class="h-40 bg-gray-50 rounded mb-4 overflow-hidden flex items-center justify-center">
-      <img src="comical6.jpg" alt="Tokyoこみかる" class="w-auto h-40 mx-auto object-contain">
-    </div>
-    <h3 class="text-lg font-semibold text-gray-800 mb-1">🗼 Tokyoこみかる</h3>
-    <p class="text-sm text-gray-600 mb-2">
-      福井で始まったこみかるが、東京出張！東京にいる福井の若者と交流会
-    </p>
-    <ul class="text-xs text-gray-500 mb-3">
-      <li>🎯 対象：誰でも参加OK</li>
-      <li>🏷ジャンル：Community</li>
-    </ul>
-  </div>
-</div>
-
-</section>
-  
-<!👇開催場所>
-<section id="place" class="scroll-adjust py-16 px-6 sm:px-12 bg-pink-100 text-gray-800">
-  <div class="max-w-6xl mx-auto px-4">
-    <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">開催場所</h2>
-    <p class="text-center text-gray-600 mb-10">
-      参加無料！申し込み不要！途中参加・途中退出OK！<br>
-      いつでもふらっと遊びに来てね
-    </p>
-
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-
-      <!-- エルパ -->
-      <div class="bg-white rounded-xl shadow p-4">
-        <div class="relative h-40 rounded-lg overflow-hidden mb-3">
-          <img src="comical1.jpg" alt="エルパ拠点写真" class="w-full h-full object-cover">
-          <img src="logo_lpa.jpg" alt="エルパロゴ"
-               class="absolute bottom-2 right-2 max-h-12 max-w-12 h-auto w-auto bg-white rounded-full p-1 shadow object-contain">
-        </div>
-        <h3 class="text-lg font-bold text-pink-500 mb-1">ラブリーパートナーエルパ（福井市）</h3>
-        <p class="text-sm text-gray-700">2Fフードコート内「Mint」付近で開催。出入り自由で、誰でもふらっと立ち寄れます。
-          <br><br>開催日：毎週金曜日17:30~19:30</p>
-      </div>
-
-      <!-- VIO -->
-      <div class="bg-white rounded-xl shadow p-4">
-        <div class="relative h-40 rounded-lg overflow-hidden mb-3">
-          <img src="vio.jpg" alt="VIO拠点写真" class="w-full h-full object-cover">
-          <img src="logo_vio.svg" alt="VIOロゴ"
-               class="absolute bottom-2 right-2 max-h-12 max-w-12 h-auto w-auto bg-white rounded-full p-1 shadow object-contain">
-        </div>
-        <h3 class="text-lg font-bold text-blue-500 mb-1">ショッピングモールVIO（大野市）</h3>
-        <p class="text-sm text-gray-700">VIOのサブコートで開催。大野地域のメンバーが中心となり、子ども～大人まで多年代が大集合！
-          <br><br>開催日：毎週木曜日17:00~19:00</p>
-      </div>
-
-      <!-- ベル -->
-      <div class="bg-white rounded-xl shadow p-4">
-        <div class="relative h-40 rounded-lg overflow-hidden mb-3">
-          <img src="bell.jpg" alt="ベル拠点写真" class="w-full h-full object-cover">
-          <img src="logo_bell.png" alt="ベルロゴ"
-               class="absolute bottom-2 right-2 max-h-12 max-w-12 h-auto w-auto bg-white rounded-full p-1 shadow object-contain">
-        </div>
-        <h3 class="text-lg font-bold text-orange-500 mb-1">ショッピングシティ ベル（福井市）</h3>
-        <p class="text-sm text-gray-700">2Fフードコートで開催。毎月1回ご飯会を開催！22歳以下には、500円券をプレゼント！
-          <br><br>開催日：毎月最終水曜日17:30~19:30</p>
-      </div>
-
-      <!-- アルプラザ敦賀 -->
-      <div class="bg-white rounded-xl shadow p-4">
-        <div class="relative h-40 rounded-lg overflow-hidden mb-3">
-          <img src="tsuruga.jpg" alt="敦賀拠点写真" class="w-full h-full object-cover">
-          <img src="logo_heiwado.gif" alt="敦賀ロゴ"
-               class="absolute bottom-2 right-2 max-h-12 max-w-12 h-auto w-auto bg-white rounded-full p-1 shadow object-contain">
-        </div>
-        <h3 class="text-lg font-bold text-green-500 mb-1">アルプラザ敦賀（敦賀市）</h3>
-        <p class="text-sm text-gray-700">6Fフードコート展望エリアにて開催。嶺南の高校生～大学生・大人の交流場所として大集合！
-        <br><br>毎月開催 詳細はInstagramをチェック！</p>
-      </div>
-
-      <!-- アルプラザ武生 -->
-      <div class="bg-white rounded-xl shadow p-4">
-        <div class="relative h-40 rounded-lg overflow-hidden mb-3">
-          <img src="takefu.jpg" alt="武生拠点写真" class="w-full h-full object-cover">
-          <img src="logo_heiwado.gif" alt="武生ロゴ"
-               class="absolute bottom-2 right-2 max-h-12 max-w-12 h-auto w-auto bg-white rounded-full p-1 shadow object-contain">
-        </div>
-        <h3 class="text-lg font-bold text-yellow-500 mb-1">アルプラザ武生（越前市）</h3>
-        <p class="text-sm text-gray-700">1Fフードコートで開催。武生高校生が探究活動と連携して、企画を実施！
-         <br><br>不定期開催 詳細はInstagramをチェック！</p>
-      </div>
-
-      <!-- 三国高校 -->
-      <div class="bg-white rounded-xl shadow p-4">
-        <div class="relative h-40 rounded-lg overflow-hidden mb-3">
-          <img src="mikuni.jpg" alt="三国高校の様子" class="w-full h-full object-cover">
-        </div>
-        <h3 class="text-lg font-bold text-purple-500 mb-1">三国高校（坂井市）</h3>
-        <p class="text-sm text-gray-700">こみかるの出張活動として、三国高校内で「ふらっと放課後」として開催！
-         <br><br>不定期開催 詳細はInstagramをチェック！</p>
-      </div>
-
-     <!-- 永平寺こみかる（予定） -->
-<div class="bg-white rounded-xl shadow p-4 border border-dashed border-gray-300">
-  <div class="relative h-40 rounded-lg overflow-hidden mb-3">
-    <img src="comicallogo.png" alt="永平寺準備中" class="w-full h-full object-cover">
-  </div>
-  <h3 class="text-lg font-bold text-gray-600 mb-1">永平寺こみかる（開設予定）</h3>
-  <p class="text-sm text-gray-600">現在準備中！オープンに向けて地域と調整中です。</p>
-</div>
-
-<!-- 美浜こみかる（予定） -->
-<div class="bg-white rounded-xl shadow p-4 border border-dashed border-gray-300">
-  <div class="relative h-40 rounded-lg overflow-hidden mb-3">
-    <img src="comicallogo.png" alt="美浜準備中" class="w-full h-full object-cover">
-  </div>
-  <h3 class="text-lg font-bold text-gray-600 mb-1">美浜こみかる（開設予定）</h3>
-  <p class="text-sm text-gray-600">現在準備中！オープンに向けて地域と調整中です。</p>
-</div>
-
-<!-- 鯖江こみかる（予定） -->
-<div class="bg-white rounded-xl shadow p-4 border border-dashed border-gray-300">
-  <div class="relative h-40 rounded-lg overflow-hidden mb-3">
-    <img src="comicallogo.png" alt="鯖江準備中" class="w-full h-full object-cover">
-     </div>
-  <h3 class="text-lg font-bold text-gray-600 mb-1">鯖江こみかる（開設予定）</h3>
-  <p class="text-sm text-gray-600">現在準備中！オープンに向けて地域と調整中です。</p>
-</div>
-
-</section>
-
-<!-- フッター -->
-<footer class="bg-white border-t border-gray-200 py-6 mt-12 text-center text-sm text-gray-500">
-  <p class="mb-2">© 2025 こみかるユース福井</p>
-  <a href="https://www.instagram.com/comicalyouth/" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-pink-500 hover:underline">
-    <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5A4.25 4.25 0 0 0 7.75 20.5h8.5a4.25 4.25 0 0 0 4.25-4.25v-8.5A4.25 4.25 0 0 0 16.25 3.5h-8.5zm8.75 2.25a.75.75 0 0 1 .102 1.493L16.5 7.25a.75.75 0 0 1-.102-1.493l.102-.007zm-4.75 1.75a5.25 5.25 0 1 1 0 10.5a5.25 5.25 0 0 1 0-10.5zm0 1.5a3.75 3.75 0 1 0 0 7.5a3.75 3.75 0 0 0 0-7.5z"/></svg>
-    @comicalyouth
-  </a>
-</footer>
-  
+    // Smooth scrolling for anchor links
+    document.addEventListener('click', (e) => {
+      if (e.target.tagName === 'A' && e.target.getAttribute('href')?.startsWith('#')) {
+        e.preventDefault();
+        const targetId = e.target.getAttribute('href').substring(1);
+        const targetElement = document.getElementById(targetId);
+        
+        if (targetElement) {
+          const headerHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-height')) || 88;
+          const targetPosition = targetElement.offsetTop - headerHeight;
+          
+          window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+          });
+        }
+      }
+    });
+  </script>
 </body>
 </html>

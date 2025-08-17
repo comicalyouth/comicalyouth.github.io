@@ -1,0 +1,124 @@
+{
+  "title": "🌀 いつもの活動",
+  "subtitle": "こみかるで毎週・毎月おこなっている、続けて楽しい定番プログラムたち。",
+  "activities": [
+    {
+      "id": "gohan_kai",
+      "title": "🥢 こみかるご飯会",
+      "titleColor": "gray-800",
+      "image": "comical1.jpg",
+      "description": "毎月1回みんなでご飯を食べながら、初対面の人とも自然とつながれる人気企画。22歳以下には「500円食事券」or「食事提供」！<br>詳細はInstaramをチェック！",
+      "meta": [
+        "📍場所： エルパ / ベル / ヴィオ / アルプラザ敦賀",
+        "🎯対象： 22歳以下、大人も参加OK",
+        "🏷ジャンル：Community / Social"
+      ]
+    },
+    {
+      "id": "vr_experience",
+      "title": "⚡VR体験",
+      "titleColor": "blue-600",
+      "image": "comical4.jpg",
+      "description": "VRゴーグルで、学校ではできない刺激的な体験。",
+      "meta": [
+        "📍場所： エルパ（不定期）",
+        "🎯対象： 小学生～大学生",
+        "🏷ジャンル：Community"
+      ]
+    },
+    {
+      "id": "challenge_consultation",
+      "title": "🚀 チャレンジ相談室",
+      "titleColor": "green-600",
+      "image": "soudan2.jpg",
+      "description": "「やってみたい！」に、大人が本気で応える場所。イベントづくりを一緒にサポート。",
+      "meta": [
+        "📍場所： 全拠点",
+        "🎯対象： 中高生・大学生",
+        "🏷ジャンル：Social"
+      ]
+    },
+    {
+      "id": "craft_club",
+      "title": "🧵 こみかる手芸部",
+      "titleColor": "purple-600",
+      "image": "syugei.jpg",
+      "description": "リボンやフェルトで飾り付けをしながら、ゆるっとつながる時間。",
+      "meta": [
+        "📍場所： エルパ",
+        "🎯対象： 小学生〜大人",
+        "🏷ジャンル：Community"
+      ]
+    },
+    {
+      "id": "segway_experience",
+      "title": "🛹 セグウェイ体験",
+      "titleColor": "blue-600",
+      "image": "segwey.jpg",
+      "description": "セグウェイを使って、ショッピングモールで滑走！",
+      "meta": [
+        "📍場所： ヴィオ（不定期）",
+        "🎯対象： 小学生～大学生",
+        "🏷ジャンル：Community / Social"
+      ]
+    },
+    {
+      "id": "checkin",
+      "title": "✔️ こみかるチェックイン",
+      "titleColor": "yellow-600",
+      "image": "checkin3.jpg",
+      "description": "受付をして、こみかるスタンプを集めよう！6個集めたらこみかるシール2枚プレゼント",
+      "meta": [
+        "📍場所： こみかる全拠点",
+        "🎯対象： 全年齢",
+        "🏷ジャンル：Community / Social"
+      ]
+    },
+    {
+      "id": "keyholder",
+      "title": "🔑 オリジナルキーホルダー",
+      "titleColor": "yellow-600",
+      "image": "keyholder.jpg",
+      "description": "レーザープリンターを使ってオリジナルキーホルダーを作ろう！",
+      "meta": [
+        "📍場所： エルパ / ヴィオ",
+        "🎯対象： 小学生～高校生",
+        "🏷ジャンル：Community / Social"
+      ]
+    },
+    {
+      "id": "book_exchange",
+      "title": "📚 本の交換市",
+      "titleColor": "yellow-600",
+      "image": "comical7.jpg",
+      "description": "もう読まなくなった本を持ってきて、別の本と交換しよう！",
+      "meta": [
+        "📍場所： エルパ",
+        "🎯対象： 全年齢",
+        "🏷ジャンル：Community / Social",
+        "🤝 協力：akushu"
+      ],
+      "link": {
+        "text": "▶︎ akushuの詳細はこちらから",
+        "url": "https://www.instagram.com/keyanswer_tsuruga"
+      }
+    },
+    {
+      "id": "quiz_tournament",
+      "title": "❔ こみかるクイズ大会",
+      "titleColor": "blue-600",
+      "image": "kuiz.jpg",
+      "description": "参加者でチームを組んでわいわい楽しめる、敦賀こみかるの名物企画。",
+      "meta": [
+        "📍場所： アルプラザ敦賀",
+        "🎯対象： 全年齢",
+        "🏷ジャンル：Community / Social",
+        "🤝 協力：Key Answer"
+      ],
+      "link": {
+        "text": "▶︎ Key Answerのinstagramはこちらから",
+        "url": "https://www.instagram.com/keyanswer_tsuruga"
+      }
+    }
+  ]
+}

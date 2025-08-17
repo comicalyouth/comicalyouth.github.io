@@ -1,0 +1,93 @@
+<!-- メンバー紹介セクション -->
+<section id="members" class="section scroll-adjust bg-[#fffaf0]">
+  <div class="container text-center mb-12">
+    <h2 class="section-title text-[#5e4ab1]" id="members-title">Loading...</h2>
+    <p class="section-subtitle" id="members-subtitle">Loading...</p>
+    <p class="text-base text-gray-700 leading-relaxed" id="members-description">Loading...</p>
+    <p class="mt-6 text-sm text-gray-500" id="members-locations">Loading...</p>
+  </div>
+
+  <div id="members-grid" class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 container-large">
+    <!-- メンバーカードはJavaScriptで動的生成 -->
+  </div>
+
+  <!-- メンバー加入案内 -->
+  <div id="recruitment-section" class="recruitment-section">
+    <!-- 募集セクションはJavaScriptで動的生成 -->
+  </div>
+</section>
+
+<script>
+// メンバーデータの読み込みと表示
+async function loadMembers() {
+  try {
+    const response = await fetch('./data/members.json');
+    const data = await response.json();
+    
+    // タイトルと説明を設定
+    document.getElementById('members-title').textContent = data.title;
+    document.getElementById('members-subtitle').textContent = data.subtitle;
+    document.getElementById('members-description').innerHTML = data.description;
+    document.getElementById('members-locations').innerHTML = `現在の拠点：<strong class="text-[#ff7b63]">${data.locations.replace('現在の拠点：', '')}</strong>`;
+    
+    // メンバーカードを生成
+    const membersGrid = document.getElementById('members-grid');
+    membersGrid.innerHTML = '';
+    
+    data.members.forEach(member => {
+      const memberCard = document.createElement('div');
+      memberCard.className = `member-card bg-${member.bgColor} ${member.rotation}`;
+      
+      const imageHtml = member.image 
+        ? `<img src="${member.image}" alt="${member.name}" class="member-avatar">`
+        : `<div class="member-avatar bg-gray-200 flex items-center justify-center">
+             <span class="text-gray-500 text-sm">写真準備中</span>
+           </div>`;
+      
+      memberCard.innerHTML = `
+        ${imageHtml}
+        <h3 class="member-name">${member.name}</h3>
+        <p class="member-role text-${member.roleColor} font-semibold">${member.role}</p>
+        <p class="member-description">${member.description}</p>
+      `;
+      
+      membersGrid.appendChild(memberCard);
+    });
+    
+    // 募集セクションを生成
+    const recruitmentSection = document.getElementById('recruitment-section');
+    const recruitment = data.recruitment;
+    
+    const categoriesHtml = recruitment.categories.map(category => `
+      <div class="recruitment-category">
+        <div class="recruitment-category-icon">${category.icon}</div>
+        <p class="recruitment-category-title">${category.title}</p>
+        <p class="recruitment-category-subtitle">${category.subtitle}</p>
+      </div>
+    `).join('');
+    
+    recruitmentSection.innerHTML = `
+      <h3 class="recruitment-title">${recruitment.title}</h3>
+      <p class="recruitment-description">${recruitment.description}</p>
+      <div class="recruitment-categories">
+        ${categoriesHtml}
+      </div>
+      <p class="text-sm text-gray-600 mb-4">${recruitment.footer}</p>
+      <a href="${recruitment.ctaUrl}" target="_blank" rel="noopener noreferrer" 
+         class="btn btn-primary">
+        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+          <path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5A4.25 4.25 0 0 0 7.75 20.5h8.5a4.25 4.25 0 0 0 4.25-4.25v-8.5A4.25 4.25 0 0 0 16.25 3.5h-8.5zm8.75 2.25a.75.75 0 0 1 .102 1.493L16.5 7.25a.75.75 0 0 1-.102-1.493l.102-.007zm-4.75 1.75a5.25 5.25 0 1 1 0 10.5a5.25 5.25 0 0 1 0-10.5zm0 1.5a3.75 3.75 0 1 0 0 7.5a3.75 3.75 0 0 0 0-7.5z"/>
+        </svg>
+        ${recruitment.ctaText}
+      </a>
+    `;
+    
+  } catch (error) {
+    console.error('Error loading members:', error);
+    document.getElementById('members-title').textContent = 'メンバー情報を読み込めませんでした';
+  }
+}
+
+// ページ読み込み時にメンバーデータを読み込み
+document.addEventListener('DOMContentLoaded', loadMembers);
+</script>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="こみかるユース福井 - まちのなかに、若者が想い想いに過ごせる居場所を。福井のショッピングモールで展開する若者コミュニティ。">
+  <meta name="keywords" content="こみかる,福井,若者,居場所,コミュニティ,イベント,チャレンジ">
+  <meta property="og:title" content="こみかるユース福井">
+  <meta property="og:description" content="まちのなかに、若者が想い想いに過ごせる居場所を。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://comicalyouth.github.io">
+  
+  <title>こみかるユース福井</title>
+  
+  <!-- External CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/animations.css">
+  
+  <!-- Preload critical resources -->
+  <link rel="preload" href="logo_header-01.svg" as="image">
+  <link rel="preload" href="comical1.jpg" as="image">
+</head>
+
+<body class="bg-white text-gray-800 font-sans">
+  <!-- ヘッダー -->
+  <div id="header-container">
+    <!-- Header component will be loaded here -->
+  </div>
+
+  <!-- メインビジュアル -->
+  <div id="hero-container">
+    <!-- Hero component will be loaded here -->
+  </div>
+
+  <!-- コンセプト -->
+  <div id="about-container">
+    <!-- About component will be loaded here -->
+  </div>
+
+  <!-- メンバー紹介 -->
+  <div id="members-container">
+    <!-- Members component will be loaded here -->
+  </div>
+
+  <!-- いつもの活動 -->
+  <div id="activities-container">
+    <!-- Activities component will be loaded here -->
+  </div>
+
+  <!-- みんなのプロジェクト -->
+  <div id="projects-container">
+    <!-- Projects component will be loaded here -->
+  </div>
+
+  <!-- 開催場所 -->
+  <div id="places-container">
+    <!-- Places component will be loaded here -->
+  </div>
+
+  <!-- フッター -->
+  <div id="footer-container">
+    <!-- Footer component will be loaded here -->
+  </div>
+
+  <!-- Loading indicator -->
+  <div id="loading-indicator" class="fixed inset-0 bg-white flex items-center justify-center z-50">
+    <div class="text-center">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-500 mx-auto mb-4"></div>
+      <p class="text-gray-600">読み込み中...</p>
+    </div>
+  </div>
+
+  <!-- External JavaScript -->
+  <script src="js/menu.js"></script>
+  <script src="js/slideshow.js"></script>
+  <script src="js/main.js"></script>
+  
+  <!-- Component Loading Script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', async function() {
+      console.log('🚀 こみかるユース福井 - モジュラーサイト開始');
+      
+      // コンポーネントの読み込み設定
+      const components = [
+        { path: 'components/header.html', target: 'header-container' },
+        { path: 'components/hero.html', target: 'hero-container' },
+        { path: 'components/about.html', target: 'about-container' },
+        { path: 'components/members.html', target: 'members-container' },
+        { path: 'components/activities.html', target: 'activities-container' },
+        { path: 'components/places.html', target: 'places-container' },
+        { path: 'components/footer.html', target: 'footer-container' }
+      ];
+
+      try {
+        // 全コンポーネントを並行して読み込み
+        await window.componentLoader.loadComponents(components);
+        
+        // ローディング表示を非表示
+        const loadingIndicator = document.getElementById('loading-indicator');
+        if (loadingIndicator) {
+          window.utils.fadeOut(loadingIndicator, 300);
+        }
+        
+        console.log('✅ 全コンポーネント読み込み完了');
+        
+      } catch (error) {
+        console.error('❌ コンポーネント読み込みエラー:', error);
+        
+        // エラー時はローディングを隠してフォールバック表示
+        const loadingIndicator = document.getElementById('loading-indicator');
+        if (loadingIndicator) {
+          loadingIndicator.innerHTML = `
+            <div class="text-center">
+              <p class="text-red-600 mb-4">読み込みに失敗しました</p>
+              <button onclick="location.reload()" class="btn btn-primary">
+                再読み込み
+              </button>
+            </div>
+          `;
+        }
+      }
+    });
+
+    // パフォーマンス監視
+    window.addEventListener('load', function() {
+      const loadTime = performance.now();
+      console.log(`⚡ ページ読み込み完了: ${Math.round(loadTime)}ms`);
+    });
+
+    // エラーハンドリング
+    window.addEventListener('error', function(e) {
+      console.error('🚨 JavaScript エラー:', e.error);
+    });
+
+    // Service Worker registration (if available)
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/sw.js')
+          .then(registration => console.log('SW registered'))
+          .catch(error => console.log('SW registration failed'));
+      });
+    }
+  </script>
+
+  <!-- Analytics (Google Analytics など、必要に応じて) -->
+  <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script> -->
+</body>
+</html>
