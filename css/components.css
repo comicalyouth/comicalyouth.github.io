@@ -1,0 +1,324 @@
+/* ===============================================
+   コンポーネント専用スタイル
+   =============================================== */
+
+/* ヒーローセクション */
+.hero {
+  position: relative;
+  min-height: 280px;
+  text-align: center;
+  padding: 1rem;
+  padding-top: 100px;
+}
+
+@media (min-width: 640px) {
+  .hero {
+    height: 100vh;
+    padding-top: 80px;
+  }
+}
+
+.hero-content {
+  position: absolute;
+  inset: 0;
+}
+
+/* メンバーカード */
+.member-card {
+  background: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  text-align: center;
+  transition: transform 0.2s ease;
+}
+
+.member-card:hover {
+  transform: translateY(-2px);
+}
+
+.member-card.rotate-1 { transform: rotate(1deg); }
+.member-card.rotate-2 { transform: rotate(2deg); }
+.member-card.rotate--1 { transform: rotate(-1deg); }
+.member-card.rotate--2 { transform: rotate(-2deg); }
+
+.member-card:hover.rotate-1 { transform: rotate(1deg) translateY(-2px); }
+.member-card:hover.rotate-2 { transform: rotate(2deg) translateY(-2px); }
+.member-card:hover.rotate--1 { transform: rotate(-1deg) translateY(-2px); }
+.member-card:hover.rotate--2 { transform: rotate(-2deg) translateY(-2px); }
+
+.member-avatar {
+  width: 6rem;
+  height: 6rem;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin: 0 auto 1rem;
+}
+
+.member-name {
+  font-size: 1.125rem;
+  font-weight: bold;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.member-role {
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.member-description {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+/* カード背景色 */
+.bg-yellow-100 { background-color: #fef3c7; }
+.bg-pink-100 { background-color: #fce7f3; }
+.bg-blue-100 { background-color: #dbeafe; }
+.bg-green-100 { background-color: #dcfce7; }
+.bg-purple-100 { background-color: #e9d5ff; }
+.bg-orange-100 { background-color: #fed7aa; }
+.bg-red-100 { background-color: #fee2e2; }
+.bg-indigo-100 { background-color: #e0e7ff; }
+.bg-teal-100 { background-color: #ccfbf1; }
+
+/* アクティビティカード */
+.activity-card {
+  background: #f9fafb;
+  border-radius: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.activity-image {
+  height: 10rem;
+  background-color: #e5e7eb;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.activity-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.activity-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.activity-description {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+
+.activity-meta {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.activity-meta li {
+  list-style: none;
+  margin-bottom: 0.25rem;
+}
+
+/* プロジェクトカード */
+.project-card {
+  background: #f9fafb;
+  border-radius: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.project-image {
+  height: 10rem;
+  background-color: #f9fafb;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.project-image img {
+  width: auto;
+  height: 10rem;
+  margin: 0 auto;
+  object-fit: contain;
+}
+
+.project-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.project-description {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+
+.project-meta {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.75rem;
+}
+
+.project-meta li {
+  list-style: none;
+  margin-bottom: 0.25rem;
+}
+
+/* 場所カード */
+.place-card {
+  background: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+}
+
+.place-image-container {
+  position: relative;
+  height: 10rem;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  margin-bottom: 0.75rem;
+}
+
+.place-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.place-logo {
+  position: absolute;
+  bottom: 0.5rem;
+  right: 0.5rem;
+  max-width: 3rem;
+  max-height: 3rem;
+  background: white;
+  border-radius: 50%;
+  padding: 0.25rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  object-fit: contain;
+}
+
+.place-title {
+  font-size: 1.125rem;
+  font-weight: bold;
+  margin-bottom: 0.25rem;
+}
+
+.place-description {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+/* タイトル色 */
+.text-pink-500 { color: #ec4899; }
+.text-blue-500 { color: #3b82f6; }
+.text-green-500 { color: #10b981; }
+.text-orange-500 { color: #f97316; }
+.text-purple-500 { color: #8b5cf6; }
+.text-yellow-500 { color: #eab308; }
+.text-red-500 { color: #ef4444; }
+.text-indigo-500 { color: #6366f1; }
+.text-teal-500 { color: #14b8a6; }
+
+/* 背景色 */
+.bg-pink-50 { background-color: #fdf2f8; }
+.bg-blue-50 { background-color: #eff6ff; }
+.bg-pink-100 { background-color: #fce7f3; }
+.bg-white { background-color: white; }
+
+/* 募集案内セクション */
+.recruitment-section {
+  margin-top: 3rem;
+  text-align: center;
+  background: linear-gradient(to right, #fdf2f8, #f3e8ff);
+  border-radius: 1rem;
+  padding: 2rem;
+}
+
+.recruitment-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+}
+
+.recruitment-description {
+  font-size: 1.125rem;
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+.recruitment-categories {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .recruitment-categories {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .recruitment-categories {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.recruitment-category {
+  background: white;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.recruitment-category-icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.recruitment-category-title {
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.recruitment-category-subtitle {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}

@@ -1,0 +1,69 @@
+<!-- いつもの活動セクション -->
+<section id="regular" class="section scroll-adjust bg-white">
+  <div class="container">
+    <h2 class="section-title text-pink-600">🌀 いつもの活動</h2>
+    <p class="section-subtitle">
+      こみかるで毎週・毎月おこなっている、続けて楽しい定番プログラムたち。
+    </p>
+    
+    <div id="activities-grid" class="grid grid-1 sm:grid-2 lg:grid-3 gap-6">
+      <!-- 活動カードはJavaScriptで動的生成 -->
+      <div class="text-center py-8">
+        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-pink-500 mx-auto mb-4"></div>
+        <p class="text-gray-500">活動情報を読み込み中...</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+// 活動データの読み込みと表示
+async function loadActivities() {
+  try {
+    const response = await fetch('./data/activities.json');
+    const data = await response.json();
+    
+    const activitiesGrid = document.getElementById('activities-grid');
+    activitiesGrid.innerHTML = '';
+    
+    data.activities.forEach(activity => {
+      const activityCard = document.createElement('div');
+      activityCard.className = 'activity-card';
+      
+      const metaHtml = activity.meta.map(item => `<li>${item}</li>`).join('');
+      const linkHtml = activity.link 
+        ? `<a href="${activity.link.url}" target="_blank" class="btn btn-primary btn-sm mt-3">
+             ${activity.link.text}
+           </a>`
+        : '';
+      
+      activityCard.innerHTML = `
+        <div>
+          <div class="activity-image">
+            <img src="${activity.image}" alt="${activity.title}" loading="lazy">
+          </div>
+          <h3 class="activity-title text-${activity.titleColor}">${activity.title}</h3>
+          <p class="activity-description">${activity.description}</p>
+          <ul class="activity-meta">
+            ${metaHtml}
+          </ul>
+        </div>
+        ${linkHtml}
+      `;
+      
+      activitiesGrid.appendChild(activityCard);
+    });
+    
+  } catch (error) {
+    console.error('Error loading activities:', error);
+    document.getElementById('activities-grid').innerHTML = `
+      <div class="text-center py-8">
+        <p class="text-red-500">活動情報の読み込みに失敗しました</p>
+      </div>
+    `;
+  }
+}
+
+// ページ読み込み時に活動データを読み込み
+document.addEventListener('DOMContentLoaded', loadActivities);
+</script>

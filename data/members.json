@@ -1,0 +1,127 @@
+{
+  "title": "こみかるユースの仲間たち",
+  "subtitle": "それぞれの"好き"や"想い"を持ち寄って活動する、高校生・大学生・社会人のゆるやかなチームです。",
+  "description": "コミュニティナース、地域おこし協力隊、福井県庁職員、看護師、保健師、助産師、理学療法士、IT企業創業者、キャリアコンサルタント、フリータレント、大学院生、大学生、高校生など。さまざまな個性を持つメンバー(約50名）が、ちょっとずつ力を合わせて運営するコミュニティです。",
+  "locations": "現在の拠点：エルパ（福井市）／ベル（福井市）／ヴィオ（大野市）／アルプラザ武生／アルプラザ敦賀など",
+  "members": [
+    {
+      "id": "kato_mizuho",
+      "name": "加藤 瑞穂（みーちゃん）",
+      "role": "共同代表",
+      "roleColor": "pink-500",
+      "image": "member_kato.jpg",
+      "description": "看護師／保健師／コミュニティナース<br>株式会社AllINUS代表取締役<br>#趣味は看護 #SKY-HI",
+      "bgColor": "yellow-100",
+      "rotation": "rotate-[-2deg]"
+    },
+    {
+      "id": "tsukahara_kohei",
+      "name": "塚原 康平（つかちゃん）",
+      "role": "共同代表",
+      "roleColor": "pink-500",
+      "image": "member_tsukahara.jpg",
+      "description": "地域おこし協力隊／チャレンジ応援コーディネーター<br>#福井で転生 #聴く #将棋",
+      "bgColor": "pink-100",
+      "rotation": "rotate-[2deg]"
+    },
+    {
+      "id": "terai_yusuke",
+      "name": "寺井 優介（寺井COD）",
+      "role": "福井県庁／チャレンジ応援ディレクター",
+      "roleColor": "gray-500",
+      "image": "member_terai.jpg",
+      "description": "#サウナ #ランニング #Mr.children",
+      "bgColor": "blue-100",
+      "rotation": "rotate-[-1deg]"
+    },
+    {
+      "id": "recruitment",
+      "name": "メンバー募集中！",
+      "role": "あなたも仲間に",
+      "roleColor": "pink-500",
+      "image": null,
+      "description": "こみかるに興味がある方<br>お気軽にご参加ください<br>#一緒に活動しよう",
+      "bgColor": "green-100",
+      "rotation": "rotate-[1deg]"
+    },
+    {
+      "id": "maki_midwife",
+      "name": "まき（助産師）",
+      "role": "医療サポートメンバー",
+      "roleColor": "orange-500",
+      "image": null,
+      "description": "助産師／保健師<br>「性のこと」「体のこと」相談OK<br>#助産師 #医療相談",
+      "bgColor": "purple-100",
+      "rotation": "rotate-[-1deg]"
+    },
+    {
+      "id": "highschool_members",
+      "name": "高校生メンバー",
+      "role": "企画・運営チーム",
+      "roleColor": "blue-500",
+      "image": null,
+      "description": "福井県内の高校生たち<br>イベント企画・運営を担当<br>#高校生パワー #企画力",
+      "bgColor": "orange-100",
+      "rotation": "rotate-[2deg]"
+    },
+    {
+      "id": "university_members",
+      "name": "大学生メンバー",
+      "role": "イベントサポーター",
+      "roleColor": "green-500",
+      "image": null,
+      "description": "県内外の大学生<br>活動サポート・企画協力<br>#大学生 #サポート",
+      "bgColor": "red-100",
+      "rotation": "rotate-[-2deg]"
+    },
+    {
+      "id": "it_members",
+      "name": "ITメンバー",
+      "role": "技術サポート",
+      "roleColor": "purple-500",
+      "image": null,
+      "description": "IT企業創業者<br>VR体験・プログラミング企画<br>#テクノロジー #VR",
+      "bgColor": "indigo-100",
+      "rotation": "rotate-[1deg]"
+    },
+    {
+      "id": "medical_members",
+      "name": "医療系メンバー",
+      "role": "ヘルスケアチーム",
+      "roleColor": "teal-500",
+      "image": null,
+      "description": "看護師・理学療法士など<br>健康・医療体験企画<br>#医療 #健康サポート",
+      "bgColor": "teal-100",
+      "rotation": "rotate-[-1deg]"
+    }
+  ],
+  "recruitment": {
+    "title": "🌟 こみかるメンバーになりませんか？",
+    "description": "年齢・職業・経験は問いません！<br>「若者を応援したい」「一緒に何かやってみたい」という想いがあれば、誰でも歓迎です。",
+    "categories": [
+      {
+        "icon": "🎓",
+        "title": "学生",
+        "subtitle": "高校生・大学生"
+      },
+      {
+        "icon": "💼",
+        "title": "社会人",
+        "subtitle": "様々な職業の方"
+      },
+      {
+        "icon": "⚕️",
+        "title": "医療従事者",
+        "subtitle": "看護師・助産師等"
+      },
+      {
+        "icon": "🎨",
+        "title": "専門職",
+        "subtitle": "様々な専門性"
+      }
+    ],
+    "footer": "まずは、各拠点の活動に遊びに来てください。<br>詳しくは下記Instagramからお気軽にお問い合わせください！",
+    "ctaText": "Instagram で相談・質問する",
+    "ctaUrl": "https://www.instagram.com/comicalyouth/"
+  }
+}

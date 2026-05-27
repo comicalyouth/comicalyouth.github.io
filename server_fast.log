@@ -1,0 +1,22 @@
+10.12.21.226 - - [17/Aug/2025 07:08:43] "GET / HTTP/1.1" 200 -
+10.12.21.226 - - [17/Aug/2025 07:08:43] "GET /logo_header-01.svg HTTP/1.1" 200 -
+10.12.21.226 - - [17/Aug/2025 07:08:43] "GET /comical1.jpg HTTP/1.1" 200 -
+10.12.21.226 - - [17/Aug/2025 07:08:43] "GET /css/components.css HTTP/1.1" 200 -
+10.12.21.226 - - [17/Aug/2025 07:08:43] "GET /comical2.jpg HTTP/1.1" 200 -
+10.12.21.226 - - [17/Aug/2025 07:08:43] "GET /css/animations.css HTTP/1.1" 200 -
+10.12.21.226 - - [17/Aug/2025 07:08:43] "GET /comical12.jpg HTTP/1.1" 200 -
+10.12.21.226 - - [17/Aug/2025 07:08:43] "GET /comical10.jpg HTTP/1.1" 200 -
+10.12.21.226 - - [17/Aug/2025 07:08:43] "GET /comical5.jpg HTTP/1.1" 200 -
+10.12.21.226 - - [17/Aug/2025 07:08:43] "GET /comical4.jpg HTTP/1.1" 200 -
+10.12.21.226 - - [17/Aug/2025 07:08:43] "GET /comical11.jpg HTTP/1.1" 200 -
+10.12.21.226 - - [17/Aug/2025 07:08:43] "GET /comical3.jpg HTTP/1.1" 200 -
+10.12.21.226 - - [17/Aug/2025 07:08:43] "GET /comical6.jpg HTTP/1.1" 200 -
+10.12.21.226 - - [17/Aug/2025 07:08:43] "GET /components/about.html HTTP/1.1" 200 -
+10.12.21.226 - - [17/Aug/2025 07:08:43] code 404, message File not found
+10.12.21.226 - - [17/Aug/2025 07:08:43] "GET /favicon.ico HTTP/1.1" 404 -
+10.12.21.226 - - [17/Aug/2025 07:08:44] "GET /components/members.html HTTP/1.1" 200 -
+10.12.21.226 - - [17/Aug/2025 07:08:44] "GET /js/slideshow.js HTTP/1.1" 200 -
+10.12.21.226 - - [17/Aug/2025 07:08:44] "GET /js/main.js HTTP/1.1" 200 -
+10.12.21.226 - - [17/Aug/2025 07:08:44] "GET /components/activities.html HTTP/1.1" 200 -
+10.12.21.226 - - [17/Aug/2025 07:08:44] "GET /components/places.html HTTP/1.1" 200 -
+10.12.21.226 - - [17/Aug/2025 07:08:44] "GET /components/footer.html HTTP/1.1" 200 -

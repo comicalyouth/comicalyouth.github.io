@@ -1,0 +1,71 @@
+{
+  "title": "開催場所",
+  "subtitle": "参加無料！申し込み不要！途中参加・途中退出OK！<br>いつでもふらっと遊びに来てね",
+  "places": [
+    {
+      "id": "elpa",
+      "name": "ラブリーパートナーエルパ（福井市）",
+      "titleColor": "pink-500",
+      "image": "comical1.jpg",
+      "logo": "logo_lpa.jpg",
+      "description": "2Fフードコート内「Mint」付近で開催。出入り自由で、誰でもふらっと立ち寄れます。<br><br>開催日：毎週金曜日17:30~19:30"
+    },
+    {
+      "id": "vio",
+      "name": "ショッピングモールVIO（大野市）",
+      "titleColor": "blue-500",
+      "image": "vio.jpg",
+      "logo": "logo_vio.svg",
+      "description": "VIOのサブコートで開催。大野地域のメンバーが中心となり、子ども～大人まで多年代が大集合！<br><br>開催日：毎週木曜日17:00~19:00"
+    },
+    {
+      "id": "bell",
+      "name": "ショッピングシティ ベル（福井市）",
+      "titleColor": "orange-500",
+      "image": "bell.jpg",
+      "logo": "logo_bell.png",
+      "description": "2Fフードコートで開催。毎月1回ご飯会を開催！22歳以下には、500円券をプレゼント！<br><br>開催日：毎月最終水曜日17:30~19:30"
+    },
+    {
+      "id": "tsuruga",
+      "name": "アルプラザ敦賀（敦賀市）",
+      "titleColor": "green-500",
+      "image": "tsuruga.jpg",
+      "logo": "logo_heiwado.gif",
+      "description": "6Fフードコート展望エリアにて開催。嶺南の高校生～大学生・大人の交流場所として大集合！<br><br>毎月開催 詳細はInstagramをチェック！"
+    },
+    {
+      "id": "takefu",
+      "name": "アルプラザ武生（越前市）",
+      "titleColor": "yellow-500",
+      "image": "takefu.jpg",
+      "logo": "logo_heiwado.gif",
+      "description": "1Fフードコートで開催。武生高校生が探究活動と連携して、企画を実施！<br><br>不定期開催 詳細はInstagramをチェック！"
+    },
+    {
+      "id": "mikuni",
+      "name": "三国高校（坂井市）",
+      "titleColor": "purple-500",
+      "image": "mikuni.jpg",
+      "logo": null,
+      "description": "こみかるの出張活動として、三国高校内で「ふらっと放課後」として開催！<br><br>不定期開催 詳細はInstagramをチェック！"
+    }
+  ],
+  "comingSoon": [
+    {
+      "id": "eiheiji",
+      "name": "永平寺こみかる（開設予定）",
+      "description": "現在準備中！オープンに向けて地域と調整中です。"
+    },
+    {
+      "id": "mihama",
+      "name": "美浜こみかる（開設予定）",
+      "description": "現在準備中！オープンに向けて地域と調整中です。"
+    },
+    {
+      "id": "sabae",
+      "name": "鯖江こみかる（開設予定）",
+      "description": "現在準備中！オープンに向けて地域と調整中です。"
+    }
+  ]
+}

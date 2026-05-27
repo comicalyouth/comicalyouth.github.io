@@ -1,0 +1,93 @@
+<!-- 開催場所セクション -->
+<section id="place" class="section scroll-adjust bg-pink-100">
+  <div class="container">
+    <h2 class="section-title">開催場所</h2>
+    <p class="section-subtitle">
+      参加無料！申し込み不要！途中参加・途中退出OK！<br>
+      いつでもふらっと遊びに来てね
+    </p>
+
+    <div id="places-grid" class="grid grid-1 sm:grid-2 lg:grid-3 gap-8">
+      <!-- 場所カードはJavaScriptで動的生成 -->
+      <div class="text-center py-8">
+        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-pink-500 mx-auto mb-4"></div>
+        <p class="text-gray-500">場所情報を読み込み中...</p>
+      </div>
+    </div>
+
+    <!-- 開設予定の場所 -->
+    <div id="coming-soon-section" class="mt-12">
+      <!-- Coming soon カードはJavaScriptで動的生成 -->
+    </div>
+  </div>
+</section>
+
+<script>
+// 場所データの読み込みと表示
+async function loadPlaces() {
+  try {
+    const response = await fetch('./data/places.json');
+    const data = await response.json();
+    
+    // 既存の場所を表示
+    const placesGrid = document.getElementById('places-grid');
+    placesGrid.innerHTML = '';
+    
+    data.places.forEach(place => {
+      const placeCard = document.createElement('div');
+      placeCard.className = 'place-card';
+      
+      const logoHtml = place.logo 
+        ? `<img src="${place.logo}" alt="${place.name}ロゴ" class="place-logo">`
+        : '';
+      
+      placeCard.innerHTML = `
+        <div class="place-image-container">
+          <img src="${place.image}" alt="${place.name}の様子" class="place-image" loading="lazy">
+          ${logoHtml}
+        </div>
+        <h3 class="place-title text-${place.titleColor}">${place.name}</h3>
+        <p class="place-description">${place.description}</p>
+      `;
+      
+      placesGrid.appendChild(placeCard);
+    });
+    
+    // 開設予定の場所を表示
+    const comingSoonSection = document.getElementById('coming-soon-section');
+    
+    if (data.comingSoon && data.comingSoon.length > 0) {
+      const comingSoonGrid = document.createElement('div');
+      comingSoonGrid.className = 'grid grid-1 sm:grid-2 lg:grid-3 gap-8';
+      
+      data.comingSoon.forEach(place => {
+        const comingSoonCard = document.createElement('div');
+        comingSoonCard.className = 'place-card border border-dashed border-gray-300';
+        
+        comingSoonCard.innerHTML = `
+          <div class="place-image-container">
+            <img src="comicallogo.png" alt="${place.name}" class="place-image">
+          </div>
+          <h3 class="place-title text-gray-600">${place.name}</h3>
+          <p class="place-description text-gray-600">${place.description}</p>
+        `;
+        
+        comingSoonGrid.appendChild(comingSoonCard);
+      });
+      
+      comingSoonSection.appendChild(comingSoonGrid);
+    }
+    
+  } catch (error) {
+    console.error('Error loading places:', error);
+    document.getElementById('places-grid').innerHTML = `
+      <div class="text-center py-8">
+        <p class="text-red-500">場所情報の読み込みに失敗しました</p>
+      </div>
+    `;
+  }
+}
+
+// ページ読み込み時に場所データを読み込み
+document.addEventListener('DOMContentLoaded', loadPlaces);
+</script>
