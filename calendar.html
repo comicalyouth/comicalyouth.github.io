@@ -75,7 +75,21 @@
       box-shadow: 0 1px 4px rgba(232,37,122,0.12);
     }
     .cal-cell.has-event:hover { filter: brightness(0.96); transform: scale(1.03); }
-    .cal-cell.today { background: #3D2C6E; color: white; font-weight: bold; cursor: pointer; }
+    .cal-cell.today {
+      background: linear-gradient(160deg, #ede0ff 0%, #ddd0f8 100%);
+      color: #3D2C6E;
+      font-weight: bold;
+      cursor: pointer;
+      border: 2px solid #9B72D8;
+    }
+    .cal-today-label {
+      font-size: 0.42rem;
+      font-weight: bold;
+      color: #9B72D8;
+      letter-spacing: 0.03em;
+      line-height: 1;
+      margin-top: 1px;
+    }
     .cal-num { font-size: 0.82rem; font-weight: bold; line-height: 1; margin-bottom: 3px; }
     .cal-cell.sun .cal-num { color: #E8257A; }
     .cal-cell.sat .cal-num { color: #5B8FD6; }
@@ -715,6 +729,13 @@ function renderCalendar() {
     num.className = "cal-num";
     num.textContent = d;
     cell.appendChild(num);
+
+    if (isToday) {
+      const todayLabel = document.createElement("div");
+      todayLabel.className = "cal-today-label";
+      todayLabel.textContent = "Today";
+      cell.appendChild(todayLabel);
+    }
 
     if (hasEvent) {
       if (evOnDay.length === 1) {
