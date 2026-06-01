@@ -907,18 +907,29 @@ function openModal(ev) {
   photoCandidates.forEach((src, i) => {
     const item = document.createElement("div");
     item.className = "photo-item";
+
+    if (!src) {
+      item.innerHTML = `<div class="photo-placeholder">🏠<span>準備中</span></div>`;
+      gallery.appendChild(item);
+      return;
+    }
+
+    // まずDOMに追加してからsrcをセット（ブラウザが確実に読み込む）
     const img = document.createElement("img");
     img.alt = `写真${i+1}`;
-    img.loading = "lazy";
-    img.src = src;
+    img.style.width = "100%";
+    img.style.height = "100%";
+    img.style.objectFit = "cover";
+    item.appendChild(img);
+    gallery.appendChild(item);
+
     img.onload = () => {
-      item.appendChild(img);
       item.addEventListener("click", () => openLightbox(src));
     };
     img.onerror = () => {
       item.innerHTML = `<div class="photo-placeholder">🏠<span>準備中</span></div>`;
     };
-    gallery.appendChild(item);
+    img.src = src; // DOMに追加した後にsrcをセット
   });
 
   // スタッフ
