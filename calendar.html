@@ -76,16 +76,16 @@
     }
     .cal-cell.has-event:hover { filter: brightness(0.96); transform: scale(1.03); }
     .cal-cell.today {
-      background: linear-gradient(160deg, #ede0ff 0%, #ddd0f8 100%);
-      color: #3D2C6E;
+      background: linear-gradient(160deg, #FFFDE7 0%, #FFF59D 100%);
+      color: #7A6000;
       font-weight: bold;
       cursor: pointer;
-      border: 2px solid #9B72D8;
+      border: 2px solid #F5C800;
     }
     .cal-today-label {
       font-size: 0.42rem;
       font-weight: bold;
-      color: #9B72D8;
+      color: #B08800;
       letter-spacing: 0.03em;
       line-height: 1;
       margin-top: 1px;
@@ -156,7 +156,7 @@
     .event-label {
       display: inline-block;
       font-size: 0.78rem; font-weight: bold;
-      background: #FFF0C0; color: #B07800;
+      background: #E0F0FF; color: #1A6BB5;
       border-radius: 6px; padding: 2px 8px; margin-bottom: 4px;
     }
     .event-detail-row { font-size: 0.78rem; color: #666; display: flex; align-items: center; gap: 3px; margin-bottom: 1px; }
@@ -767,7 +767,7 @@ function renderCalendar() {
         // 時間
         const timeEl = document.createElement("div");
         timeEl.className = "cal-time";
-        timeEl.textContent = `${ev1.timeStart}〜`;
+        timeEl.textContent = `${ev1.timeStart}〜${ev1.timeEnd}`;
         cell.appendChild(timeEl);
 
         // ご飯・クーポンアイコン
@@ -795,7 +795,7 @@ function renderCalendar() {
         });
         const timeEl = document.createElement("div");
         timeEl.className = "cal-time";
-        timeEl.textContent = `${evOnDay[0].timeStart}〜`;
+        timeEl.textContent = `${evOnDay[0].timeStart}〜${evOnDay[0].timeEnd}`;
         cell.appendChild(timeEl);
 
         cell.addEventListener("click", () => scrollToDate(dateStr));
