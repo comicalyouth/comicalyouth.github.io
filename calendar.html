@@ -153,7 +153,12 @@
 
     .event-info { flex: 1; min-width: 0; }
     .event-place-name { font-size: 0.95rem; font-weight: bold; margin-bottom: 2px; }
-    .event-label { font-size: 0.82rem; color: #E8257A; font-weight: bold; margin-bottom: 3px; }
+    .event-label {
+      display: inline-block;
+      font-size: 0.78rem; font-weight: bold;
+      background: #FFF0C0; color: #B07800;
+      border-radius: 6px; padding: 2px 8px; margin-bottom: 4px;
+    }
     .event-detail-row { font-size: 0.78rem; color: #666; display: flex; align-items: center; gap: 3px; margin-bottom: 1px; }
 
     /* フードバッジ */
@@ -778,13 +783,16 @@ function renderCalendar() {
         cell.addEventListener("click", () => openModal(ev1));
 
       } else {
-        // 複数件：件数バッジ＋時間（最初の開始時間）
-        const badge = document.createElement("div");
-        badge.className = "cal-badge";
-        badge.style.background = "#888";
-        badge.textContent = `${evOnDay.length}件`;
-        cell.appendChild(badge);
-
+        // 複数件：それぞれのイベントを縦に並べて表示
+        evOnDay.forEach((ev, idx) => {
+          const p2 = PLACES[ev.placeId] || {};
+          const badge2 = document.createElement("div");
+          badge2.className = "cal-badge";
+          badge2.style.background = p2.hex || "#888";
+          // イベント名があればそれを、なければ拠点名を表示
+          badge2.textContent = ev.eventName || p2.label || ev.placeId;
+          cell.appendChild(badge2);
+        });
         const timeEl = document.createElement("div");
         timeEl.className = "cal-time";
         timeEl.textContent = `${evOnDay[0].timeStart}〜`;
@@ -886,7 +894,7 @@ function renderEventList() {
       </div>
       <div class="event-info">
         <div class="event-place-name">${place.name || ev.placeId}</div>
-        ${ev.eventName ? `<div class="event-label">🎉 ${ev.eventName}</div>` : ""}
+        ${ev.eventName ? `<div class="event-label">${ev.eventName}</div>` : ""}
         <div class="event-detail-row">🕐 ${ev.timeStart}〜${ev.timeEnd}</div>
         ${foodBadges ? `<div style="margin-top:4px">${foodBadges}</div>` : ""}
       </div>
