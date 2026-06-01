@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>イベントカレンダー | こみかるユース福井</title>
+  <meta name="description" content="こみかるユース福井の毎月のカレンダー。エルパ・ベル・永平寺・FWI・美浜・敦賀・大野。予約不要・参加費無料。次に来れる日をすぐ確認できます。">
+  <script type="application/ld+json" id="schema-events"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif; background: #fdf5f8; color: #333; }
+
+    /* ===== ヘッダー ===== */
+    .header {
+      background: linear-gradient(135deg, #E8257A 0%, #b565c5 50%, #5B8FD6 100%);
+      color: white; padding: 28px 20px 24px; text-align: center;
+    }
+    .header-logo { font-size: 0.78rem; opacity: 0.9; letter-spacing: 0.1em; margin-bottom: 4px; }
+    .header h1 { font-size: 1.45rem; font-weight: bold; margin-bottom: 6px; }
+    .header p { font-size: 0.84rem; opacity: 0.9; line-height: 1.6; }
+
+    .container { max-width: 680px; margin: 0 auto; padding: 20px 14px 60px; }
+
+    /* ===== 月ナビ ===== */
+    .month-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .month-nav-btn {
+      background: white; border: 1.5px solid #E8257A; border-radius: 8px;
+      color: #E8257A; padding: 6px 16px; font-size: 1rem; cursor: pointer; transition: all 0.15s;
+    }
+    .month-nav-btn:hover { background: #E8257A; color: white; }
+    .month-title { font-size: 1.2rem; font-weight: bold; }
+
+    /* ===== インスタボタン ===== */
+    .instagram-btn {
+      display: block; width: 100%;
+      background: linear-gradient(135deg, #E8257A, #b565c5);
+      color: white; border: none; border-radius: 10px; padding: 9px;
+      font-size: 0.85rem; font-weight: bold; cursor: pointer;
+      margin-bottom: 16px; letter-spacing: 0.05em; transition: opacity 0.15s;
+    }
+    .instagram-btn:hover { opacity: 0.85; }
+
+    /* ===== カレンダー撮影対象 ===== */
+    #calendar-capture {
+      background: white; border-radius: 16px; padding: 14px;
+      margin-bottom: 24px; box-shadow: 0 2px 16px rgba(232,37,122,0.08);
+    }
+    .cal-brand {
+      display: flex; align-items: center; gap: 8px;
+      margin-bottom: 10px; padding-bottom: 10px; border-bottom: 2px solid #fde8f2;
+    }
+    .cal-brand-name { font-size: 0.82rem; font-weight: bold; color: #E8257A; }
+    .cal-month-label { font-size: 1.05rem; font-weight: bold; margin-left: auto; }
+
+    .cal-weekdays { display: grid; grid-template-columns: repeat(7, 1fr); margin-bottom: 3px; }
+    .cal-weekday { text-align: center; font-size: 0.7rem; font-weight: bold; padding: 3px 0; color: #aaa; }
+    .cal-weekday.sun { color: #E8257A; }
+    .cal-weekday.sat { color: #5B8FD6; }
+
+    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+    .cal-cell {
+      min-height: 52px;
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: flex-start; padding: 5px 2px 4px;
+      border-radius: 7px; font-size: 0.82rem; position: relative;
+      transition: background 0.12s;
+    }
+    .cal-cell.empty { background: transparent; min-height: 52px; }
+    .cal-cell.normal { background: #fafafa; }
+    .cal-cell.has-event { background: #fafafa; cursor: pointer; }
+    .cal-cell.has-event:hover { filter: brightness(0.95); }
+    .cal-cell.today { background: #E8257A; color: white; font-weight: bold; cursor: pointer; }
+    .cal-num { font-size: 0.82rem; font-weight: bold; line-height: 1; margin-bottom: 3px; }
+    .cal-cell.sun .cal-num { color: #E8257A; }
+    .cal-cell.sat .cal-num { color: #5B8FD6; }
+    .cal-cell.today .cal-num,
+    .cal-cell.today.sun .cal-num,
+    .cal-cell.today.sat .cal-num { color: white; }
+
+    /* 拠点カラーバッジ（JS側でbg色をinline styleで設定） */
+    .cal-badge {
+      font-size: 0.5rem; color: white;
+      border-radius: 6px; padding: 1px 4px; line-height: 1.5;
+      max-width: 96%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+      font-weight: bold; text-align: center;
+    }
+    .cal-badge.event-name {
+      margin-top: 2px; background: rgba(0,0,0,0.15);
+    }
+    .cal-time {
+      font-size: 0.45rem; color: #888; margin-top: 2px; line-height: 1.2; text-align: center;
+    }
+    .cal-food-icon {
+      font-size: 0.48rem; margin-top: 2px; line-height: 1.3;
+      color: #E65100; font-weight: bold; text-align: center;
+    }
+    .cal-cell.today .cal-badge { background: rgba(255,255,255,0.3) !important; }
+    .cal-cell.today .cal-time  { color: rgba(255,255,255,0.8); }
+    .cal-cell.today .cal-food-icon { filter: brightness(10); }
+
+    .cal-legend { display: flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 0.7rem; color: #999; }
+    .legend-dot { width: 7px; height: 7px; background: #E8257A; border-radius: 50%; }
+
+    /* ===== 拠点フィルター ===== */
+    .filter-wrap { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
+    .filter-btn {
+      padding: 4px 12px; border-radius: 20px; font-size: 0.78rem; font-weight: bold;
+      border: 1.5px solid #ddd; background: white; cursor: pointer; transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .filter-btn.active { border-color: var(--place-color, #E8257A); background: var(--place-color, #E8257A); color: white; }
+
+    /* ===== イベントリスト ===== */
+    .section-title {
+      font-size: 0.92rem; font-weight: bold; color: #E8257A;
+      border-left: 3px solid #E8257A; padding-left: 10px; margin-bottom: 12px;
+    }
+    .event-card {
+      background: white; border-radius: 12px; padding: 12px 14px;
+      margin-bottom: 8px; border: 1px solid #f0d0e0; cursor: pointer;
+      display: flex; align-items: flex-start; gap: 12px;
+      transition: box-shadow 0.15s, transform 0.1s;
+    }
+    .event-card:hover { box-shadow: 0 4px 16px rgba(232,37,122,0.15); transform: translateY(-1px); }
+
+    .event-date-block {
+      min-width: 44px; text-align: center; border-radius: 8px;
+      padding: 5px 4px; color: white; flex-shrink: 0;
+    }
+    .edb-month { font-size: 0.65rem; }
+    .edb-day { font-size: 1.3rem; font-weight: bold; line-height: 1; }
+    .edb-weekday { font-size: 0.65rem; margin-top: 1px; }
+
+    .event-info { flex: 1; min-width: 0; }
+    .event-place-name { font-size: 0.95rem; font-weight: bold; margin-bottom: 2px; }
+    .event-label { font-size: 0.82rem; color: #E8257A; font-weight: bold; margin-bottom: 3px; }
+    .event-detail-row { font-size: 0.78rem; color: #666; display: flex; align-items: center; gap: 3px; margin-bottom: 1px; }
+
+    /* フードバッジ */
+    .food-badge {
+      display: inline-flex; align-items: center; gap: 3px;
+      font-size: 0.72rem; font-weight: bold; border-radius: 6px;
+      padding: 2px 7px; margin-top: 4px; margin-right: 4px;
+    }
+    .food-badge.meal   { background: #FFF8E1; color: #B06000; }
+    .food-badge.coupon { background: #FFF8E1; color: #B06000; }
+    .food-badge.note-badge { background: #F5F5F5; color: #777; }
+
+    .event-arrow { color: #E8257A; font-size: 1rem; margin-left: auto; align-self: center; flex-shrink: 0; }
+
+    /* ===== 拠点カラー定義 ===== */
+    /* エルパ：ピンク */
+    .bg-elpa    { background: #E8257A; }
+    /* ベル：ピンク（やや深め・視認性確保） */
+    .bg-bell    { background: #C9276B; }
+    /* 永平寺：パープル */
+    .bg-eiheiji { background: #7B5EA7; }
+    /* FWI：グリーン */
+    .bg-fwi     { background: #2E9E6E; }
+    /* 美浜：オレンジ */
+    .bg-mihama  { background: #E8721A; }
+    /* アルプラザ敦賀：ミドリ（濃いめ） */
+    .bg-alpla_tsuruga { background: #3A8A5A; }
+    /* 大野（VIO）：アンバー */
+    .bg-vio     { background: #C48B10; }
+    /* アルプラザ武生：ミドリ（明るめ） */
+    .bg-alpla_takefu  { background: #4CAF6A; }
+
+    /* テキストカラー版（フィルターボタン用） */
+    .tc-elpa    { --place-color: #E8257A; }
+    .tc-bell    { --place-color: #C9276B; }
+    .tc-eiheiji { --place-color: #7B5EA7; }
+    .tc-fwi     { --place-color: #2E9E6E; }
+    .tc-mihama  { --place-color: #E8721A; }
+    .tc-alpla_tsuruga { --place-color: #3A8A5A; }
+    .tc-vio     { --place-color: #C48B10; }
+    .tc-alpla_takefu  { --place-color: #4CAF6A; }
+
+    /* ===== モーダル ===== */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+      z-index: 200; padding: 20px; align-items: center; justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: white; border-radius: 20px; width: 100%; max-width: 420px;
+      max-height: 88vh; overflow-y: auto; box-shadow: 0 8px 40px rgba(0,0,0,0.2);
+      animation: modalIn 0.2s ease;
+      position: relative;
+    }
+    @keyframes modalIn {
+      from { opacity:0; transform: scale(0.95) translateY(10px); }
+      to   { opacity:1; transform: scale(1) translateY(0); }
+    }
+    .modal-header { color: white; padding: 18px 18px 14px; border-radius: 20px 20px 0 0; position: relative; }
+    .modal-close {
+      position: absolute;
+      top: 10px; right: 12px;
+      background: rgba(0,0,0,0.25);
+      border: 2px solid rgba(255,255,255,0.6);
+      border-radius: 50%;
+      width: 32px; height: 32px;
+      font-size: 1rem; line-height: 1;
+      color: white;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 999;
+    }
+    .modal-close:hover { background: rgba(0,0,0,0.5); }
+    .modal-date-label { font-size: 0.78rem; opacity: 0.85; margin-bottom: 3px; }
+    .modal-event-title { font-size: 1.15rem; font-weight: bold; margin-bottom: 3px; }
+    .modal-sub-title { font-size: 0.85rem; opacity: 0.9; margin-bottom: 5px; }
+    .modal-meta-row { font-size: 0.8rem; opacity: 0.9; display: flex; gap: 10px; flex-wrap: wrap; }
+    .modal-badges { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+    .modal-badge {
+      font-size: 0.72rem; font-weight: bold; border-radius: 6px;
+      padding: 3px 8px; background: rgba(255,255,255,0.25); color: white;
+    }
+
+    .modal-body { padding: 14px 16px 20px; }
+    .modal-section-title {
+      font-size: 0.78rem; color: #999; font-weight: bold; margin-bottom: 8px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .modal-section-title::after { content: ''; flex: 1; height: 1px; background: #eee; }
+
+    /* 写真ギャラリー */
+    .photo-gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin-bottom: 18px; }
+    .photo-item {
+      aspect-ratio: 1; border-radius: 8px; overflow: hidden; cursor: pointer;
+      background: #f0d0e0; position: relative;
+    }
+    .photo-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.2s; }
+    .photo-item:hover img { transform: scale(1.06); }
+    .photo-placeholder {
+      width: 100%; height: 100%; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; background: #fde8f2; font-size: 1.4rem;
+    }
+    .photo-placeholder span { font-size: 0.6rem; color: #c07090; margin-top: 3px; }
+
+    /* スタッフ */
+    .staff-list { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 18px; }
+    .staff-chip {
+      display: flex; align-items: center; gap: 5px;
+      background: #fde8f2; border-radius: 20px; padding: 4px 10px 4px 4px;
+      font-size: 0.82rem; font-weight: bold; color: #c41a63;
+    }
+    .staff-avatar {
+      width: 24px; height: 24px; border-radius: 50%;
+      background: linear-gradient(135deg, #E8257A, #F5A623);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.65rem; color: white; font-weight: bold; overflow: hidden; flex-shrink: 0;
+    }
+    .staff-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .staff-undecided { font-size: 0.8rem; color: #bbb; }
+
+    /* Gcalボタン */
+    .gcal-btn {
+      display: flex; align-items: center; justify-content: center; gap: 7px; width: 100%;
+      background: white; border: 1.5px solid #5B8FD6; border-radius: 10px;
+      color: #5B8FD6; padding: 9px; font-size: 0.85rem; font-weight: bold;
+      cursor: pointer; text-decoration: none; transition: all 0.15s;
+    }
+    .gcal-btn:hover { background: #5B8FD6; color: white; }
+
+    /* HP連動リンク */
+    .place-link {
+      display: flex; align-items: center; gap: 6px; margin-top: 10px;
+      font-size: 0.8rem; color: #888; text-decoration: none;
+      border: 1px solid #eee; border-radius: 8px; padding: 7px 12px;
+      transition: all 0.15s;
+    }
+    .place-link:hover { color: #E8257A; border-color: #E8257A; }
+
+    /* ライトボックス */
+    .lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 300; align-items: center; justify-content: center; }
+    .lightbox.open { display: flex; }
+    .lightbox img { max-width: 92vw; max-height: 85vh; border-radius: 8px; }
+    .lightbox-close { position: absolute; top: 14px; right: 14px; color: white; font-size: 2rem; background: none; border: none; cursor: pointer; }
+
+    /* CTA */
+    .cta-section { background: white; border-radius: 16px; padding: 18px; text-align: center; border: 1px solid #f0d0e0; margin-top: 28px; }
+    .cta-title { font-size: 0.88rem; font-weight: bold; margin-bottom: 3px; }
+    .cta-sub { font-size: 0.76rem; color: #888; margin-bottom: 12px; }
+    .cta-buttons { display: flex; gap: 8px; }
+    .cta-btn-line {
+      flex: 1; display: flex; align-items: center; justify-content: center; gap: 5px;
+      background: #06C755; color: white; border-radius: 10px; padding: 9px;
+      font-size: 0.82rem; font-weight: bold; text-decoration: none; transition: opacity 0.15s;
+    }
+    .cta-btn-line:hover { opacity: 0.85; }
+    .cta-btn-insta {
+      flex: 1; display: flex; align-items: center; justify-content: center; gap: 5px;
+      background: linear-gradient(135deg, #E8257A, #F5A623); color: white;
+      border-radius: 10px; padding: 9px; font-size: 0.82rem; font-weight: bold;
+      text-decoration: none; transition: opacity 0.15s;
+    }
+    .cta-btn-insta:hover { opacity: 0.85; }
+
+    .empty-month { text-align: center; padding: 36px 20px; color: #bbb; font-size: 0.88rem; line-height: 1.8; }
+  </style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-logo">こみかるユース福井</div>
+  <h1>📅 イベントカレンダー</h1>
+  <p>次に来れる日が、きっとある。<br>予約不要・参加費無料</p>
+</header>
+
+<div class="container">
+
+  <div class="month-nav">
+    <button class="month-nav-btn" onclick="changeMonth(-1)">＜</button>
+    <h2 class="month-title" id="monthTitle"></h2>
+    <button class="month-nav-btn" onclick="changeMonth(1)">＞</button>
+  </div>
+
+  <button class="instagram-btn" onclick="saveInstagramImage()">
+    📸 インスタ用カレンダー画像を保存
+  </button>
+
+  <!-- カレンダー（撮影対象） -->
+  <div id="calendar-capture">
+    <div class="cal-brand">
+      <div class="cal-brand-name">こみかるユース福井</div>
+      <div class="cal-month-label" id="calMonthLabel"></div>
+    </div>
+    <div class="cal-weekdays">
+      <div class="cal-weekday sun">日</div>
+      <div class="cal-weekday">月</div>
+      <div class="cal-weekday">火</div>
+      <div class="cal-weekday">水</div>
+      <div class="cal-weekday">木</div>
+      <div class="cal-weekday">金</div>
+      <div class="cal-weekday sat">土</div>
+    </div>
+    <div class="cal-grid" id="calGrid"></div>
+    <div class="cal-legend">
+      <div class="legend-dot"></div>
+      <span>開館・イベントあり</span>
+    </div>
+  </div>
+
+  <!-- 拠点フィルター -->
+  <div class="filter-wrap" id="filterWrap"></div>
+
+  <!-- リスト -->
+  <div class="section-title" id="listTitle"></div>
+  <div id="eventList"></div>
+
+  <p style="font-size:0.72rem; color:#aaa; text-align:center; margin-bottom:12px; line-height:1.6;">
+    ※ご飯ありの拠点では、大人の方に別途参加費をいただく場合がございます。
+  </p>
+
+  <div class="cta-section">
+    <div class="cta-title">最新情報をチェック</div>
+    <div class="cta-sub">変更・追加情報はSNSでも発信中</div>
+    <div class="cta-buttons">
+      <a href="https://lin.ee/xxxxxxx" class="cta-btn-line" target="_blank">💬 LINE公式</a>
+      <a href="https://www.instagram.com/komikaru_youth_fukui/" class="cta-btn-insta" target="_blank">📸 Instagram</a>
+    </div>
+  </div>
+</div>
+
+<!-- モーダル -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-header" id="modalHeader">
+      <button class="modal-close" id="modalCloseBtn" onclick="document.getElementById('modalOverlay').classList.remove('open'); document.body.style.overflow='';">✕</button>
+      <div class="modal-date-label" id="modalDateLabel"></div>
+      <div class="modal-event-title" id="modalEventTitle"></div>
+      <div class="modal-sub-title" id="modalSubTitle"></div>
+      <div class="modal-meta-row" id="modalMetaRow"></div>
+      <div class="modal-badges" id="modalBadges"></div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-section-title">📍 場所の写真</div>
+      <div class="photo-gallery" id="photoGallery"></div>
+      <div class="modal-section-title">👋 この日にいるメンバー</div>
+      <div class="staff-list" id="staffList"></div>
+      <a id="formLinkBtn" class="gcal-btn" href="#" target="_blank" style="display:none; background: #E8257A; color: white; border-color: #E8257A;">
+        📝 参加申し込みはこちら
+      </a>
+      <a id="gmapLink" class="gcal-btn" href="#" target="_blank">📍 Googleマップで見る</a>
+      <a href="https://comicalyouth.jp/#place" id="placeLinkBtn" class="place-link" target="_blank">
+        🏠 この場所の詳細をHPで見る →
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ライトボックス -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close">✕</button>
+  <img id="lightboxImg" src="" alt="">
+</div>
+
+
+<script>
+// ============================================================
+//  拠点マスタ
+//  hpAnchor: HPの #place セクションのアンカーID（連動用）
+// ============================================================
+const PLACES = {
+  elpa: {
+    label: "エルパ",
+    name: "ラブリーパートナーエルパ",
+    address: "福井市手寄1丁目4-1 エルパ2F フードコート「Mint」付近",
+    bgClass: "bg-elpa",
+    tcClass: "tc-elpa",
+    hex: "#E8257A",
+    hpAnchor: "https://comicalyouth.jp/#place",
+    mapUrl: "https://maps.app.goo.gl/JhRbQsTEp3U7xGMz7",
+    photos: ["images/places/elpa1.jpg","images/places/elpa2.jpg","images/places/elpa3.jpg"],
+    meal: null,
+    coupon: null
+  },
+  bell: {
+    label: "ベル",
+    name: "ショッピングシティ ベル",
+    address: "福井市 ショッピングシティベル2F フードコート",
+    bgClass: "bg-bell",
+    tcClass: "tc-bell",
+    hex: "#C9276B",
+    hpAnchor: "https://comicalyouth.jp/#place",
+    photos: [null, null, null],
+    meal: null,
+    coupon: "🍚 22歳以下は500円食事券あり",
+    mapUrl: "https://maps.app.goo.gl/bL9o9u7MbaEvAvxr9",
+    photos: ["images/places/bell.jpg","images/places/bell2.jpg","images/places/bell3.jpg"]
+  },
+  eiheiji: {
+    label: "永平寺",
+    name: "永平寺こみかる",
+    address: "永平寺町 松岡公民館",
+    bgClass: "bg-eiheiji",
+    tcClass: "tc-eiheiji",
+    hex: "#7B5EA7",
+    hpAnchor: "https://comicalyouth.jp/#place",
+    photos: [null, null, null],
+    meal: "🍚 ご飯あり",
+    coupon: null,
+    note: "調理部は16:00集合",
+    mapUrl: "https://maps.app.goo.gl/2kuMBDY96Eu1EqSR7",
+    photos: ["images/places/eiheiji1.jpg","images/places/eiheiji2.jpg","images/places/eiheiji3.jpg"]
+  },
+  fwi: {
+    label: "FWI",
+    name: "FWIこみかる",
+    address: "〒910-0006 福井県福井市中央1丁目3-1 加藤ビル5階（FWIスタジオ）",
+    bgClass: "bg-fwi",
+    tcClass: "tc-fwi",
+    hex: "#2E9E6E",
+    hpAnchor: "https://comicalyouth.jp/#place",
+    photos: ["images/places/fwi1.jpg","images/places/fwi2.jpg","images/places/fwi3.jpg"],
+    meal: null,
+    coupon: null
+  },
+  mihama: {
+    label: "美浜",
+    name: "美浜こみかる",
+    address: "美浜町 生涯学習センターなびあす",
+    bgClass: "bg-mihama",
+    tcClass: "tc-mihama",
+    hex: "#E8721A",
+    hpAnchor: "https://comicalyouth.jp/#place",
+    photos: ["images/places/mihama1.jpg","images/places/mihama2.jpg","images/places/mihama3.jpg"],
+    meal: "🍚 ご飯あり",
+    coupon: null,
+    mapUrl: "https://maps.app.goo.gl/RcafjQ5z72Rtyj148"
+  },
+  alpla_tsuruga: {
+    label: "敦賀",
+    name: "アルプラザ敦賀",
+    address: "敦賀市 アルプラザ敦賀6F フードコート展望エリア",
+    bgClass: "bg-alpla_tsuruga",
+    tcClass: "tc-alpla_tsuruga",
+    hex: "#3A8A5A",
+    hpAnchor: "https://comicalyouth.jp/#place",
+    photos: ["images/places/tsuruga1.jpg","images/places/tsuruga2.jpg","images/places/tsuruga3.jpg"],
+    meal: "🍚 ご飯あり",
+    coupon: null,
+    mapUrl: "https://maps.app.goo.gl/iyNDDHdLCksbfkzb9"
+  },
+  vio: {
+    label: "大野",
+    name: "大野朝市こみかる",
+    address: "大野市 城下町東広場駐車場",
+    mapUrl: "https://maps.app.goo.gl/ckJMgFDBdZghsShT9",
+    bgClass: "bg-vio",
+    tcClass: "tc-vio",
+    hex: "#C48B10",
+    hpAnchor: "https://comicalyouth.jp/#place",
+    photos: ["images/places/ono1.jpg","images/places/ono2.jpg","images/places/ono3.jpg"],
+    meal: null,
+    coupon: null
+  },
+  alpla_takefu: {
+    label: "武生",
+    name: "アルプラザ武生",
+    address: "越前市 アルプラザ武生1F フードコート",
+    bgClass: "bg-alpla_takefu",
+    tcClass: "tc-alpla_takefu",
+    hex: "#4CAF6A",
+    hpAnchor: "https://comicalyouth.jp/#place",
+    photos: ["images/places/takefu.jpg", null, null],
+    meal: null,
+    coupon: null,
+    mapUrl: "https://maps.app.goo.gl/YUBeLeQJ7DKsjvpA6"
+  }
+};
+
+// ============================================================
+//  繰り返しルール
+//  ★ここを編集するだけで全月のカレンダーが自動生成されます
+// ============================================================
+const RECURRING_RULES = [
+  // エルパ：毎週金曜 17:30〜19:30
+  { placeId: "elpa",          rule: "weekly",       weekday: 5, timeStart: "17:30", timeEnd: "19:30" },
+  // 永平寺：第1水曜 17:30〜19:30
+  { placeId: "eiheiji",       rule: "nth-weekday",  n: 1, weekday: 3, timeStart: "17:30", timeEnd: "19:30" },
+  // FWI：第2水曜 16:00〜19:00
+  { placeId: "fwi",           rule: "nth-weekday",  n: 2, weekday: 3, timeStart: "16:00", timeEnd: "19:00" },
+  // 美浜：第3火曜 17:30〜19:30
+  { placeId: "mihama",        rule: "nth-weekday",  n: 3, weekday: 2, timeStart: "17:30", timeEnd: "19:30" },
+  // ベル：最終水曜 17:30〜19:30
+  { placeId: "bell",          rule: "last-weekday", weekday: 3, timeStart: "17:30", timeEnd: "19:30" },
+  // 大野朝市こみかる：第3日曜 9:00〜11:00
+  { placeId: "vio",           rule: "nth-weekday",  n: 3, weekday: 0, timeStart: "09:00", timeEnd: "11:00", eventName: "" }
+];
+
+// 第N金曜など「定期の中の特別回」上書きルール
+// → 通常の繰り返しと同じ日付に当たったとき、eventName/noteを上書きします
+const WEEK_OVERRIDES = [
+  {
+    placeId: "elpa",
+    n: 3, weekday: 5,          // 第3金曜
+    eventName: "ご飯会",
+    extraNote: "🍚 22歳以下は500円食事券あり",
+    overrideCoupon: "🍚 22歳以下は500円食事券あり"
+  }
+];
+
+// 不定期イベント（日付を手動指定）
+const SPOT_EVENTS = [
+  { date: "2026-06-30", placeId: "alpla_tsuruga", timeStart: "17:00", timeEnd: "19:30", eventName: "" },
+  { date: "2026-07-14", placeId: "alpla_tsuruga", timeStart: "17:00", timeEnd: "19:30", eventName: "" },
+  { date: "2026-07-24", placeId: "elpa", timeStart: "20:00", timeEnd: "翌07:00", eventName: "オールナイトエルパ", note: "7/25(土) 7:00まで・参加費無料", formUrl: "https://docs.google.com/forms/d/e/1FAIpQLSeNtXVCP7ssq44OpOorYNOQ4vTzrza-IKejhoa_dxM_KqL0mQ/viewform?usp=dialog" },
+  // ★ 武生・敦賀など不定期イベントを追加する場合はここに記入
+];
+
+// スタッフ出勤データ（フォーム回答後に反映 / スプレッドシート連携後は自動）
+const STAFF_DATA = {
+  // "2026-06-06-elpa": ["つかちゃん", "スタッフA"],
+};
+
+// ============================================================
+//  日付ユーティリティ
+// ============================================================
+function toDateStr(y, m, d) {
+  return `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+}
+function getNthWeekday(year, month, n, weekday) {
+  let count = 0;
+  for (let d = 1; d <= 31; d++) {
+    const dt = new Date(year, month, d);
+    if (dt.getMonth() !== month) break;
+    if (dt.getDay() === weekday && ++count === n) return d;
+  }
+  return null;
+}
+function getLastWeekday(year, month, weekday) {
+  let last = null;
+  for (let d = 1; d <= 31; d++) {
+    const dt = new Date(year, month, d);
+    if (dt.getMonth() !== month) break;
+    if (dt.getDay() === weekday) last = d;
+  }
+  return last;
+}
+function getAllWeekdays(year, month, weekday) {
+  const result = [];
+  for (let d = 1; d <= 31; d++) {
+    const dt = new Date(year, month, d);
+    if (dt.getMonth() !== month) break;
+    if (dt.getDay() === weekday) result.push(d);
+  }
+  return result;
+}
+
+// ============================================================
+//  指定月のイベント生成
+// ============================================================
+function generateEvents(year, month) {
+  const events = [];
+
+  RECURRING_RULES.forEach(rule => {
+    let days = [];
+    if      (rule.rule === "weekly")       days = getAllWeekdays(year, month, rule.weekday);
+    else if (rule.rule === "nth-weekday")  { const d = getNthWeekday(year, month, rule.n, rule.weekday); if (d) days = [d]; }
+    else if (rule.rule === "last-weekday") { const d = getLastWeekday(year, month, rule.weekday); if (d) days = [d]; }
+
+    days.forEach(d => {
+      const dateStr = toDateStr(year, month, d);
+      const place   = PLACES[rule.placeId] || {};
+
+      // WEEK_OVERRIDES 適用チェック
+      let eventName   = rule.eventName || "";
+      let extraNote   = "";
+      let overrideCoupon = null;
+      WEEK_OVERRIDES.forEach(ov => {
+        if (ov.placeId === rule.placeId) {
+          const ovDay = getNthWeekday(year, month, ov.n, ov.weekday);
+          if (ovDay === d) {
+            eventName      = ov.eventName      || eventName;
+            extraNote      = ov.extraNote      || "";
+            overrideCoupon = ov.overrideCoupon || null;
+          }
+        }
+      });
+
+      events.push({
+        date:      dateStr,
+        placeId:   rule.placeId,
+        timeStart: rule.timeStart,
+        timeEnd:   rule.timeEnd,
+        eventName,
+        note:        place.note || rule.note || "",
+        extraNote,
+        overrideCoupon,
+        staff: STAFF_DATA[`${dateStr}-${rule.placeId}`] || []
+      });
+    });
+  });
+
+  // 不定期
+  SPOT_EVENTS.forEach(ev => {
+    const d = new Date(ev.date);
+    if (d.getFullYear() === year && d.getMonth() === month) {
+      const place = PLACES[ev.placeId] || {};
+      events.push({
+        date:      ev.date,
+        placeId:   ev.placeId,
+        timeStart: ev.timeStart,
+        timeEnd:   ev.timeEnd,
+        eventName: ev.eventName || "",
+        note:      place.note || "",
+        extraNote: "",
+        overrideCoupon: null,
+        staff: STAFF_DATA[`${ev.date}-${ev.placeId}`] || []
+      });
+    }
+  });
+
+  events.sort((a, b) => a.date !== b.date ? a.date.localeCompare(b.date) : a.timeStart.localeCompare(b.timeStart));
+  return events;
+}
+
+// ============================================================
+//  状態
+// ============================================================
+const today = new Date();
+let currentYear  = today.getFullYear();
+let currentMonth = today.getMonth();
+let activeFilter = "all";
+let allEvents    = [];
+
+// ============================================================
+//  カレンダー描画
+// ============================================================
+function renderCalendar() {
+  allEvents = generateEvents(currentYear, currentMonth);
+
+  document.getElementById("monthTitle").textContent    = `${currentYear}年${currentMonth+1}月`;
+  document.getElementById("calMonthLabel").textContent = `${currentYear}年${currentMonth+1}月`;
+  document.getElementById("listTitle").textContent     = `${currentMonth+1}月のスケジュール`;
+
+  // 日付→イベントマップ
+  const dateMap = {};
+  allEvents.forEach(ev => { if (!dateMap[ev.date]) dateMap[ev.date] = []; dateMap[ev.date].push(ev); });
+
+  const grid = document.getElementById("calGrid");
+  grid.innerHTML = "";
+  const firstDay    = new Date(currentYear, currentMonth, 1).getDay();
+  const daysInMonth = new Date(currentYear, currentMonth+1, 0).getDate();
+
+  for (let i = 0; i < firstDay; i++) {
+    const cell = document.createElement("div");
+    cell.className = "cal-cell empty";
+    grid.appendChild(cell);
+  }
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dateStr = toDateStr(currentYear, currentMonth, d);
+    const isToday = (currentYear === today.getFullYear() && currentMonth === today.getMonth() && d === today.getDate());
+    const evOnDay = dateMap[dateStr] || [];
+    const hasEvent = evOnDay.length > 0;
+    const dow = new Date(currentYear, currentMonth, d).getDay();
+
+    const cell = document.createElement("div");
+    const cls = ["cal-cell"];
+    if (isToday) cls.push("today");
+    else if (hasEvent) cls.push("has-event");
+    else cls.push("normal");
+    if (dow === 0) cls.push("sun");
+    if (dow === 6) cls.push("sat");
+    cell.className = cls.join(" ");
+
+    const num = document.createElement("span");
+    num.className = "cal-num";
+    num.textContent = d;
+    cell.appendChild(num);
+
+    if (hasEvent) {
+      if (evOnDay.length === 1) {
+        // 1件：拠点カラーバッジ＋イベント名＋時間
+        const ev1 = evOnDay[0];
+        const p   = PLACES[ev1.placeId] || {};
+
+        // 拠点名バッジ
+        const badge = document.createElement("div");
+        badge.className = "cal-badge";
+        badge.textContent = p.label || ev1.placeId;
+        badge.style.background = p.hex || "#E8257A";
+        cell.appendChild(badge);
+
+        // イベント名（ご飯会など）
+        if (ev1.eventName) {
+          const evBadge = document.createElement("div");
+          evBadge.className = "cal-badge event-name";
+          evBadge.style.background = p.hex || "#E8257A";
+          evBadge.textContent = ev1.eventName;
+          cell.appendChild(evBadge);
+        }
+
+        // 時間
+        const timeEl = document.createElement("div");
+        timeEl.className = "cal-time";
+        timeEl.textContent = `${ev1.timeStart}〜`;
+        cell.appendChild(timeEl);
+
+        // ご飯・クーポンアイコン
+        const hasMeal   = p.meal;
+        const hasCoupon = ev1.overrideCoupon || p.coupon;
+        if (hasMeal || hasCoupon) {
+          const foodEl = document.createElement("div");
+          foodEl.className = "cal-food-icon";
+          foodEl.textContent = hasMeal ? "ご飯あり" : "食事券あり";
+          cell.appendChild(foodEl);
+        }
+
+        cell.addEventListener("click", () => openModal(ev1));
+
+      } else {
+        // 複数件：件数バッジ＋時間（最初の開始時間）
+        const badge = document.createElement("div");
+        badge.className = "cal-badge";
+        badge.style.background = "#888";
+        badge.textContent = `${evOnDay.length}件`;
+        cell.appendChild(badge);
+
+        const timeEl = document.createElement("div");
+        timeEl.className = "cal-time";
+        timeEl.textContent = `${evOnDay[0].timeStart}〜`;
+        cell.appendChild(timeEl);
+
+        cell.addEventListener("click", () => scrollToDate(dateStr));
+      }
+    }
+    grid.appendChild(cell);
+  }
+
+  renderFilters();
+  renderEventList();
+  updateSchema(allEvents);
+}
+
+// ============================================================
+//  拠点フィルター
+// ============================================================
+function renderFilters() {
+  const wrap = document.getElementById("filterWrap");
+  wrap.innerHTML = "";
+  const usedPlaces = [...new Set(allEvents.map(e => e.placeId))];
+
+  const allBtn = document.createElement("button");
+  allBtn.className = "filter-btn" + (activeFilter === "all" ? " active" : "");
+  allBtn.style.setProperty("--place-color", "#E8257A");
+  allBtn.textContent = "すべて";
+  allBtn.onclick = () => { activeFilter = "all"; renderFilters(); renderEventList(); };
+  wrap.appendChild(allBtn);
+
+  usedPlaces.forEach(pid => {
+    const place = PLACES[pid] || {};
+    const btn = document.createElement("button");
+    btn.className = "filter-btn " + (place.tcClass || "") + (activeFilter === pid ? " active" : "");
+    btn.textContent = place.label || pid;
+    btn.onclick = () => { activeFilter = pid; renderFilters(); renderEventList(); };
+    wrap.appendChild(btn);
+  });
+}
+
+// ============================================================
+//  フードバッジHTML生成
+// ============================================================
+function buildFoodBadges(ev) {
+  const place = PLACES[ev.placeId] || {};
+  const items = [];
+
+  // 場所固有のご飯情報
+  if (place.meal) items.push(`<span class="food-badge meal">${place.meal}</span>`);
+
+  // 場所固有の割引クーポン or イベント上書きクーポン
+  const coupon = ev.overrideCoupon || place.coupon;
+  if (coupon) items.push(`<span class="food-badge coupon">${coupon}</span>`);
+
+  // ノート（調理部集合時間など）
+  if (ev.note && ev.note !== place.note) items.push(`<span class="food-badge note-badge">⚠️ ${ev.note}</span>`);
+  else if (place.note) items.push(`<span class="food-badge note-badge">⚠️ ${place.note}</span>`);
+
+  // イベント固有の追加ノート
+  if (ev.extraNote && ev.extraNote !== (ev.overrideCoupon || place.coupon)) {
+    // すでにcouponで表示済みの場合はスキップ
+  }
+
+  return items.join("");
+}
+
+// ============================================================
+//  イベントリスト描画
+// ============================================================
+function renderEventList() {
+  const list = document.getElementById("eventList");
+  list.innerHTML = "";
+  const filtered = activeFilter === "all" ? allEvents : allEvents.filter(e => e.placeId === activeFilter);
+
+  if (filtered.length === 0) {
+    list.innerHTML = `<div class="empty-month">この月のスケジュールはまだ登録されていません。<br>SNSで最新情報をチェックしてください📣</div>`;
+    return;
+  }
+
+  const weekdays = ["日","月","火","水","木","金","土"];
+
+  filtered.forEach(ev => {
+    const d     = new Date(ev.date);
+    const dow   = weekdays[d.getDay()];
+    const place = PLACES[ev.placeId] || {};
+
+    const card = document.createElement("div");
+    card.className = "event-card";
+    card.dataset.date = ev.date;
+
+    const foodBadges = buildFoodBadges(ev);
+
+    card.innerHTML = `
+      <div class="event-date-block ${place.bgClass || ''}">
+        <div class="edb-month">${d.getMonth()+1}月</div>
+        <div class="edb-day">${d.getDate()}</div>
+        <div class="edb-weekday">${dow}曜</div>
+      </div>
+      <div class="event-info">
+        <div class="event-place-name">${place.name || ev.placeId}</div>
+        ${ev.eventName ? `<div class="event-label">🎉 ${ev.eventName}</div>` : ""}
+        <div class="event-detail-row">🕐 ${ev.timeStart}〜${ev.timeEnd}</div>
+        ${foodBadges ? `<div style="margin-top:4px">${foodBadges}</div>` : ""}
+      </div>
+      <div class="event-arrow">›</div>
+    `;
+    card.addEventListener("click", () => openModal(ev));
+    list.appendChild(card);
+  });
+}
+
+// ============================================================
+//  モーダル
+// ============================================================
+function openModal(ev) {
+  const d       = new Date(ev.date);
+  const weekdays = ["日","月","火","水","木","金","土"];
+  const dow     = weekdays[d.getDay()];
+  const place   = PLACES[ev.placeId] || {};
+
+  document.getElementById("modalHeader").style.background = place.hex || "#E8257A";
+  document.getElementById("modalDateLabel").textContent   = `${d.getMonth()+1}/${d.getDate()}（${dow}）`;
+  document.getElementById("modalEventTitle").textContent  = place.name || ev.placeId;
+  document.getElementById("modalSubTitle").textContent    = ev.eventName ? `🎉 ${ev.eventName}` : "開館日";
+  document.getElementById("modalMetaRow").innerHTML       = `<span>🕐 ${ev.timeStart}〜${ev.timeEnd}</span><span>📍 ${place.address || ""}</span>`;
+
+  // モーダルバッジ（ご飯・クーポン・ノート）
+  const badges = document.getElementById("modalBadges");
+  const bItems = [];
+  if (place.meal)                     bItems.push(`<span class="modal-badge">${place.meal}</span>`);
+  const coupon = ev.overrideCoupon || place.coupon;
+  if (coupon)                         bItems.push(`<span class="modal-badge">${coupon}</span>`);
+  const note = place.note || ev.note;
+  if (note)                           bItems.push(`<span class="modal-badge">⚠️ ${note}</span>`);
+  badges.innerHTML = bItems.join("");
+
+  // 写真（PLACESのphotosリストから表示。なければプレースホルダー）
+  const gallery = document.getElementById("photoGallery");
+  gallery.innerHTML = "";
+  const photoCandidates = place.photos && place.photos.length > 0
+    ? place.photos
+    : [null, null, null];
+
+  photoCandidates.forEach((src, i) => {
+    const item = document.createElement("div");
+    item.className = "photo-item";
+    const img = document.createElement("img");
+    img.alt = `写真${i+1}`;
+    img.loading = "lazy";
+    img.src = src;
+    img.onload = () => {
+      item.appendChild(img);
+      item.addEventListener("click", () => openLightbox(src));
+    };
+    img.onerror = () => {
+      item.innerHTML = `<div class="photo-placeholder">🏠<span>準備中</span></div>`;
+    };
+    gallery.appendChild(item);
+  });
+
+  // スタッフ
+  const staffList = document.getElementById("staffList");
+  staffList.innerHTML = "";
+  if (ev.staff && ev.staff.length > 0) {
+    ev.staff.forEach(name => {
+      const chip = document.createElement("div");
+      chip.className = "staff-chip";
+      chip.innerHTML = `<div class="staff-avatar">${name.slice(0,1)}</div>${name}`;
+      staffList.appendChild(chip);
+    });
+  } else {
+    staffList.innerHTML = `<div class="staff-undecided">メンバー調整中です</div>`;
+  }
+
+  // 申し込みフォームボタン（formUrlがある場合のみ表示）
+  const formBtn = document.getElementById("formLinkBtn");
+  if (ev.formUrl) {
+    formBtn.href = ev.formUrl;
+    formBtn.style.display = "flex";
+  } else {
+    formBtn.style.display = "none";
+  }
+
+  // Googleマップ / HP連動リンク
+  document.getElementById("gmapLink").href = buildGmapUrl(ev);
+  document.getElementById("placeLinkBtn").href = place.hpAnchor || "https://comicalyouth.jp/#place";
+
+  document.getElementById("modalOverlay").classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+
+function closeModalBtn() {
+  document.getElementById("modalOverlay").classList.remove("open");
+  document.body.style.overflow = "";
+}
+function closeModal(e) {
+  if (e.target === document.getElementById("modalOverlay")) closeModalBtn();
+}
+
+// ============================================================
+//  ライトボックス
+// ============================================================
+function openLightbox(src) {
+  document.getElementById("lightboxImg").src = src;
+  document.getElementById("lightbox").classList.add("open");
+}
+function closeLightbox() { document.getElementById("lightbox").classList.remove("open"); }
+
+// ============================================================
+//  GoogleマップURL
+// ============================================================
+function buildGmapUrl(ev) {
+  const place = PLACES[ev.placeId] || {};
+  // mapUrl が拠点マスタにあればそちらを優先、なければ住所検索
+  if (place.mapUrl) return place.mapUrl;
+  const q = encodeURIComponent((place.name || "") + " " + (place.address || ""));
+  return `https://www.google.com/maps/search/?api=1&query=${q}`;
+}
+
+function scrollToDate(dateStr) {
+  const card = document.querySelector(`.event-card[data-date="${dateStr}"]`);
+  if (card) card.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+// ============================================================
+//  月変更
+// ============================================================
+function changeMonth(delta) {
+  currentMonth += delta;
+  if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+  if (currentMonth < 0)  { currentMonth = 11; currentYear--; }
+  activeFilter = "all";
+  renderCalendar();
+}
+
+// ============================================================
+//  構造化データ（AI検索対応）
+// ============================================================
+function updateSchema(events) {
+  const schema = events.map(ev => {
+    const place = PLACES[ev.placeId] || {};
+    return {
+      "@context": "https://schema.org",
+      "@type": "Event",
+      "name": (place.name || ev.placeId) + (ev.eventName ? ` ${ev.eventName}` : " 開館日"),
+      "startDate": `${ev.date}T${ev.timeStart}:00+09:00`,
+      "endDate":   `${ev.date}T${ev.timeEnd}:00+09:00`,
+      "location": { "@type": "Place", "name": place.name || "", "address": { "@type": "PostalAddress", "addressLocality": "福井", "addressCountry": "JP" } },
+      "organizer": { "@type": "Organization", "name": "こみかるユース福井", "url": "https://comicalyouth.jp" },
+      "isAccessibleForFree": true,
+      "eventStatus": "https://schema.org/EventScheduled",
+      "description": "予約不要・参加費無料。10代・20代が気軽に立ち寄れる若者の居場所です。" + (place.meal ? ` ${place.meal}。` : "")
+    };
+  });
+  document.getElementById("schema-events").textContent = JSON.stringify(schema, null, 2);
+}
+
+// ============================================================
+//  インスタ画像出力
+// ============================================================
+function saveInstagramImage() {
+  const el  = document.getElementById("calendar-capture");
+  const btn = document.querySelector(".instagram-btn");
+  btn.textContent = "📸 画像生成中...";
+  btn.disabled = true;
+  html2canvas(el, { scale: 3, backgroundColor: "#ffffff", useCORS: true, logging: false })
+    .then(canvas => {
+      const link = document.createElement("a");
+      link.download = `こみかる_${currentYear}年${currentMonth+1}月.png`;
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    })
+    .finally(() => {
+      btn.textContent = "📸 インスタ用カレンダー画像を保存";
+      btn.disabled = false;
+    });
+}
+
+// ============================================================
+//  初期化
+// ============================================================
+renderCalendar();
+
+// ✕ボタンを確実にバインド（onclickより確実）
+document.getElementById("modalCloseBtn").addEventListener("click", function(e) {
+  e.stopPropagation();
+  closeModalBtn();
+});
+
+// オーバーレイ外クリックで閉じる
+document.getElementById("modalOverlay").addEventListener("click", function(e) {
+  if (e.target === this) closeModalBtn();
+});
+</script>
+</body>
+</html>
