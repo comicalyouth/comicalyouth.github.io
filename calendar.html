@@ -755,11 +755,11 @@ function renderCalendar() {
         badge.style.background = p.hex || "#E8257A";
         cell.appendChild(badge);
 
-        // イベント名（ご飯会など）
+        // イベント名（ご飯会・オールナイトなど） → 水色バッジ
         if (ev1.eventName) {
           const evBadge = document.createElement("div");
-          evBadge.className = "cal-badge event-name";
-          evBadge.style.background = p.hex || "#E8257A";
+          evBadge.className = "cal-badge";
+          evBadge.style.background = "#1A6BB5";
           evBadge.textContent = ev1.eventName;
           cell.appendChild(evBadge);
         }
@@ -788,9 +788,15 @@ function renderCalendar() {
           const p2 = PLACES[ev.placeId] || {};
           const badge2 = document.createElement("div");
           badge2.className = "cal-badge";
-          badge2.style.background = p2.hex || "#888";
-          // イベント名があればそれを、なければ拠点名を表示
-          badge2.textContent = ev.eventName || p2.label || ev.placeId;
+          if (ev.eventName) {
+            // イベント名あり → 水色
+            badge2.style.background = "#1A6BB5";
+            badge2.textContent = ev.eventName;
+          } else {
+            // 通常開館 → 拠点カラー
+            badge2.style.background = p2.hex || "#888";
+            badge2.textContent = p2.label || ev.placeId;
+          }
           cell.appendChild(badge2);
         });
         const timeEl = document.createElement("div");
