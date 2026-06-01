@@ -69,8 +69,12 @@
     }
     .cal-cell.empty { background: transparent; min-height: 52px; }
     .cal-cell.normal { background: #fafafa; }
-    .cal-cell.has-event { background: #fafafa; cursor: pointer; }
-    .cal-cell.has-event:hover { filter: brightness(0.95); }
+    .cal-cell.has-event {
+      background: linear-gradient(160deg, #fff0f6 0%, #fce8f3 100%);
+      cursor: pointer;
+      box-shadow: 0 1px 4px rgba(232,37,122,0.12);
+    }
+    .cal-cell.has-event:hover { filter: brightness(0.96); transform: scale(1.03); }
     .cal-cell.today { background: #E8257A; color: white; font-weight: bold; cursor: pointer; }
     .cal-num { font-size: 0.82rem; font-weight: bold; line-height: 1; margin-bottom: 3px; }
     .cal-cell.sun .cal-num { color: #E8257A; }
