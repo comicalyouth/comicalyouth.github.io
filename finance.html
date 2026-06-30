@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>こみかるユース福井 財務ダッシュボード</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Segoe UI', sans-serif; background: #f4f6fa; color: #1a1a2e; font-size: 13px; }
+.app { max-width: 1000px; margin: 0 auto; padding: 24px 16px; }
+
+/* ヘッダー */
+.header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 20px; }
+.header h1 { font-size: 20px; font-weight: 800; letter-spacing: -0.3px; }
+.header h1 span { color: #4f7cff; }
+.header-meta { text-align: right; font-size: 11px; color: #999; line-height: 1.6; }
+.updated-badge { display: inline-block; background: #e8f0fe; color: #4f7cff; padding: 2px 10px; border-radius: 20px; font-size: 10px; font-weight: 600; margin-bottom: 4px; }
+
+/* タブ */
+.tabs { display: flex; gap: 2px; margin-bottom: 20px; background: #e8eaf0; padding: 4px; border-radius: 10px; width: fit-content; }
+.tab { padding: 7px 18px; border: none; background: none; cursor: pointer; font-size: 12px; color: #666; border-radius: 7px; font-weight: 500; transition: all 0.15s; }
+.tab.active { background: #fff; color: #1a1a2e; font-weight: 700; box-shadow: 0 1px 4px rgba(0,0,0,.1); }
+.panel { display: none; } .panel.active { display: block; }
+
+/* サマリーカード */
+.cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+.card { background: #fff; border-radius: 12px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+.card .label { font-size: 10px; font-weight: 600; color: #999; letter-spacing: 0.05em; margin-bottom: 6px; text-transform: uppercase; }
+.card .value { font-size: 22px; font-weight: 800; line-height: 1; }
+.card .sub { font-size: 10px; color: #aaa; margin-top: 6px; }
+.card .bar { height: 3px; border-radius: 2px; margin-top: 10px; background: #f0f0f0; }
+.card .bar-fill { height: 100%; border-radius: 2px; }
+.green { color: #16a34a; } .red { color: #dc2626; } .blue { color: #4f7cff; } .orange { color: #ea580c; }
+
+/* テーブル */
+.section { background: #fff; border-radius: 12px; overflow: hidden; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+.section-head { padding: 12px 16px; font-size: 11px; font-weight: 700; color: #666; letter-spacing: 0.08em; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; gap: 6px; }
+.section-head::before { content:''; display:inline-block; width:3px; height:12px; border-radius:2px; background:#4f7cff; }
+table { width: 100%; border-collapse: collapse; }
+thead th { padding: 8px 14px; text-align: left; font-size: 10px; font-weight: 700; color: #aaa; letter-spacing: 0.06em; background: #fafafa; border-bottom: 1px solid #f0f0f0; }
+tbody td { padding: 10px 14px; border-bottom: 1px solid #f8f8f8; font-size: 12px; }
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:hover { background: #fafbff; }
+.right { text-align: right; }
+.bold { font-weight: 700; }
+
+/* バッジ */
+.badge { display: inline-block; padding: 2px 9px; border-radius: 20px; font-size: 10px; font-weight: 700; }
+.badge-confirmed { background: #dcfce7; color: #166534; }
+.badge-forecast { background: #fef9c3; color: #854d0e; }
+.badge-current { background: #dbeafe; color: #1e40af; }
+.badge-fixed { background: #f3f4f6; color: #374151; }
+
+/* 月次グリッド */
+.month-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-bottom: 16px; }
+.month-card { background: #fff; border-radius: 10px; padding: 12px 10px; cursor: pointer; border: 2px solid transparent; box-shadow: 0 1px 3px rgba(0,0,0,.06); transition: all 0.15s; }
+.month-card:hover, .month-card.selected { border-color: #4f7cff; background: #f8faff; }
+.month-card .m-label { font-size: 12px; font-weight: 700; margin-bottom: 8px; color: #555; }
+.month-card .m-in { font-size: 10px; color: #16a34a; margin-bottom: 2px; }
+.month-card .m-out { font-size: 10px; color: #dc2626; margin-bottom: 4px; }
+.month-card .m-bal { font-size: 12px; font-weight: 800; padding-top: 6px; border-top: 1px solid #f0f0f0; }
+
+/* 貸借対照表 */
+.bs-page { background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,.06); margin-bottom: 16px; }
+.bs-title-bar { padding: 20px; text-align: center; border-bottom: 2px solid #1a1a2e; }
+.bs-title-bar h2 { font-size: 18px; font-weight: 800; }
+.bs-title-bar p { font-size: 12px; color: #666; margin-top: 4px; }
+.bs-cols { display: grid; grid-template-columns: 1fr 1fr; border-top: none; }
+.bs-col { padding: 20px; }
+.bs-col:first-child { border-right: 1px solid #e8e8e8; }
+.bs-sec-title { font-size: 12px; font-weight: 800; border-bottom: 2px solid #1a1a2e; padding-bottom: 4px; margin-bottom: 8px; }
+.bs-sub-title { font-size: 10px; font-weight: 700; color: #666; margin: 10px 0 4px; }
+.bs-item { display: flex; justify-content: space-between; padding: 4px 0 4px 12px; font-size: 11px; border-bottom: 1px solid #f8f8f8; }
+.bs-item.subtotal { font-weight: 700; padding-left: 0; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; margin-top: 4px; background: #f9f9f9; padding: 5px 6px; }
+.bs-item.total { font-weight: 800; font-size: 13px; padding: 8px 6px; border-top: 2px solid #1a1a2e; border-bottom: 2px solid #1a1a2e; background: #f0f4ff; margin-top: 8px; }
+.bs-actions { padding: 14px 20px; border-top: 1px solid #f0f0f0; display: flex; gap: 10px; align-items: center; }
+.btn-print { padding: 8px 20px; background: #1a1a2e; color: #fff; border: none; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; }
+.btn-print:hover { background: #2d2d4a; }
+.bs-note { font-size: 10px; color: #aaa; }
+
+/* 資産カード */
+.asset-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+
+@media print {
+  body { background: #fff; }
+  .app > .header, .tabs, #panel-summary, #panel-monthly, #panel-transactions, #panel-assets { display: none !important; }
+  #panel-bs { display: block !important; }
+  .bs-actions { display: none !important; }
+}
+@media (max-width: 680px) {
+  .cards { grid-template-columns: repeat(2, 1fr); }
+  .month-grid { grid-template-columns: repeat(4, 1fr); }
+  .bs-cols { grid-template-columns: 1fr; }
+  .bs-col:first-child { border-right: none; border-bottom: 1px solid #e8e8e8; }
+  .asset-cards { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <div>
+      <h1>こみかる<span>ユース福井</span> 財務ダッシュボード</h1>
+      <p style="font-size:11px;color:#aaa;margin-top:4px;">特定非営利活動法人 こみかるユース福井 ／ 役員閲覧用</p>
+    </div>
+    <div class="header-meta">
+      <div><span class="updated-badge">最終更新</span></div>
+      <div id="update-date"></div>
+      <div>2026年度（4月〜3月）</div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="showPanel('summary',this)">サマリー</button>
+    <button class="tab" onclick="showPanel('monthly',this)">月次収支</button>
+    <button class="tab" onclick="showPanel('assets',this)">資産・負債</button>
+    <button class="tab" onclick="showPanel('bs',this)">貸借対照表</button>
+  </div>
+
+  <div id="panel-summary" class="panel active">
+    <div class="cards" id="summary-cards"></div>
+    <div class="section">
+      <div class="section-head">収入内訳（今年度）</div>
+      <table><thead><tr><th>収入源</th><th>区分</th><th class="right">確定額</th><th class="right">見込み額</th><th class="right">合計</th></tr></thead>
+      <tbody id="income-body"></tbody></table>
+    </div>
+    <div class="section">
+      <div class="section-head">支出内訳（今年度）</div>
+      <table><thead><tr><th>支出項目</th><th>区分</th><th class="right">確定額</th><th class="right">見込み額</th><th class="right">合計</th></tr></thead>
+      <tbody id="expense-body"></tbody></table>
+    </div>
+  </div>
+
+  <div id="panel-monthly" class="panel">
+    <div class="month-grid" id="month-grid"></div>
+    <div class="section" id="month-detail-wrap" style="display:none">
+      <div class="section-head" id="month-detail-title"></div>
+      <table><thead><tr><th>項目</th><th>種別</th><th>区分</th><th class="right">金額</th></tr></thead>
+      <tbody id="month-detail-body"></tbody></table>
+    </div>
+  </div>
+
+  <div id="panel-assets" class="panel">
+    <div class="asset-cards" id="asset-summary-cards"></div>
+    <div class="section">
+      <div class="section-head">流動資産（現金・預金）</div>
+      <table><thead><tr><th>名称</th><th>備考</th><th class="right">金額</th></tr></thead>
+      <tbody id="current-asset-body"></tbody></table>
+    </div>
+    <div class="section">
+      <div class="section-head">固定資産（物品・備品）</div>
+      <table><thead><tr><th>品名</th><th>取得</th><th>備考</th><th class="right">取得価額</th></tr></thead>
+      <tbody id="fixed-asset-body"></tbody></table>
+    </div>
+    <div class="section">
+      <div class="section-head">負債</div>
+      <table><thead><tr><th>名称</th><th>種別</th><th>備考</th><th class="right">金額</th></tr></thead>
+      <tbody id="liability-body"></tbody></table>
+    </div>
+  </div>
+
+  <div id="panel-bs" class="panel">
+    <div class="bs-page">
+      <div class="bs-title-bar">
+        <h2>貸借対照表</h2>
+        <p id="bs-date"></p>
+        <p style="font-weight:700;margin-top:2px;">特定非営利活動法人 こみかるユース福井</p>
+      </div>
+      <div class="bs-cols">
+        <div class="bs-col" id="bs-assets-col"></div>
+        <div class="bs-col" id="bs-liabilities-col"></div>
+      </div>
+    </div>
+    <div class="bs-actions">
+      <button class="btn-print" onclick="window.print()">印刷 / PDF保存</button>
+      <span class="bs-note">印刷すると貸借対照表のみが出力されます。税理士への提出用にご利用ください。</span>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===================== データ =====================
+const DATA = {
+  updatedAt: '2026年6月30日',
+  transactions: [
+    { month:'2026-04', type:'income', name:'寄付（固定）', amount:50000, status:'confirmed' },
+    { month:'2026-05', type:'income', name:'寄付（固定）', amount:50000, status:'confirmed' },
+    { month:'2026-06', type:'income', name:'寄付（固定）', amount:50000, status:'confirmed' },
+    { month:'2026-07', type:'income', name:'寄付（固定）', amount:50000, status:'forecast' },
+    { month:'2026-08', type:'income', name:'寄付（固定）', amount:50000, status:'forecast' },
+    { month:'2026-09', type:'income', name:'寄付（固定）', amount:50000, status:'forecast' },
+    { month:'2026-10', type:'income', name:'寄付（固定）', amount:50000, status:'forecast' },
+    { month:'2026-11', type:'income', name:'寄付（固定）', amount:50000, status:'forecast' },
+    { month:'2026-12', type:'income', name:'寄付（固定）', amount:50000, status:'forecast' },
+    { month:'2027-01', type:'income', name:'寄付（固定）', amount:50000, status:'forecast' },
+    { month:'2027-02', type:'income', name:'寄付（固定）', amount:50000, status:'forecast' },
+    { month:'2027-03', type:'income', name:'寄付（固定）', amount:50000, status:'forecast' },
+    { month:'2026-06', type:'expense', name:'役員報酬（塚原）', amount:30000, status:'confirmed' },
+    { month:'2026-07', type:'expense', name:'役員報酬（塚原）', amount:30000, status:'forecast' },
+    { month:'2026-08', type:'expense', name:'役員報酬（塚原）', amount:30000, status:'forecast' },
+    { month:'2026-09', type:'expense', name:'役員報酬（塚原）', amount:30000, status:'forecast' },
+    { month:'2026-10', type:'expense', name:'役員報酬（塚原）', amount:30000, status:'forecast' },
+    { month:'2026-11', type:'expense', name:'役員報酬（塚原）', amount:30000, status:'forecast' },
+    { month:'2026-12', type:'expense', name:'役員報酬（塚原）', amount:30000, status:'forecast' },
+    { month:'2027-01', type:'expense', name:'役員報酬（塚原）', amount:30000, status:'forecast' },
+    { month:'2027-02', type:'expense', name:'役員報酬（塚原）', amount:30000, status:'forecast' },
+    { month:'2027-03', type:'expense', name:'役員報酬（塚原）', amount:30000, status:'forecast' },
+    { month:'2026-06', type:'income', name:'YourLpa 事前調整', amount:20000, status:'confirmed' },
+    { month:'2026-06', type:'income', name:'YourLpa 立ち合い', amount:10000, status:'confirmed' },
+    { month:'2026-06', type:'income', name:'YourLpa チラシ制作', amount:5000, status:'confirmed' },
+    { month:'2026-06', type:'expense', name:'YourLpa 業務委託費（塚原）', amount:35000, status:'confirmed' },
+    ...['2026-04','2026-05','2026-06','2026-07','2026-08','2026-09','2026-10','2026-11','2026-12','2027-01','2027-02','2027-03'].flatMap(m=>[
+      { month:m, type:'income', name:'居場所/エルパ（ご飯券）', amount:30000, status:'confirmed' },
+      { month:m, type:'income', name:'居場所/VIO', amount:10000, status:'confirmed' },
+      { month:m, type:'income', name:'居場所/ベル（ご飯代）', amount:20000, status:'confirmed' },
+    ]),
+    ...['2026-06','2026-07','2026-08','2026-09','2026-10','2026-11','2026-12','2027-01','2027-02','2027-03'].map(m=>
+      ({ month:m, type:'income', name:'法人サポーター/エルパ（5万プラン）', amount:50000, status:'forecast' })
+    ),
+  ],
+  currentAssets: [
+    { name:'法人口座（福井銀行）', amount:0, note:'残高は都度更新' },
+    { name:'現金', amount:0, note:'' },
+  ],
+  fixedAssets: [
+    { name:'プリンター', amount:44228, date:'2026-03', note:'設備費' },
+    { name:'レーザー刻印機（LaserPecker）', amount:87990, date:'2026-08', note:'ノベルティ製作用' },
+    { name:'マイク（サンワサプライ）', amount:14680, date:'2026-03', note:'イベント用' },
+    { name:'マイク', amount:99800, date:'2026-03', note:'イベント用' },
+    { name:'タブレット', amount:147200, date:'2026-03', note:'' },
+    { name:'ボードゲーム一式', amount:20543, date:'2026-03', note:'カタン・クアルト・ITO・将棋盤・パズル等' },
+    { name:'オフィス利用料（前払）', amount:225500, date:'2025-10', note:'2025/10〜2028/3まで' },
+  ],
+  liabilities: [],
+};
+// ===================== ここまでデータ =====================
+
+const fmt = n => Number(n).toLocaleString('ja-JP') + '円';
+const months = ['2026-04','2026-05','2026-06','2026-07','2026-08','2026-09','2026-10','2026-11','2026-12','2027-01','2027-02','2027-03'];
+const monthLabel = m => m.split('-')[1] + '月';
+
+document.getElementById('update-date').textContent = DATA.updatedAt;
+document.getElementById('bs-date').textContent = DATA.updatedAt + ' 現在';
+
+function showPanel(id, btn) {
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  if(btn) btn.classList.add('active');
+}
+
+function calcSummary() {
+  let iC=0,iF=0,eC=0,eF=0;
+  DATA.transactions.forEach(t=>{
+    if(t.type==='income') t.status==='confirmed'?iC+=t.amount:iF+=t.amount;
+    else t.status==='confirmed'?eC+=t.amount:eF+=t.amount;
+  });
+  return {iC,iF,eC,eF};
+}
+function calcMonthly(m) {
+  let inc=0,exp=0;
+  DATA.transactions.filter(t=>t.month===m).forEach(t=>t.type==='income'?inc+=t.amount:exp+=t.amount);
+  return {inc,exp,bal:inc-exp};
+}
+function totalCA() { return DATA.currentAssets.reduce((s,a)=>s+Number(a.amount),0); }
+function totalFA() { return DATA.fixedAssets.reduce((s,a)=>s+Number(a.amount),0); }
+function totalLi() { return DATA.liabilities.reduce((s,l)=>s+Number(l.amount),0); }
+function totalA()  { return totalCA()+totalFA(); }
+function netA()    { return totalA()-totalLi(); }
+
+function renderAll() {
+  renderSummary();
+  renderMonthGrid();
+  renderAssets();
+  renderBS();
+}
+
+function renderSummary() {
+  const {iC,iF,eC,eF} = calcSummary();
+  const iT=iC+iF, eT=eC+eF, goalPct = Math.min(Math.round(iT/5000000*100),100);
+  document.getElementById('summary-cards').innerHTML = `
+    <div class="card">
+      <div class="label">確定収入</div>
+      <div class="value green">${fmt(iC)}</div>
+      <div class="sub">見込み含む計 ${fmt(iT)}</div>
+      <div class="bar"><div class="bar-fill" style="width:${Math.min(iC/5000000*100,100)}%;background:#16a34a"></div></div>
+    </div>
+    <div class="card">
+      <div class="label">確定支出</div>
+      <div class="value red">${fmt(eC)}</div>
+      <div class="sub">見込み含む計 ${fmt(eT)}</div>
+    </div>
+    <div class="card">
+      <div class="label">確定収支</div>
+      <div class="value ${iC-eC>=0?'green':'red'}">${fmt(iC-eC)}</div>
+      <div class="sub">見込み含む ${fmt(iT-eT)}</div>
+    </div>
+    <div class="card">
+      <div class="label">年間目標 達成率</div>
+      <div class="value blue">${goalPct}%</div>
+      <div class="sub">目標 500万円 ／ 見込み含む</div>
+      <div class="bar"><div class="bar-fill" style="width:${goalPct}%;background:#4f7cff"></div></div>
+    </div>`;
+
+  const grp = (type) => {
+    const g={};
+    DATA.transactions.filter(t=>t.type===type).forEach(t=>{
+      if(!g[t.name]) g[t.name]={c:0,f:0};
+      t.status==='confirmed'?g[t.name].c+=t.amount:g[t.name].f+=t.amount;
+    });
+    return g;
+  };
+  const row=(name,v)=>`<tr><td>${name}</td>
+    <td><span class="badge ${v.c&&v.f?'badge-confirmed':v.c?'badge-confirmed':'badge-forecast'}">${v.c&&v.f?'確定＋見込':v.c?'確定':'見込み'}</span></td>
+    <td class="right">${v.c?fmt(v.c):'-'}</td><td class="right">${v.f?fmt(v.f):'-'}</td>
+    <td class="right bold">${fmt(v.c+v.f)}</td></tr>`;
+  document.getElementById('income-body').innerHTML=Object.entries(grp('income')).map(([n,v])=>row(n,v)).join('');
+  document.getElementById('expense-body').innerHTML=Object.entries(grp('expense')).map(([n,v])=>row(n,v)).join('');
+}
+
+function renderMonthGrid() {
+  document.getElementById('month-grid').innerHTML = months.map(m=>{
+    const {inc,exp,bal}=calcMonthly(m);
+    return `<div class="month-card" onclick="showMonthDetail('${m}')" id="mc-${m}">
+      <div class="m-label">${monthLabel(m)}</div>
+      <div class="m-in">▲ ${inc?fmt(inc):'-'}</div>
+      <div class="m-out">▼ ${exp?fmt(exp):'-'}</div>
+      <div class="m-bal ${bal>0?'green':bal<0?'red':''}">${inc||exp?fmt(bal):'未入力'}</div>
+    </div>`;
+  }).join('');
+}
+function showMonthDetail(m) {
+  document.querySelectorAll('.month-card').forEach(c=>c.classList.remove('selected'));
+  document.getElementById('mc-'+m)?.classList.add('selected');
+  const txs=DATA.transactions.filter(t=>t.month===m);
+  document.getElementById('month-detail-title').textContent=monthLabel(m)+' 明細';
+  document.getElementById('month-detail-body').innerHTML=txs.length
+    ?txs.map(t=>`<tr><td>${t.name}</td><td>${t.type==='income'?'収入':'支出'}</td>
+      <td><span class="badge ${t.status==='confirmed'?'badge-confirmed':'badge-forecast'}">${t.status==='confirmed'?'確定':'見込み'}</span></td>
+      <td class="right bold ${t.type==='income'?'green':'red'}">${t.type==='income'?'+':'-'}${fmt(t.amount)}</td></tr>`).join('')
+    :'<tr><td colspan="4" style="text-align:center;color:#aaa;padding:16px">データなし</td></tr>';
+  document.getElementById('month-detail-wrap').style.display='block';
+}
+
+function renderAssets() {
+  const ca=totalCA(),fa=totalFA(),li=totalLi(),na=netA();
+  document.getElementById('asset-summary-cards').innerHTML=`
+    <div class="card"><div class="label">流動資産</div><div class="value blue">${fmt(ca)}</div><div class="sub">現金・預金</div></div>
+    <div class="card"><div class="label">固定資産</div><div class="value blue">${fmt(fa)}</div><div class="sub">物品・備品</div></div>
+    <div class="card"><div class="label">正味財産</div><div class="value ${na>=0?'green':'red'}">${fmt(na)}</div><div class="sub">資産 − 負債</div></div>`;
+  document.getElementById('current-asset-body').innerHTML=DATA.currentAssets.map(a=>`
+    <tr><td>${a.name}</td><td style="color:#aaa">${a.note||''}</td><td class="right bold">${fmt(a.amount)}</td></tr>`).join('')||'<tr><td colspan="3" style="text-align:center;color:#aaa;padding:12px">未登録</td></tr>';
+  document.getElementById('fixed-asset-body').innerHTML=DATA.fixedAssets.map(a=>`
+    <tr><td>${a.name}</td><td style="color:#aaa">${a.date||''}</td><td style="color:#aaa">${a.note||''}</td><td class="right bold">${fmt(a.amount)}</td></tr>`).join('')||'<tr><td colspan="4" style="text-align:center;color:#aaa;padding:12px">未登録</td></tr>';
+  document.getElementById('liability-body').innerHTML=DATA.liabilities.map(l=>`
+    <tr><td>${l.name}</td><td><span class="badge ${l.ltype==='current'?'badge-current':'badge-fixed'}">${l.ltype==='current'?'流動':'固定'}</span></td><td style="color:#aaa">${l.note||''}</td><td class="right bold">${fmt(l.amount)}</td></tr>`).join('')||'<tr><td colspan="4" style="text-align:center;color:#aaa;padding:12px">負債なし</td></tr>';
+}
+
+function renderBS() {
+  const ca=totalCA(),fa=totalFA(),ta=totalA();
+  const cLi=DATA.liabilities.filter(l=>l.ltype==='current').reduce((s,l)=>s+Number(l.amount),0);
+  const fLi=DATA.liabilities.filter(l=>l.ltype==='fixed').reduce((s,l)=>s+Number(l.amount),0);
+  const li=totalLi(),na=netA();
+  const item=(label,amount,indent=true)=>`<div class="bs-item" style="${indent?'':'padding-left:0'}">${label}<span>${fmt(amount)}</span></div>`;
+  const sub=(label,amount)=>`<div class="bs-item subtotal">${label}<span>${fmt(amount)}</span></div>`;
+  const tot=(label,amount)=>`<div class="bs-item total">${label}<span>${fmt(amount)}</span></div>`;
+  document.getElementById('bs-assets-col').innerHTML=`
+    <div class="bs-sec-title">資産の部</div>
+    <div class="bs-sub-title">Ⅰ 流動資産</div>
+    ${DATA.currentAssets.map(a=>item(a.name,a.amount)).join('')}
+    ${sub('流動資産 合計',ca)}
+    <div class="bs-sub-title">Ⅱ 固定資産</div>
+    ${DATA.fixedAssets.map(a=>item(a.name,a.amount)).join('')||item('（なし）',0)}
+    ${sub('固定資産 合計',fa)}
+    ${tot('資産合計',ta)}`;
+  document.getElementById('bs-liabilities-col').innerHTML=`
+    <div class="bs-sec-title">負債の部</div>
+    <div class="bs-sub-title">Ⅰ 流動負債</div>
+    ${DATA.liabilities.filter(l=>l.ltype==='current').map(l=>item(l.name,l.amount)).join('')||item('（なし）',0)}
+    ${sub('流動負債 合計',cLi)}
+    <div class="bs-sub-title">Ⅱ 固定負債</div>
+    ${DATA.liabilities.filter(l=>l.ltype==='fixed').map(l=>item(l.name,l.amount)).join('')||item('（なし）',0)}
+    ${sub('固定負債 合計',fLi)}
+    ${sub('負債合計',li)}
+    <div class="bs-sec-title" style="margin-top:16px">正味財産の部</div>
+    ${item('正味財産',na)}
+    ${sub('正味財産合計',na)}
+    ${tot('負債及び正味財産合計',ta)}`;
+}
+
+renderAll();
+</script>
+</body>
+</html>
