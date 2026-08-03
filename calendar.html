@@ -59,13 +59,22 @@
     .cal-weekday.sun { color: #E8257A; }
     .cal-weekday.sat { color: #5B8FD6; }
 
-    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); grid-auto-rows: 84px; gap: 2px; }
     .cal-cell {
-      min-height: 52px;
+      height: 100%; overflow: hidden;
       display: flex; flex-direction: column; align-items: center;
       justify-content: flex-start; padding: 5px 2px 4px;
       border-radius: 7px; font-size: 0.82rem; position: relative;
       transition: background 0.12s;
+    }
+    .cal-banner {
+      align-self: end; justify-self: stretch;
+      margin: 0 2px 3px; padding: 2px 3px;
+      color: #fff;
+      font-size: 0.5rem; font-weight: bold; text-align: center;
+      border-radius: 5px; line-height: 1.3;
+      pointer-events: none; z-index: 2;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
     }
     .cal-cell.empty { background: transparent; min-height: 52px; }
     .cal-cell.normal { background: #fafafa; }
@@ -570,8 +579,24 @@ const WEEK_OVERRIDES = [
 const SPOT_EVENTS = [
   { date: "2026-06-30", placeId: "alpla_tsuruga", timeStart: "17:00", timeEnd: "19:30", eventName: "" },
   { date: "2026-07-14", placeId: "alpla_tsuruga", timeStart: "17:00", timeEnd: "19:30", eventName: "" },
-  { date: "2026-07-24", placeId: "elpa", timeStart: "20:00", timeEnd: "翌07:00", eventName: "オールナイトエルパ", note: "7/25(土) 7:00まで・参加費無料", formUrl: "https://docs.google.com/forms/d/e/1FAIpQLSeNtXVCP7ssq44OpOorYNOQ4vTzrza-IKejhoa_dxM_KqL0mQ/viewform?usp=dialog" },
+  { date: "2026-07-24", placeId: "elpa", timeStart: "20:00", timeEnd: "翌07:00", eventName: "オールナイトこみかる（エルパ開催）", note: "7/24(金)こみかる後〜7/25(土) 7:00まで・参加費無料", formUrl: "https://docs.google.com/forms/d/e/1FAIpQLSeNtXVCP7ssq44OpOorYNOQ4vTzrza-IKejhoa_dxM_KqL0mQ/viewform?usp=dialog" },
+  { date: "2026-08-13", placeId: "vio", timeStart: "10:00", timeEnd: "14:00", eventName: "夏休みの宿題を終わらせる会" },
   // ★ 武生・敦賀など不定期イベントを追加する場合はここに記入
+];
+
+// 特定の日付だけ、定期イベントの名称を上書きする（その日限定／毎月繰り返さない）
+const DATE_OVERRIDES = [
+  { date: "2026-07-01", placeId: "eiheiji", eventName: "Eスポーツ体験会" },
+];
+
+// 特定の日付の定期開催をお休みにする（その日限定／毎月繰り返さない）
+const SKIP_DATES = [
+  { date: "2026-08-05", placeId: "eiheiji", reason: "8月はお休み" },
+];
+
+// 複数日にかかるイベントを、カレンダー上で日付の境目に中央揃えの帯として表示する
+const BANNER_EVENTS = [
+  { startDate: "2026-07-24", endDate: "2026-07-25", label: "オールナイトこみかる", placeId: "elpa" },
 ];
 
 // スタッフ出勤データ（フォーム回答後に反映 / スプレッドシート連携後は自動）
@@ -677,8 +702,22 @@ function generateEvents(year, month) {
     }
   });
 
-  events.sort((a, b) => a.date !== b.date ? a.date.localeCompare(b.date) : a.timeStart.localeCompare(b.timeStart));
-  return events;
+  // DATE_OVERRIDES 適用（特定日だけの名称上書き）
+  DATE_OVERRIDES.forEach(ov => {
+    events.forEach(ev => {
+      if (ev.date === ov.date && ev.placeId === ov.placeId) {
+        ev.eventName = ov.eventName;
+      }
+    });
+  });
+
+  // SKIP_DATES 適用（特定日の定期開催をお休みにする）
+  const filtered = events.filter(ev =>
+    !SKIP_DATES.some(sk => sk.date === ev.date && sk.placeId === ev.placeId)
+  );
+
+  filtered.sort((a, b) => a.date !== b.date ? a.date.localeCompare(b.date) : a.timeStart.localeCompare(b.timeStart));
+  return filtered;
 }
 
 // ============================================================
@@ -712,6 +751,8 @@ function renderCalendar() {
   for (let i = 0; i < firstDay; i++) {
     const cell = document.createElement("div");
     cell.className = "cal-cell empty";
+    cell.style.gridRow = 1;
+    cell.style.gridColumn = i + 1;
     grid.appendChild(cell);
   }
   for (let d = 1; d <= daysInMonth; d++) {
@@ -720,8 +761,11 @@ function renderCalendar() {
     const evOnDay = dateMap[dateStr] || [];
     const hasEvent = evOnDay.length > 0;
     const dow = new Date(currentYear, currentMonth, d).getDay();
+    const pos = firstDay + (d - 1);
 
     const cell = document.createElement("div");
+    cell.style.gridRow = Math.floor(pos / 7) + 1;
+    cell.style.gridColumn = (pos % 7) + 1;
     const cls = ["cal-cell"];
     if (isToday) cls.push("today");
     else if (hasEvent) cls.push("has-event");
@@ -809,6 +853,28 @@ function renderCalendar() {
     }
     grid.appendChild(cell);
   }
+
+  // 複数日にかかるイベントの帯（24/25の間に中央揃えなど）
+  BANNER_EVENTS.forEach(b => {
+    const sd = new Date(b.startDate), ed = new Date(b.endDate);
+    if (sd.getFullYear() === currentYear && sd.getMonth() === currentMonth) {
+      const startPos = firstDay + (sd.getDate() - 1);
+      const endPos    = firstDay + (ed.getDate() - 1);
+      const startRow  = Math.floor(startPos / 7) + 1;
+      const endRow    = Math.floor(endPos / 7) + 1;
+      const startCol  = (startPos % 7) + 1;
+      const endCol    = (endPos % 7) + 1;
+      if (startRow === endRow) {
+        const banner = document.createElement("div");
+        banner.className = "cal-banner";
+        banner.textContent = b.label;
+        banner.style.gridRow = startRow;
+        banner.style.gridColumn = `${startCol} / ${endCol + 1}`;
+        banner.style.background = (PLACES[b.placeId] || {}).hex || "#888";
+        grid.appendChild(banner);
+      }
+    }
+  });
 
   renderFilters();
   renderEventList();
