@@ -127,8 +127,21 @@
     .cal-cell.today .cal-time  { color: rgba(255,255,255,0.8); }
     .cal-cell.today .cal-food-icon { filter: brightness(10); }
 
-    .cal-legend { display: flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 0.7rem; color: #999; }
+    .cal-staff-warn {
+      font-size: 0.42rem; font-weight: bold; margin-top: 2px; line-height: 1.2;
+      color: #D32F2F; text-align: center;
+    }
+    .cal-cell.today .cal-staff-warn { color: #B71C1C; }
+
+    .cal-legend { display: flex; align-items: center; gap: 10px; margin-top: 8px; font-size: 0.7rem; color: #999; flex-wrap: wrap; }
     .legend-dot { width: 7px; height: 7px; background: #E8257A; border-radius: 50%; }
+    .legend-dot.warn { background: #D32F2F; }
+
+    .staff-warn-badge {
+      display: inline-block; font-size: 0.72rem; font-weight: bold;
+      background: #FFEBEE; color: #D32F2F; border-radius: 6px;
+      padding: 2px 8px; margin-top: 4px;
+    }
 
     /* ===== 拠点フィルター ===== */
     .filter-wrap { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
@@ -351,7 +364,7 @@
   </div>
 
   <button class="instagram-btn" onclick="saveInstagramImage()">
-    📸 インスタ用カレンダー画像を保存
+    📸カレンダー画像を保存
   </button>
 
   <!-- カレンダー（撮影対象） -->
@@ -373,6 +386,8 @@
     <div class="cal-legend">
       <div class="legend-dot"></div>
       <span>開館・イベントあり</span>
+      <div class="legend-dot warn"></div>
+      <span>運営者未定</span>
     </div>
   </div>
 
@@ -599,10 +614,108 @@ const BANNER_EVENTS = [
   { startDate: "2026-07-24", endDate: "2026-07-25", label: "オールナイトこみかる", placeId: "elpa" },
 ];
 
-// スタッフ出勤データ（フォーム回答後に反映 / スプレッドシート連携後は自動）
-const STAFF_DATA = {
-  // "2026-06-06-elpa": ["つかちゃん", "スタッフA"],
+// スタッフ出勤データ（Googleフォーム回答シートから自動読み込み。読み込み前/失敗時は空のまま＝運営者未定表示）
+// 形式: { "YYYY-MM-DD-placeId": [ { name: "つかちゃん", segment: "通し" }, ... ] }
+// segment: "通し" | "前半" | "後半"
+let STAFF_DATA = {
+  // "2026-08-07-elpa": [ { name: "つかちゃん", segment: "通し" } ],
 };
+
+// Googleフォームの回答スプレッドシートCSV公開URL（つかちゃんがフォーム作成後にここへ貼る）
+// 例: "https://docs.google.com/spreadsheets/d/【シートID】/gviz/tq?tqx=out:csv&sheet=フォームの回答 1"
+const STAFF_SHEET_CSV_URL = "";
+
+// Googleフォームのグリッド行ラベル（列見出しに含まれる文字列）→ 日付・拠点 の対応表
+// ★毎月、対象月の開催日に合わせてここを書き換える
+const FORM_ROW_TO_EVENT = [
+  { label: "8/7(金) エルパ",   date: "2026-08-07", placeId: "elpa" },
+  { label: "8/12(水) FWI",     date: "2026-08-12", placeId: "fwi" },
+  { label: "8/13(木) 大野こみかる", date: "2026-08-13", placeId: "vio" },
+  { label: "8/14(金) エルパ",  date: "2026-08-14", placeId: "elpa" },
+  { label: "8/16(日) 大野",    date: "2026-08-16", placeId: "vio" },
+  { label: "8/18(火) 美浜",    date: "2026-08-18", placeId: "mihama" },
+  { label: "8/21(金) エルパ",  date: "2026-08-21", placeId: "elpa" },
+  { label: "8/26(水) ベル",    date: "2026-08-26", placeId: "bell" },
+  { label: "8/28(金) エルパ",  date: "2026-08-28", placeId: "elpa" },
+];
+
+// 出欠カバー状況を判定（通し1人以上 or 前半+後半が揃っていれば「full」）
+function computeCoverage(staffArr) {
+  if (!staffArr || staffArr.length === 0) return { status: "none" };
+  if (staffArr.some(s => s.segment === "通し")) return { status: "full" };
+  const hasFirst  = staffArr.some(s => s.segment === "前半");
+  const hasSecond = staffArr.some(s => s.segment === "後半");
+  if (hasFirst && hasSecond) return { status: "full" };
+  if (hasFirst)  return { status: "partial", missing: "後半" };
+  if (hasSecond) return { status: "partial", missing: "前半" };
+  return { status: "none" };
+}
+
+// 超簡易CSVパーサ（ダブルクオート・カンマ内カンマに対応）
+function parseCSV(text) {
+  const rows = [];
+  let row = [], field = "", inQuotes = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (inQuotes) {
+      if (c === '"') {
+        if (text[i + 1] === '"') { field += '"'; i++; }
+        else inQuotes = false;
+      } else field += c;
+    } else {
+      if (c === '"') inQuotes = true;
+      else if (c === ',') { row.push(field); field = ""; }
+      else if (c === '\n') { row.push(field); rows.push(row); row = []; field = ""; }
+      else if (c === '\r') { /* skip */ }
+      else field += c;
+    }
+  }
+  if (field.length || row.length) { row.push(field); rows.push(row); }
+  return rows.filter(r => r.length > 1 || r[0] !== "");
+}
+
+// Googleフォーム回答シート（CSV公開）からSTAFF_DATAを構築して再描画
+async function loadStaffDataFromSheet() {
+  if (!STAFF_SHEET_CSV_URL) return; // 未設定なら何もしない（運営者未定のまま）
+  try {
+    const res = await fetch(STAFF_SHEET_CSV_URL);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const rows = parseCSV(await res.text());
+    if (rows.length < 2) return;
+
+    const header = rows[0];
+    // 「お名前」列を特定
+    const nameColIdx = header.findIndex(h => h.includes("名前"));
+    // グリッド各列 → 対応する日付/拠点をマッピング
+    const colMap = header.map(h => FORM_ROW_TO_EVENT.find(ev => h.includes(ev.label)) || null);
+
+    const newData = {};
+    for (let r = 1; r < rows.length; r++) {
+      const row = rows[r];
+      const name = nameColIdx >= 0 ? (row[nameColIdx] || "").trim() : "";
+      if (!name) continue;
+      row.forEach((cell, c) => {
+        const ev = colMap[c];
+        if (!ev) return;
+        const val = (cell || "").trim();
+        let segment = null;
+        if (val.startsWith("通し")) segment = "通し";
+        else if (val.startsWith("前半")) segment = "前半";
+        else if (val.startsWith("後半")) segment = "後半";
+        if (!segment) return; // 「参加できない」/空欄は無視
+        const key = `${ev.date}-${ev.placeId}`;
+        if (!newData[key]) newData[key] = [];
+        if (!newData[key].some(s => s.name === name && s.segment === segment)) {
+          newData[key].push({ name, segment });
+        }
+      });
+    }
+    STAFF_DATA = newData;
+    renderCalendar();
+  } catch (e) {
+    console.error("スタッフ出欠シートの読み込みに失敗しました:", e);
+  }
+}
 
 // ============================================================
 //  日付ユーティリティ
@@ -827,6 +940,15 @@ function renderCalendar() {
           cell.appendChild(foodEl);
         }
 
+        // 運営者未定バッジ
+        const cov1 = computeCoverage(ev1.staff);
+        if (cov1.status !== "full") {
+          const warnEl = document.createElement("div");
+          warnEl.className = "cal-staff-warn";
+          warnEl.textContent = cov1.status === "partial" ? `⚠️${cov1.missing}未定` : "⚠️運営者未定";
+          cell.appendChild(warnEl);
+        }
+
         cell.addEventListener("click", () => openModal(ev1));
 
       } else {
@@ -844,6 +966,7 @@ function renderCalendar() {
             badge2.style.background = p2.hex || "#888";
             badge2.textContent = p2.label || ev.placeId;
           }
+          if (computeCoverage(ev.staff).status !== "full") badge2.textContent += " ⚠️";
           cell.appendChild(badge2);
         });
         const timeEl = document.createElement("div");
@@ -960,6 +1083,12 @@ function renderEventList() {
     card.dataset.date = ev.date;
 
     const foodBadges = buildFoodBadges(ev);
+    const cov = computeCoverage(ev.staff);
+    const covBadgeHtml = cov.status === "none"
+      ? `<div class="staff-warn-badge">⚠️ 運営者未定</div>`
+      : cov.status === "partial"
+        ? `<div class="staff-warn-badge">⚠️ ${cov.missing}の運営者未定</div>`
+        : "";
 
     card.innerHTML = `
       <div class="event-date-block ${place.bgClass || ''}">
@@ -972,6 +1101,7 @@ function renderEventList() {
         ${ev.eventName ? `<div class="event-label">${ev.eventName}</div>` : ""}
         <div class="event-detail-row">🕐 ${ev.timeStart}〜${ev.timeEnd}</div>
         ${foodBadges ? `<div style="margin-top:4px">${foodBadges}</div>` : ""}
+        ${covBadgeHtml}
       </div>
       <div class="event-arrow">›</div>
     `;
@@ -1044,15 +1174,23 @@ function openModal(ev) {
   // スタッフ
   const staffList = document.getElementById("staffList");
   staffList.innerHTML = "";
+  const modalCov = computeCoverage(ev.staff);
   if (ev.staff && ev.staff.length > 0) {
-    ev.staff.forEach(name => {
+    ev.staff.forEach(s => {
       const chip = document.createElement("div");
       chip.className = "staff-chip";
-      chip.innerHTML = `<div class="staff-avatar">${name.slice(0,1)}</div>${name}`;
+      chip.innerHTML = `<div class="staff-avatar">${s.name.slice(0,1)}</div>${s.name}（${s.segment}）`;
       staffList.appendChild(chip);
     });
-  } else {
-    staffList.innerHTML = `<div class="staff-undecided">メンバー調整中です</div>`;
+  }
+  if (modalCov.status === "none") {
+    staffList.innerHTML = `<div class="staff-warn-badge">⚠️ 運営者未定（まだ誰も入力していません）</div>`;
+  } else if (modalCov.status === "partial") {
+    const warn = document.createElement("div");
+    warn.className = "staff-warn-badge";
+    warn.style.marginTop = "6px";
+    warn.textContent = `⚠️ ${modalCov.missing}の運営者が未定です`;
+    staffList.appendChild(warn);
   }
 
   // 申し込みフォームボタン（formUrlがある場合のみ表示）
@@ -1146,6 +1284,18 @@ function saveInstagramImage() {
   const btn = document.querySelector(".instagram-btn");
   btn.textContent = "📸 画像生成中...";
   btn.disabled = true;
+
+  // 画像には「Today」の表記・黄色ワクを含めない（予定だけが見える状態にする／画面上の表示はそのまま）
+  const todayLabels = el.querySelectorAll(".cal-today-label");
+  todayLabels.forEach(elm => elm.style.display = "none");
+
+  const todayCell = el.querySelector(".cal-cell.today");
+  const todayCellOriginalClass = todayCell ? todayCell.className : null;
+  if (todayCell) {
+    const fallbackClass = todayCell.querySelector(".cal-badge") ? "has-event" : "normal";
+    todayCell.className = todayCell.className.replace(/\btoday\b/, fallbackClass);
+  }
+
   html2canvas(el, { scale: 3, backgroundColor: "#ffffff", useCORS: true, logging: false })
     .then(canvas => {
       const link = document.createElement("a");
@@ -1154,7 +1304,9 @@ function saveInstagramImage() {
       link.click();
     })
     .finally(() => {
-      btn.textContent = "📸 インスタ用カレンダー画像を保存";
+      todayLabels.forEach(elm => elm.style.display = "");
+      if (todayCell) todayCell.className = todayCellOriginalClass;
+      btn.textContent = "📸カレンダー画像を保存";
       btn.disabled = false;
     });
 }
@@ -1163,6 +1315,7 @@ function saveInstagramImage() {
 //  初期化
 // ============================================================
 renderCalendar();
+loadStaffDataFromSheet(); // 読み込めたら自動で再描画される
 
 // ✕ボタンを確実にバインド（onclickより確実）
 document.getElementById("modalCloseBtn").addEventListener("click", function(e) {
