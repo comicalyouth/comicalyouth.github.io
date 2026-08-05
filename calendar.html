@@ -127,21 +127,8 @@
     .cal-cell.today .cal-time  { color: rgba(255,255,255,0.8); }
     .cal-cell.today .cal-food-icon { filter: brightness(10); }
 
-    .cal-staff-warn {
-      font-size: 0.42rem; font-weight: bold; margin-top: 2px; line-height: 1.2;
-      color: #D32F2F; text-align: center;
-    }
-    .cal-cell.today .cal-staff-warn { color: #B71C1C; }
-
-    .cal-legend { display: flex; align-items: center; gap: 10px; margin-top: 8px; font-size: 0.7rem; color: #999; flex-wrap: wrap; }
+    .cal-legend { display: flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 0.7rem; color: #999; }
     .legend-dot { width: 7px; height: 7px; background: #E8257A; border-radius: 50%; }
-    .legend-dot.warn { background: #D32F2F; }
-
-    .staff-warn-badge {
-      display: inline-block; font-size: 0.72rem; font-weight: bold;
-      background: #FFEBEE; color: #D32F2F; border-radius: 6px;
-      padding: 2px 8px; margin-top: 4px;
-    }
 
     /* ===== 拠点フィルター ===== */
     .filter-wrap { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
@@ -386,8 +373,6 @@
     <div class="cal-legend">
       <div class="legend-dot"></div>
       <span>開館・イベントあり</span>
-      <div class="legend-dot warn"></div>
-      <span>運営者未定</span>
     </div>
   </div>
 
@@ -940,15 +925,6 @@ function renderCalendar() {
           cell.appendChild(foodEl);
         }
 
-        // 運営者未定バッジ
-        const cov1 = computeCoverage(ev1.staff);
-        if (cov1.status !== "full") {
-          const warnEl = document.createElement("div");
-          warnEl.className = "cal-staff-warn";
-          warnEl.textContent = cov1.status === "partial" ? `⚠️${cov1.missing}未定` : "⚠️運営者未定";
-          cell.appendChild(warnEl);
-        }
-
         cell.addEventListener("click", () => openModal(ev1));
 
       } else {
@@ -966,7 +942,6 @@ function renderCalendar() {
             badge2.style.background = p2.hex || "#888";
             badge2.textContent = p2.label || ev.placeId;
           }
-          if (computeCoverage(ev.staff).status !== "full") badge2.textContent += " ⚠️";
           cell.appendChild(badge2);
         });
         const timeEl = document.createElement("div");
@@ -1083,12 +1058,6 @@ function renderEventList() {
     card.dataset.date = ev.date;
 
     const foodBadges = buildFoodBadges(ev);
-    const cov = computeCoverage(ev.staff);
-    const covBadgeHtml = cov.status === "none"
-      ? `<div class="staff-warn-badge">⚠️ 運営者未定</div>`
-      : cov.status === "partial"
-        ? `<div class="staff-warn-badge">⚠️ ${cov.missing}の運営者未定</div>`
-        : "";
 
     card.innerHTML = `
       <div class="event-date-block ${place.bgClass || ''}">
@@ -1101,7 +1070,6 @@ function renderEventList() {
         ${ev.eventName ? `<div class="event-label">${ev.eventName}</div>` : ""}
         <div class="event-detail-row">🕐 ${ev.timeStart}〜${ev.timeEnd}</div>
         ${foodBadges ? `<div style="margin-top:4px">${foodBadges}</div>` : ""}
-        ${covBadgeHtml}
       </div>
       <div class="event-arrow">›</div>
     `;
@@ -1174,7 +1142,6 @@ function openModal(ev) {
   // スタッフ
   const staffList = document.getElementById("staffList");
   staffList.innerHTML = "";
-  const modalCov = computeCoverage(ev.staff);
   if (ev.staff && ev.staff.length > 0) {
     ev.staff.forEach(s => {
       const chip = document.createElement("div");
@@ -1182,15 +1149,8 @@ function openModal(ev) {
       chip.innerHTML = `<div class="staff-avatar">${s.name.slice(0,1)}</div>${s.name}（${s.segment}）`;
       staffList.appendChild(chip);
     });
-  }
-  if (modalCov.status === "none") {
-    staffList.innerHTML = `<div class="staff-warn-badge">⚠️ 運営者未定（まだ誰も入力していません）</div>`;
-  } else if (modalCov.status === "partial") {
-    const warn = document.createElement("div");
-    warn.className = "staff-warn-badge";
-    warn.style.marginTop = "6px";
-    warn.textContent = `⚠️ ${modalCov.missing}の運営者が未定です`;
-    staffList.appendChild(warn);
+  } else {
+    staffList.innerHTML = `<div class="staff-undecided">メンバー調整中です</div>`;
   }
 
   // 申し込みフォームボタン（formUrlがある場合のみ表示）
