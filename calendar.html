@@ -1360,8 +1360,8 @@ async function saveInstagramImage() {
 
     drawScribbles(ctx, 50, 26);
 
-    // 見出し「◯月のカレンダー」（横幅の8割程度まで拡大。詰め込みすぎない余白を残す）
-    ctx.textAlign = "left";
+    // 見出し「◯月のカレンダー」（横幅の8割程度まで拡大し、中央揃えで据わりよく見せる）
+    ctx.textAlign = "center";
     ctx.textBaseline = "alphabetic";
     ctx.fillStyle = "#2B2B2B";
     const headlineMargin = 56;
@@ -1378,7 +1378,7 @@ async function saveInstagramImage() {
       ctx.font = `900 ${headlineSize}px 'M PLUS Rounded 1c', sans-serif`;
     }
     const headlineY = 46 + headlineSize * 0.86;
-    ctx.fillText(headlineText, headlineMargin, headlineY);
+    ctx.fillText(headlineText, targetW / 2, headlineY);
 
     // 「できました」（手書き風・アクセントカラー・波線つき）
     const subText = "できました";
