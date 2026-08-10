@@ -1257,6 +1257,13 @@ function saveInstagramImage() {
     todayCell.className = todayCell.className.replace(/\btoday\b/, fallbackClass);
   }
 
+  const restore = () => {
+    todayLabels.forEach(elm => elm.style.display = "");
+    if (todayCell) todayCell.className = todayCellOriginalClass;
+    btn.textContent = "📸カレンダー画像を保存";
+    btn.disabled = false;
+  };
+
   html2canvas(el, { scale: 3, backgroundColor: "#ffffff", useCORS: true, logging: false })
     .then(canvas => {
       // インスタ用に4:5の縦長比率へ合成（カレンダー本体は等倍のまま中央配置し、余白は背景色で埋める）
@@ -1275,17 +1282,30 @@ function saveInstagramImage() {
       const offsetY = (targetH - drawH) / 2;
       ctx.drawImage(canvas, offsetX, offsetY, drawW, drawH);
 
-      const link = document.createElement("a");
-      link.download = `こみかる_${currentYear}年${currentMonth+1}月.png`;
-      link.href = outCanvas.toDataURL("image/png");
-      link.click();
+      const filename = `こみかる_${currentYear}年${currentMonth+1}月.png`;
+
+      outCanvas.toBlob(blob => {
+        if (!blob) { restore(); return; }
+        const file = new File([blob], filename, { type: "image/png" });
+
+        // スマホ（iOS Safari等）は <a download> + data URL が機能しないことが多いため、
+        // 共有シート経由で「画像を保存」できるWeb Share APIを優先する
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          navigator.share({ files: [file], title: "こみかるカレンダー" })
+            .catch(() => {}) // キャンセル時のエラーは無視
+            .finally(restore);
+        } else {
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.download = filename;
+          link.href = url;
+          link.click();
+          setTimeout(() => URL.revokeObjectURL(url), 10000);
+          restore();
+        }
+      }, "image/png");
     })
-    .finally(() => {
-      todayLabels.forEach(elm => elm.style.display = "");
-      if (todayCell) todayCell.className = todayCellOriginalClass;
-      btn.textContent = "📸カレンダー画像を保存";
-      btn.disabled = false;
-    });
+    .catch(restore);
 }
 
 // ============================================================
