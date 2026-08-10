@@ -1358,18 +1358,18 @@ async function saveInstagramImage() {
     ctx.fillStyle = "#FBF3EA";
     ctx.fillRect(0, 0, targetW, targetH);
 
-    drawScribbles(ctx, 56, 60);
+    drawScribbles(ctx, 50, 26);
 
-    // 見出し「◯月のカレンダー」（横幅いっぱいまで拡大して中央に据わりよく見せる）
+    // 見出し「◯月のカレンダー」（横幅の8割程度まで拡大。詰め込みすぎない余白を残す）
     ctx.textAlign = "left";
     ctx.textBaseline = "alphabetic";
     ctx.fillStyle = "#2B2B2B";
     const headlineMargin = 56;
-    const headlineMaxWidth = targetW - headlineMargin * 2;
+    const headlineMaxWidth = targetW - headlineMargin * 2 - 100;
     let headlineSize = 60;
     const headlineText = `${currentMonth + 1}月のカレンダー`;
     ctx.font = `900 ${headlineSize}px 'M PLUS Rounded 1c', sans-serif`;
-    while (ctx.measureText(headlineText).width < headlineMaxWidth && headlineSize < 160) {
+    while (ctx.measureText(headlineText).width < headlineMaxWidth && headlineSize < 120) {
       headlineSize += 2;
       ctx.font = `900 ${headlineSize}px 'M PLUS Rounded 1c', sans-serif`;
     }
