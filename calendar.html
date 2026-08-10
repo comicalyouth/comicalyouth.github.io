@@ -7,6 +7,9 @@
   <meta name="description" content="こみかるユース福井の毎月のカレンダー。エルパ・ベル・永平寺・FWI・美浜・敦賀・大野。予約不要・参加費無料。次に来れる日をすぐ確認できます。">
   <script type="application/ld+json" id="schema-events"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@800;900&family=Yomogi&display=swap" rel="stylesheet">
 
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -1240,7 +1243,77 @@ function updateSchema(events) {
 // ============================================================
 //  インスタ画像出力
 // ============================================================
-function saveInstagramImage() {
+// 手書き風の波線（アンダーライン装飾）
+function drawWavyLine(ctx, x1, x2, y, amplitude, color, lineWidth) {
+  ctx.save();
+  ctx.strokeStyle = color;
+  ctx.lineWidth = lineWidth;
+  ctx.lineCap = "round";
+  ctx.beginPath();
+  const segments = Math.max(3, Math.round((x2 - x1) / 24));
+  const step = (x2 - x1) / segments;
+  ctx.moveTo(x1, y);
+  for (let i = 0; i < segments; i++) {
+    const cx = x1 + step * (i + 0.5);
+    const cy = y + (i % 2 === 0 ? -amplitude : amplitude);
+    const ex = x1 + step * (i + 1);
+    ctx.quadraticCurveTo(cx, cy, ex, y);
+  }
+  ctx.stroke();
+  ctx.restore();
+}
+
+// 左上の手書き風スクリブル（きらめき・落書き風の飾り）
+function drawScribbles(ctx, x, y) {
+  ctx.save();
+  ctx.strokeStyle = "rgba(43,43,43,0.45)";
+  ctx.lineWidth = 4;
+  ctx.lineCap = "round";
+  for (let i = 0; i < 3; i++) {
+    ctx.beginPath();
+    const sx = x + i * 22;
+    const sy = y - i * 6;
+    ctx.moveTo(sx, sy + 26);
+    ctx.quadraticCurveTo(sx + 6, sy, sx + 14, sy + 4);
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
+// 回転させた「NEW」シールタグ
+function drawNewTag(ctx, cx, cy) {
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate(-8 * Math.PI / 180);
+  const w = 128, h = 54, r = 10;
+  ctx.fillStyle = "#3FAE84";
+  ctx.beginPath();
+  ctx.moveTo(-w/2 + r, -h/2);
+  ctx.arcTo(w/2, -h/2, w/2, h/2, r);
+  ctx.arcTo(w/2, h/2, -w/2, h/2, r);
+  ctx.arcTo(-w/2, h/2, -w/2, -h/2, r);
+  ctx.arcTo(-w/2, -h/2, w/2, -h/2, r);
+  ctx.closePath();
+  ctx.fill();
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "900 30px 'M PLUS Rounded 1c', sans-serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText("NEW", 0, 2);
+  ctx.restore();
+}
+
+function roundRectPath(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
+}
+
+async function saveInstagramImage() {
   const el  = document.getElementById("calendar-capture");
   const btn = document.querySelector(".instagram-btn");
   btn.textContent = "📸 画像生成中...";
@@ -1264,70 +1337,120 @@ function saveInstagramImage() {
     btn.disabled = false;
   };
 
-  html2canvas(el, { scale: 3, backgroundColor: "#ffffff", useCORS: true, logging: false })
-    .then(canvas => {
-      // インスタ用に4:5の縦長比率へ合成。上部にブランドカラーのヘッダー帯（月を大きく強調）を
-      // 追加してサムネイルとして目立たせ、下にカレンダー本体を中央配置する
-      const targetW = 1080, targetH = 1350;
-      const outCanvas = document.createElement("canvas");
-      outCanvas.width = targetW;
-      outCanvas.height = targetH;
-      const ctx = outCanvas.getContext("2d");
-      ctx.fillStyle = "#fdf5f8";
-      ctx.fillRect(0, 0, targetW, targetH);
+  try {
+    // 手書き風フォントを、キャンバス描画前に確実に読み込んでおく
+    await Promise.all([
+      document.fonts.load("900 80px 'M PLUS Rounded 1c'"),
+      document.fonts.load("800 30px 'M PLUS Rounded 1c'"),
+      document.fonts.load("400 36px 'Yomogi'"),
+    ]);
 
-      const headerH = 350;
-      const grad = ctx.createLinearGradient(0, 0, targetW, headerH);
-      grad.addColorStop(0, "#E8257A");
-      grad.addColorStop(0.5, "#b565c5");
-      grad.addColorStop(1, "#5B8FD6");
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, targetW, headerH);
+    const canvas = await html2canvas(el, { scale: 3, backgroundColor: "#ffffff", useCORS: true, logging: false });
 
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.fillStyle = "#ffffff";
-      ctx.font = "bold 28px 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif";
-      ctx.fillText("こみかるユース福井", targetW / 2, 55);
+    // インスタ用に4:5の縦長比率へ合成。クリーム背景＋手書き風の見出しで
+    // 「フレッシュさ×ゆるさ」のサムネイルらしい雰囲気を作る
+    const targetW = 1080, targetH = 1350;
+    const outCanvas = document.createElement("canvas");
+    outCanvas.width = targetW;
+    outCanvas.height = targetH;
+    const ctx = outCanvas.getContext("2d");
 
-      ctx.font = "bold 170px 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif";
-      ctx.fillText(`${currentMonth + 1}月`, targetW / 2, 185);
+    ctx.fillStyle = "#FBF3EA";
+    ctx.fillRect(0, 0, targetW, targetH);
 
-      ctx.font = "bold 34px 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif";
-      ctx.fillText("イベントカレンダー", targetW / 2, 315);
+    drawScribbles(ctx, 56, 60);
 
-      const boxX = 40, boxY = headerH + 24, boxW = targetW - 80, boxH = targetH - boxY - 24;
-      const scale  = Math.min(boxW / canvas.width, boxH / canvas.height);
-      const drawW  = canvas.width * scale;
-      const drawH  = canvas.height * scale;
-      const offsetX = boxX + (boxW - drawW) / 2;
-      const offsetY = boxY + (boxH - drawH) / 2;
-      ctx.drawImage(canvas, offsetX, offsetY, drawW, drawH);
+    // 見出し「◯月のカレンダー」（大きく・黒・手書き風丸ゴシック）
+    ctx.textAlign = "left";
+    ctx.textBaseline = "alphabetic";
+    ctx.fillStyle = "#2B2B2B";
+    let headlineSize = 78;
+    const headlineText = `${currentMonth + 1}月のカレンダー`;
+    ctx.font = `900 ${headlineSize}px 'M PLUS Rounded 1c', sans-serif`;
+    while (ctx.measureText(headlineText).width > targetW - 100 && headlineSize > 40) {
+      headlineSize -= 2;
+      ctx.font = `900 ${headlineSize}px 'M PLUS Rounded 1c', sans-serif`;
+    }
+    const headlineY = 150;
+    ctx.fillText(headlineText, 56, headlineY);
 
-      const filename = `こみかる_${currentYear}年${currentMonth+1}月.png`;
+    // 「できました」（手書き風・アクセントカラー・波線つき）
+    const subText = "できました";
+    ctx.font = "400 36px 'Yomogi', sans-serif";
+    ctx.fillStyle = "#2F8F72";
+    ctx.textAlign = "right";
+    const subX = targetW - 60;
+    const subY = headlineY + 62;
+    ctx.fillText(subText, subX, subY);
+    const subWidth = ctx.measureText(subText).width;
+    drawWavyLine(ctx, subX - subWidth - 4, subX + 4, subY + 10, 3, "#2F8F72", 3);
 
-      outCanvas.toBlob(blob => {
-        if (!blob) { restore(); return; }
-        const file = new File([blob], filename, { type: "image/png" });
+    // カレンダー本体を収める白いカード
+    const cardX = 40, cardY = 250, cardW = targetW - 80, cardH = 950;
+    ctx.save();
+    ctx.shadowColor = "rgba(43,43,43,0.12)";
+    ctx.shadowBlur = 30;
+    ctx.shadowOffsetY = 10;
+    ctx.fillStyle = "#ffffff";
+    roundRectPath(ctx, cardX, cardY, cardW, cardH, 24);
+    ctx.fill();
+    ctx.restore();
 
-        // スマホ（iOS Safari等）は <a download> + data URL が機能しないことが多いため、
-        // 共有シート経由で「画像を保存」できるWeb Share APIを優先する
-        if (navigator.canShare && navigator.canShare({ files: [file] })) {
-          navigator.share({ files: [file], title: "こみかるカレンダー" })
-            .catch(() => {}) // キャンセル時のエラーは無視
-            .finally(restore);
-        } else {
-          const url = URL.createObjectURL(blob);
-          const link = document.createElement("a");
-          link.download = filename;
-          link.href = url;
-          link.click();
-          setTimeout(() => URL.revokeObjectURL(url), 10000);
-          restore();
-        }
-      }, "image/png");
-    })
-    .catch(restore);
+    const padding = 26;
+    const boxX = cardX + padding, boxY = cardY + padding;
+    const boxW = cardW - padding * 2, boxH = cardH - padding * 2;
+    const scale  = Math.min(boxW / canvas.width, boxH / canvas.height);
+    const drawW  = canvas.width * scale;
+    const drawH  = canvas.height * scale;
+    const offsetX = boxX + (boxW - drawW) / 2;
+    const offsetY = boxY + (boxH - drawH) / 2;
+    ctx.drawImage(canvas, offsetX, offsetY, drawW, drawH);
+
+    // 「NEW」シールタグ（カード右上に少しはみ出す形で）
+    drawNewTag(ctx, cardX + cardW - 60, cardY + 6);
+
+    // 下部：見てね！＋保存アイコン＋ロゴ
+    const footerY = cardY + cardH + 68;
+    ctx.textAlign = "right";
+    ctx.textBaseline = "middle";
+    ctx.font = "400 32px 'Yomogi', sans-serif";
+    ctx.fillStyle = "#2B2B2B";
+    ctx.fillText("見てね！", targetW - 100, footerY);
+
+    ctx.beginPath();
+    ctx.arc(targetW - 56, footerY, 28, 0, Math.PI * 2);
+    ctx.fillStyle = "#2B2B2B";
+    ctx.fill();
+    ctx.fillStyle = "#ffffff";
+    ctx.textAlign = "center";
+    ctx.font = "20px sans-serif";
+    ctx.fillText("↓", targetW - 56, footerY + 1);
+
+    ctx.textAlign = "left";
+    ctx.font = "20px 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif";
+    ctx.fillStyle = "#999999";
+    ctx.fillText("こみかるユース福井", 56, footerY);
+
+    const filename = `こみかる_${currentYear}年${currentMonth+1}月.png`;
+    const blob = await new Promise(resolve => outCanvas.toBlob(resolve, "image/png"));
+    if (!blob) { restore(); return; }
+    const file = new File([blob], filename, { type: "image/png" });
+
+    // スマホ（iOS Safari等）は <a download> + data URL が機能しないことが多いため、
+    // 共有シート経由で「画像を保存」できるWeb Share APIを優先する
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      await navigator.share({ files: [file], title: "こみかるカレンダー" }).catch(() => {});
+    } else {
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.download = filename;
+      link.href = url;
+      link.click();
+      setTimeout(() => URL.revokeObjectURL(url), 10000);
+    }
+  } finally {
+    restore();
+  }
 }
 
 // ============================================================
