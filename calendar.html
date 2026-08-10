@@ -1259,9 +1259,25 @@ function saveInstagramImage() {
 
   html2canvas(el, { scale: 3, backgroundColor: "#ffffff", useCORS: true, logging: false })
     .then(canvas => {
+      // インスタ用に4:5の縦長比率へ合成（カレンダー本体は等倍のまま中央配置し、余白は背景色で埋める）
+      const targetW = 1080, targetH = 1350;
+      const outCanvas = document.createElement("canvas");
+      outCanvas.width = targetW;
+      outCanvas.height = targetH;
+      const ctx = outCanvas.getContext("2d");
+      ctx.fillStyle = "#fdf5f8";
+      ctx.fillRect(0, 0, targetW, targetH);
+
+      const scale  = Math.min(targetW / canvas.width, targetH / canvas.height);
+      const drawW  = canvas.width * scale;
+      const drawH  = canvas.height * scale;
+      const offsetX = (targetW - drawW) / 2;
+      const offsetY = (targetH - drawH) / 2;
+      ctx.drawImage(canvas, offsetX, offsetY, drawW, drawH);
+
       const link = document.createElement("a");
       link.download = `こみかる_${currentYear}年${currentMonth+1}月.png`;
-      link.href = canvas.toDataURL("image/png");
+      link.href = outCanvas.toDataURL("image/png");
       link.click();
     })
     .finally(() => {
