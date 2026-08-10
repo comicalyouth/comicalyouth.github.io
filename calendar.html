@@ -1360,19 +1360,25 @@ async function saveInstagramImage() {
 
     drawScribbles(ctx, 56, 60);
 
-    // 見出し「◯月のカレンダー」（大きく・黒・手書き風丸ゴシック）
+    // 見出し「◯月のカレンダー」（横幅いっぱいまで拡大して中央に据わりよく見せる）
     ctx.textAlign = "left";
     ctx.textBaseline = "alphabetic";
     ctx.fillStyle = "#2B2B2B";
-    let headlineSize = 78;
+    const headlineMargin = 56;
+    const headlineMaxWidth = targetW - headlineMargin * 2;
+    let headlineSize = 60;
     const headlineText = `${currentMonth + 1}月のカレンダー`;
     ctx.font = `900 ${headlineSize}px 'M PLUS Rounded 1c', sans-serif`;
-    while (ctx.measureText(headlineText).width > targetW - 100 && headlineSize > 40) {
+    while (ctx.measureText(headlineText).width < headlineMaxWidth && headlineSize < 160) {
+      headlineSize += 2;
+      ctx.font = `900 ${headlineSize}px 'M PLUS Rounded 1c', sans-serif`;
+    }
+    while (ctx.measureText(headlineText).width > headlineMaxWidth && headlineSize > 40) {
       headlineSize -= 2;
       ctx.font = `900 ${headlineSize}px 'M PLUS Rounded 1c', sans-serif`;
     }
-    const headlineY = 150;
-    ctx.fillText(headlineText, 56, headlineY);
+    const headlineY = 46 + headlineSize * 0.86;
+    ctx.fillText(headlineText, headlineMargin, headlineY);
 
     // 「できました」（手書き風・アクセントカラー・波線つき）
     const subText = "できました";
@@ -1380,13 +1386,14 @@ async function saveInstagramImage() {
     ctx.fillStyle = "#2F8F72";
     ctx.textAlign = "right";
     const subX = targetW - 60;
-    const subY = headlineY + 62;
+    const subY = headlineY + 60;
     ctx.fillText(subText, subX, subY);
     const subWidth = ctx.measureText(subText).width;
     drawWavyLine(ctx, subX - subWidth - 4, subX + 4, subY + 10, 3, "#2F8F72", 3);
 
     // カレンダー本体を収める白いカード
-    const cardX = 40, cardY = 250, cardW = targetW - 80, cardH = 950;
+    const cardY = subY + 50;
+    const cardX = 40, cardW = targetW - 80, cardH = targetH - cardY - 150;
     ctx.save();
     ctx.shadowColor = "rgba(43,43,43,0.12)";
     ctx.shadowBlur = 30;
