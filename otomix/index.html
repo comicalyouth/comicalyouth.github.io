@@ -1,0 +1,1655 @@
+﻿<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="声とBGMをアップロードするだけで、イントロ・ダッキング・ジングル・音量調整までを自動で仕上げるポッドキャスト編集ツール。音源は端末から出ません。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="OTOMIX — ポッドキャストBGMミキサー">
+<meta property="og:description" content="声とBGMを入れるだけ。イントロ・ダッキング・ジングル・配信用の音量調整まで自動。インストール不要、音源は端末から出ません。">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎚️</text></svg>">
+<title>OTOMIX — ポッドキャストBGMミキサー</title>
+</head>
+<body><title>ポッドキャスト BGMミキサー</title>
+
+<style>
+:root{
+  color-scheme: light dark;
+  --ground:#EDF1F5;
+  --panel:#FFFFFF;
+  --panel-2:#F5F8FB;
+  --ink:#16202C;
+  --ink-2:#54616F;
+  --ink-3:#8B97A4;
+  --line:#D9E0E8;
+  --line-2:#C2CDD8;
+  --voice:#E36B9F;
+  --bgm:#A089BF;
+  --signal:#3A97D4;
+  --fill:#1F6595;
+  --on-fill:#FFFFFF;
+  --ok:#2C8163;
+  --warn:#9A6714;
+  --bad:#B33F3A;
+  --tint:rgba(58,151,212,.08);
+  --shadow:0 1px 2px rgba(22,32,44,.05), 0 10px 28px -16px rgba(22,32,44,.28);
+  --font-ui:"Hiragino Kaku Gothic ProN","Yu Gothic Medium","Yu Gothic",YuGothic,"Noto Sans JP",Meiryo,system-ui,sans-serif;
+  --font-mono:ui-monospace,"Cascadia Mono","SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --ground:#0F1720;
+    --panel:#18222E;
+    --panel-2:#1D2937;
+    --ink:#E2E9F0;
+    --ink-2:#98A6B4;
+    --ink-3:#6A7887;
+    --line:#293745;
+    --line-2:#3A4A5B;
+    --voice:#F08CB6;
+    --bgm:#BCA6D9;
+    --signal:#5AB0E8;
+    --fill:#5AB0E8;
+    --on-fill:#0A1119;
+    --ok:#57B892;
+    --warn:#D6A24A;
+    --bad:#E0736C;
+    --tint:rgba(90,176,232,.10);
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 12px 32px -18px rgba(0,0,0,.8);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0F1720; --panel:#18222E; --panel-2:#1D2937;
+  --ink:#E2E9F0; --ink-2:#98A6B4; --ink-3:#6A7887;
+  --line:#293745; --line-2:#3A4A5B;
+  --voice:#F08CB6; --bgm:#BCA6D9; --signal:#5AB0E8;
+  --fill:#5AB0E8; --on-fill:#0A1119;
+  --ok:#57B892; --warn:#D6A24A; --bad:#E0736C;
+  --tint:rgba(90,176,232,.10);
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 12px 32px -18px rgba(0,0,0,.8);
+}
+:root[data-theme="light"]{
+  --ground:#EDF1F5; --panel:#FFFFFF; --panel-2:#F5F8FB;
+  --ink:#16202C; --ink-2:#54616F; --ink-3:#8B97A4;
+  --line:#D9E0E8; --line-2:#C2CDD8;
+  --voice:#E36B9F; --bgm:#A089BF; --signal:#3A97D4;
+  --fill:#1F6595; --on-fill:#FFFFFF;
+  --ok:#2C8163; --warn:#9A6714; --bad:#B33F3A;
+  --tint:rgba(58,151,212,.08);
+  --shadow:0 1px 2px rgba(22,32,44,.05), 0 10px 28px -16px rgba(22,32,44,.28);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:var(--font-ui); font-size:15px; line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:860px; margin:0 auto; padding:40px 20px 96px;}
+
+/* ---------- header ---------- */
+.plate{
+  font-family:var(--font-mono); font-size:11px; letter-spacing:.22em;
+  text-transform:uppercase; color:var(--signal); display:flex; align-items:center; gap:10px;
+}
+.plate::after{content:""; flex:1; height:1px; background:var(--line);}
+h1{
+  font-size:clamp(25px,4.4vw,33px); line-height:1.42; margin:16px 0 0;
+  letter-spacing:.01em; text-wrap:balance; font-weight:700;
+}
+.lead{margin:14px 0 0; color:var(--ink-2); max-width:62ch;}
+.trust{
+  margin-top:22px; display:flex; gap:11px; align-items:flex-start;
+  padding:13px 15px; border-radius:3px;
+  background:var(--tint); border-left:2px solid var(--signal);
+  font-size:13.5px; color:var(--ink-2); line-height:1.7;
+}
+.trust b{color:var(--ink); font-weight:600;}
+
+/* ---------- steps ---------- */
+.step{margin-top:46px;}
+.step-head{display:flex; align-items:baseline; gap:13px; margin-bottom:16px;}
+.step-n{
+  font-family:var(--font-mono); font-size:12px; font-variant-numeric:tabular-nums;
+  color:var(--on-fill); background:var(--fill); width:24px; height:24px;
+  display:grid; place-items:center; border-radius:2px; flex:none;
+  align-self:center;
+}
+.step-t{font-size:18px; font-weight:700; letter-spacing:.01em;}
+.step-sub{font-size:13px; color:var(--ink-3); margin-left:auto; font-family:var(--font-mono);}
+.card{
+  background:var(--panel); border:1px solid var(--line); border-radius:4px;
+  box-shadow:var(--shadow);
+}
+
+/* ---------- slots ---------- */
+.slots{display:flex; flex-direction:column; gap:1px; background:var(--line); border:1px solid var(--line); border-radius:4px; overflow:hidden;}
+.slot{background:var(--panel); position:relative; transition:background .12s;}
+.slot.drag{background:var(--tint);}
+.slot-body{
+  display:grid; grid-template-columns:auto 1fr auto; align-items:center;
+  gap:15px; padding:15px 17px; cursor:pointer; min-height:70px;
+}
+.slot-body:hover{background:var(--panel-2);}
+.dot{width:9px; height:9px; border-radius:50%; flex:none;}
+.slot[data-kind="voice"] .dot{background:var(--voice);}
+.slot[data-kind="bgm"] .dot{background:var(--bgm);}
+.slot[data-kind="jingle"] .dot{background:var(--signal);}
+.slot-name{font-weight:600; font-size:14.5px; display:flex; align-items:center; gap:9px; flex-wrap:wrap;}
+.tag{
+  font-family:var(--font-mono); font-size:10px; letter-spacing:.1em; text-transform:uppercase;
+  padding:2px 6px; border-radius:2px; border:1px solid var(--line-2); color:var(--ink-3); font-weight:400;
+}
+.tag.req{border-color:var(--voice); color:var(--voice);}
+.slot-desc{display:block; font-size:12.5px; color:var(--ink-3); margin-top:2px; line-height:1.6;}
+.slot-file{
+  display:block; font-family:var(--font-mono); font-size:12.5px; color:var(--ink);
+  word-break:break-all; margin-top:3px; line-height:1.6;
+}
+.slot-meta{
+  display:block; font-family:var(--font-mono); font-size:11.5px; color:var(--ink-3);
+  font-variant-numeric:tabular-nums; margin-top:2px;
+}
+.slot-act{font-size:12px; color:var(--signal); font-family:var(--font-mono); white-space:nowrap; padding-right:14px;}
+.slot-err{display:block; color:var(--bad); font-size:12.5px; margin-top:3px; line-height:1.6;}
+.clear{
+  border:none; background:none; color:var(--ink-3); cursor:pointer; font-size:16px;
+  padding:5px 8px; border-radius:2px; line-height:1; font-family:var(--font-mono);
+}
+.clear:hover{color:var(--bad); background:var(--panel-2);}
+
+/* ---------- diagram ---------- */
+.diagram{padding:18px 17px 8px;}
+canvas{display:block; width:100%;}
+.diag-note{
+  font-size:12px; color:var(--ink-3); padding:0 17px 15px; line-height:1.65;
+}
+
+/* ---------- controls ---------- */
+.ctrls{border-top:1px solid var(--line); padding:6px 17px 17px;}
+.ctrl{display:grid; grid-template-columns:1fr auto; gap:4px 16px; padding:14px 0; border-bottom:1px solid var(--line);}
+.ctrl:last-child{border-bottom:none;}
+.ctrl-l{font-size:14px; font-weight:600;}
+.ctrl-d{font-size:12.5px; color:var(--ink-3); grid-column:1; line-height:1.65;}
+.ctrl-v{
+  font-family:var(--font-mono); font-size:14px; font-variant-numeric:tabular-nums;
+  color:var(--signal); grid-row:1/3; align-self:center; text-align:right; white-space:nowrap;
+}
+.ctrl input[type=range]{grid-column:1/3; width:100%; margin:8px 0 0; accent-color:var(--signal); height:20px;}
+.ctrl-note{
+  font-size:12.5px; color:var(--ink-2); line-height:1.75; padding:13px 15px; margin:12px 0 4px;
+  background:var(--tint); border-left:2px solid var(--signal); border-radius:3px;
+}
+.ctrl-note b{color:var(--ink); font-weight:600;}
+
+details{margin-top:16px; border:1px solid var(--line); border-radius:4px; background:var(--panel);}
+summary{
+  cursor:pointer; padding:12px 17px; font-size:13.5px; color:var(--ink-2);
+  font-weight:600; list-style:none; display:flex; align-items:center; gap:8px;
+}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"+"; font-family:var(--font-mono); color:var(--signal); font-size:14px;}
+details[open] summary::before{content:"−";}
+details .ctrls{border-top:1px solid var(--line); padding-top:6px;}
+
+/* ---------- export ---------- */
+.exp{padding:17px;}
+.seg{display:inline-flex; border:1px solid var(--line-2); border-radius:3px; overflow:hidden; margin-top:4px;}
+.seg button{
+  font-family:var(--font-mono); font-size:12.5px; padding:8px 16px; border:none;
+  background:var(--panel); color:var(--ink-2); cursor:pointer; letter-spacing:.04em;
+}
+.seg button+button{border-left:1px solid var(--line-2);}
+.seg button[aria-pressed="true"]{background:var(--fill); color:var(--on-fill);}
+.exp-row{display:flex; justify-content:space-between; align-items:flex-end; gap:20px 28px; flex-wrap:wrap;}
+.opts{display:flex; gap:24px; flex-wrap:wrap;}
+.opts .mlab{margin-bottom:5px;}
+.est{font-family:var(--font-mono); font-size:12.5px; color:var(--ink-3); font-variant-numeric:tabular-nums; text-align:right; line-height:1.8; margin-left:auto;}
+.exp-hint{margin:16px 0 0; font-size:12.5px; color:var(--ink-3); line-height:1.75;}
+.exp-hint b{color:var(--ink-2); font-weight:600;}
+.seg button:disabled{opacity:.4; cursor:not-allowed;}
+.go{
+  width:100%; margin-top:18px; padding:16px; border:none; border-radius:3px;
+  background:var(--fill); color:var(--on-fill); font-family:var(--font-ui);
+  font-size:16px; font-weight:700; cursor:pointer; letter-spacing:.02em;
+}
+.go:hover:not(:disabled){filter:brightness(1.08);}
+.go:disabled{background:var(--line); color:var(--ink-2); cursor:not-allowed;}
+.prog{margin-top:16px; display:none;}
+.prog.on{display:block;}
+.bar{height:3px; background:var(--line); border-radius:2px; overflow:hidden;}
+.bar i{display:block; height:100%; width:0%; background:var(--signal); transition:width .25s ease;}
+.prog-t{
+  font-family:var(--font-mono); font-size:12px; color:var(--ink-2); margin-top:9px;
+  display:flex; justify-content:space-between; font-variant-numeric:tabular-nums;
+}
+
+/* ---------- result ---------- */
+#result{display:none;}
+#result.on{display:block;}
+.meter{padding:17px; border-bottom:1px solid var(--line);}
+.mrow{display:grid; grid-template-columns:120px 1fr; gap:14px; align-items:center; padding:9px 0;}
+.mlab{
+  font-family:var(--font-mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--ink-3);
+}
+.scale{position:relative; height:26px;}
+.track{position:absolute; top:11px; left:0; right:0; height:4px; background:var(--line); border-radius:2px;}
+.band{position:absolute; top:9px; height:8px; background:var(--tint); border-left:1px solid var(--signal); border-right:1px solid var(--signal);}
+.pin{position:absolute; top:5px; width:2px; height:16px; border-radius:1px;}
+.pin span{
+  position:absolute; top:-19px; left:50%; transform:translateX(-50%);
+  font-family:var(--font-mono); font-size:11px; font-variant-numeric:tabular-nums; white-space:nowrap;
+}
+.ticks{
+  display:flex; justify-content:space-between; font-family:var(--font-mono);
+  font-size:10px; color:var(--ink-3); margin-top:2px; font-variant-numeric:tabular-nums;
+}
+.stats{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
+  border-top:1px solid var(--line);
+}
+.stat{padding:14px 17px; border-right:1px solid var(--line);}
+.stat:last-child{border-right:none;}
+.stat-l{font-family:var(--font-mono); font-size:10px; letter-spacing:.11em; text-transform:uppercase; color:var(--ink-3);}
+.stat-v{font-family:var(--font-mono); font-size:19px; font-variant-numeric:tabular-nums; margin-top:3px; letter-spacing:-.01em;}
+.dl{padding:17px; display:flex; flex-direction:column; gap:14px;}
+audio{width:100%; height:38px;}
+.dl a{
+  display:block; text-align:center; padding:15px; border-radius:3px;
+  background:var(--fill); color:var(--on-fill); text-decoration:none; font-weight:700; font-size:15px;
+}
+.dl a:hover{filter:brightness(1.08);}
+.note{font-size:12.5px; color:var(--ink-3); line-height:1.7;}
+.alert{
+  margin-top:14px; padding:12px 15px; border-radius:3px; font-size:13px; line-height:1.7;
+  background:var(--tint); border-left:2px solid var(--warn); color:var(--ink-2); display:none;
+}
+.alert.on{display:block;}
+.alert.err{border-left-color:var(--bad);}
+
+footer{
+  margin-top:56px; padding-top:22px; border-top:1px solid var(--line);
+  font-size:12.5px; color:var(--ink-3); line-height:1.8;
+}
+footer code{font-family:var(--font-mono); font-size:12px; color:var(--ink-2);}
+
+:focus-visible{outline:2px solid var(--signal); outline-offset:2px;}
+@media (prefers-reduced-motion:reduce){*{transition:none !important;}}
+@media (max-width:560px){
+  .wrap{padding:28px 14px 72px;}
+  .slot-body{grid-template-columns:auto 1fr; gap:12px; padding:14px;}
+  .slot-act{display:none;}
+  .mrow{grid-template-columns:1fr; gap:4px;}
+  /* 指で押せる大きさを確保する */
+  .seg button{min-height:44px; padding:8px 18px;}
+  summary{padding:15px 17px;}
+  .est{text-align:left; margin-left:0;}
+  .opts{gap:18px;}
+}
+</style>
+
+<div class="wrap">
+
+  <header>
+    <div class="plate">Podcast BGM Mixer</div>
+    <h1>録った声に、BGMをのせて仕上げる</h1>
+    <p class="lead">声とBGMを入れるだけで、イントロ → 本編のBGM下げ → ジングルへのつなぎまでを自動でミックスし、ポッドキャストの標準音量（−16 LUFS）にそろえた音源を書き出します。</p>
+    <div class="trust">
+      <div><b>音源はこの端末から出ません。</b>変換はすべてブラウザの中で完結します。ファイルがどこかのサーバーに送られることはないので、未公開の収録データをそのまま入れて大丈夫です。</div>
+    </div>
+  </header>
+
+  <!-- STEP 1 -->
+  <section class="step">
+    <div class="step-head">
+      <div class="step-n">1</div>
+      <div class="step-t">素材を入れる</div>
+      <div class="step-sub" id="slotCount">0 / 2</div>
+    </div>
+    <div class="slots" id="slots">
+
+      <div class="slot" data-kind="voice">
+        <input type="file" id="f-voice" accept="audio/*,.wav,.mp3,.m4a,.aac,.flac,.ogg" hidden>
+        <label class="slot-body" for="f-voice">
+          <span class="dot"></span>
+          <span>
+            <span class="slot-name">声<span class="tag req">必須</span></span>
+            <span class="slot-desc" data-role="desc">収録した本編の音声。スマホのボイスメモ（M4A）・MP3・WAV がそのまま使えます</span>
+          </span>
+          <span class="slot-act">選ぶ</span>
+        </label>
+      </div>
+
+      <div class="slot" data-kind="bgm">
+        <input type="file" id="f-bgm" accept="audio/*,.wav,.mp3,.m4a,.aac,.flac,.ogg" hidden>
+        <label class="slot-body" for="f-bgm">
+          <span class="dot"></span>
+          <span>
+            <span class="slot-name">BGM<span class="tag req">必須</span></span>
+            <span class="slot-desc" data-role="desc">本編の下に流す曲。声より短くても自動でくり返します</span>
+          </span>
+          <span class="slot-act">選ぶ</span>
+        </label>
+      </div>
+
+      <div class="slot" data-kind="jingle">
+        <input type="file" id="f-jingle" accept="audio/*,.wav,.mp3,.m4a,.aac,.flac,.ogg" hidden>
+        <label class="slot-body" for="f-jingle">
+          <span class="dot"></span>
+          <span>
+            <span class="slot-name">ジングル<span class="tag">任意</span></span>
+            <span class="slot-desc" data-role="desc">最後に流す締めの音。入れない場合はBGMのまま終わります</span>
+          </span>
+          <span class="slot-act">選ぶ</span>
+        </label>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- STEP 2 -->
+  <section class="step">
+    <div class="step-head">
+      <div class="step-n">2</div>
+      <div class="step-t">仕上がりを決める</div>
+      <div class="step-sub" id="diagState">プレビュー表示</div>
+    </div>
+
+    <div class="card">
+      <div class="diagram">
+        <canvas id="tl" role="img" aria-label="ミックスの時間構成図"></canvas>
+      </div>
+      <p class="diag-note" id="diagNote">素材を入れると、この図が実際の長さで描き直されます。</p>
+
+      <div class="ctrls">
+        <div class="ctrl">
+          <div class="ctrl-l">イントロの長さ</div>
+          <div class="ctrl-d">声が入るまで、BGMだけを流す時間</div>
+          <div class="ctrl-v" id="v-intro">3.0 秒</div>
+          <input type="range" id="s-intro" min="0" max="15" step="0.5" value="3">
+        </div>
+        <div class="ctrl">
+          <div class="ctrl-l">BGMを下げる速さ</div>
+          <div class="ctrl-d">声が入る手前で、BGMが本編の音量まで下がりきるまでの時間</div>
+          <div class="ctrl-v" id="v-fade">0.5 秒</div>
+          <input type="range" id="s-fade" min="0" max="5" step="0.1" value="0.5">
+        </div>
+        <div class="ctrl">
+          <div class="ctrl-l">イントロとジングルの音量</div>
+          <div class="ctrl-d">声を基準に、最初のBGMと最後のジングルをどれくらいの大きさにするか。0dBで声と同じ聴こえ方にそろいます</div>
+          <div class="ctrl-v" id="v-music">±0.0 dB</div>
+          <input type="range" id="s-music" min="-18" max="6" step="0.5" value="0">
+        </div>
+        <div class="ctrl">
+          <div class="ctrl-l">BGMを下げる量</div>
+          <div class="ctrl-d">本編中、声に対してBGMを何dB下げるか。20〜24dBが聞き取りやすい目安</div>
+          <div class="ctrl-v" id="v-duck">−22.0 dB</div>
+          <input type="range" id="s-duck" min="6" max="40" step="0.5" value="22">
+        </div>
+        <div class="ctrl">
+          <div class="ctrl-l">ジングルへのつなぎ</div>
+          <div class="ctrl-d">本編が消えながらジングルが立ち上がる、重なりの時間</div>
+          <div class="ctrl-v" id="v-cf">1.0 秒</div>
+          <input type="range" id="s-cf" min="0" max="6" step="0.1" value="1">
+        </div>
+      </div>
+    </div>
+
+    <details>
+      <summary>書き出す音量：<span id="sumLufs">−16.0 LUFS</span>（ふつうは変えなくて大丈夫）</summary>
+      <div class="ctrls">
+        <div class="ctrl-note">
+          Spotify・Apple Podcasts・YouTube は再生時に音量を自動でそろえます。<b>そのため、ここの数値が多少ずれても配信後の聞こえ方はほとんど変わりません。</b>
+          手元でファイルを直接再生すると調整が効かないぶん大きく感じますが、それは配信後の音量ではありません。
+        </div>
+        <div class="ctrl">
+          <div class="ctrl-l">目標ラウドネス</div>
+          <div class="ctrl-d">ポッドキャストの一般的な基準は −16 LUFS（Apple Podcastsもこの値）。Spotifyは −14 LUFS です。小さくしたいときは −18 〜 −20 あたりに</div>
+          <div class="ctrl-v" id="v-lufs">−16.0 LUFS</div>
+          <input type="range" id="s-lufs" min="-24" max="-12" step="0.5" value="-16">
+        </div>
+        <div class="ctrl">
+          <div class="ctrl-l">真のピーク上限</div>
+          <div class="ctrl-d">音割れを防ぐための天井。−1.5 dBTPを超えないように音量を抑えます</div>
+          <div class="ctrl-v" id="v-tp">−1.5 dBTP</div>
+          <input type="range" id="s-tp" min="-6" max="-0.5" step="0.1" value="-1.5">
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <!-- STEP 3 -->
+  <section class="step">
+    <div class="step-head">
+      <div class="step-n">3</div>
+      <div class="step-t">書き出す</div>
+    </div>
+    <div class="card exp">
+      <div class="exp-row">
+        <div class="opts">
+          <div>
+            <div class="mlab">ファイル形式</div>
+            <div class="seg" role="group" aria-label="ファイル形式">
+              <button type="button" id="b-m4a" aria-pressed="true">M4A</button>
+              <button type="button" id="b-wav" aria-pressed="false">WAV</button>
+            </div>
+          </div>
+          <div>
+            <div class="mlab">チャンネル</div>
+            <div class="seg" role="group" aria-label="チャンネル数">
+              <button type="button" id="b-mo" aria-pressed="true">モノラル</button>
+              <button type="button" id="b-st" aria-pressed="false">ステレオ</button>
+            </div>
+          </div>
+        </div>
+        <div class="est" id="est">—</div>
+      </div>
+      <p class="exp-hint">
+        マイクで録った声はもともとモノラルなので、<b>話し中心の番組はモノラルで十分です</b>（容量が半分になり、声の音質は変わりません）。
+        BGMの左右の広がりを残したいときだけステレオにしてください。
+      </p>
+      <div class="ctrl-note" id="mobileHint" hidden>
+        <b>スマホでも使えますが、長い収録はパソコンのほうが確実です。</b>
+        スマホのブラウザは一度に扱えるデータ量が小さく、30分を超える収録だと途中で止まることがあります。
+        止まってしまったら、パソコンで同じページを開いて試してください。
+      </div>
+      <button class="go" id="go" disabled>声とBGMを入れてください</button>
+
+      <div class="prog" id="prog">
+        <div class="bar"><i id="barFill"></i></div>
+        <div class="prog-t"><span id="progLabel">準備中</span><span id="progPct">0%</span></div>
+      </div>
+      <div class="alert" id="alert"></div>
+    </div>
+  </section>
+
+  <!-- STEP 4 -->
+  <section class="step" id="result">
+    <div class="step-head">
+      <div class="step-n">4</div>
+      <div class="step-t">できあがり</div>
+    </div>
+    <div class="card">
+      <div class="meter">
+        <div class="mrow">
+          <div class="mlab">Loudness</div>
+          <div>
+            <div class="scale" id="scale">
+              <div class="track"></div>
+              <div class="band" id="band"></div>
+              <div class="pin" id="pinIn" style="background:var(--ink-3)"><span style="color:var(--ink-3)" id="pinInL"></span></div>
+              <div class="pin" id="pinOut" style="background:var(--voice)"><span style="color:var(--voice)" id="pinOutL"></span></div>
+            </div>
+            <div class="ticks"><span>−30</span><span>−24</span><span>−18</span><span>−12</span><span>−6 LUFS</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="stats" id="stats"></div>
+      <div class="dl">
+        <audio id="player" controls preload="metadata"></audio>
+        <a id="dl" download>ダウンロード</a>
+        <p class="note" id="dlNote"></p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>読み込める形式：<code>M4A / AAC</code>（iPhone・Androidのボイスメモはこれ）<code>MP3</code> <code>WAV</code> <code>FLAC</code> <code>OGG / Opus</code>。書き出しは <code>M4A</code> か <code>WAV</code> を選べます。<b>MP3での書き出しには対応していません</b>——ブラウザにMP3を作る機能が無いためです。M4Aは主要な配信サービスがそのまま受け付けます。</p>
+    <p style="margin-top:10px">処理内容は <code>podcast_bgm_mixer.py</code>（ffmpeg版）と同じ手順を Web Audio API で組み直したものです。ラウドネスは ITU-R BS.1770-4 の K特性フィルタとゲーティングで測定し、真のピークは4倍オーバーサンプリングで求めています。</p>
+  </footer>
+
+</div>
+
+<script>
+"use strict";
+
+/* ============================================================
+   定数・状態
+   ============================================================ */
+const SR = 44100;
+const state = {
+  voice: null, bgm: null, jingle: null,
+  channels: 1,          // 話し中心の番組が主な用途なのでモノラルを既定にする
+  format: "m4a",
+  busy: false,
+  url: null
+};
+
+// ポッドキャストの一般的な設定。ステレオは192k、モノラルは128kで十分な音質になる
+const bitrateFor = () => state.channels === 1 ? 128000 : 192000;
+
+const $ = id => document.getElementById(id);
+const clamp = (v,a,b) => v < a ? a : v > b ? b : v;
+
+/* 重い処理の途中で画面に制御を返すための待機。
+   setTimeout は裏に回ったタブだと最短1秒に制限され、書き出しが何分も伸びてしまう。
+   MessageChannel はその制限を受けないので、別のタブを見ていても速度が落ちない。 */
+const _mc = new MessageChannel();
+const _waiting = [];
+_mc.port1.onmessage = () => { const r = _waiting.shift(); if (r) r(); };
+const yieldUI = () => new Promise(r => { _waiting.push(r); _mc.port2.postMessage(0); });
+
+function fmtTime(s){
+  if (!isFinite(s)) return "—";
+  if (s < 60) return s.toFixed(1) + "秒";
+  const m = Math.floor(s/60), r = s - m*60;
+  return m + "分" + (r<10?"0":"") + r.toFixed(0) + "秒";
+}
+function fmtClock(s){
+  const m = Math.floor(s/60), r = s - m*60;
+  return m + ":" + (r<10?"0":"") + r.toFixed(1);
+}
+function fmtSize(b){
+  if (b < 1024*1024) return (b/1024).toFixed(0) + " KB";
+  if (b < 1024*1024*1024) return (b/1024/1024).toFixed(1) + " MB";
+  return (b/1024/1024/1024).toFixed(2) + " GB";
+}
+function db(v){ return (v>=0?"+":"−") + Math.abs(v).toFixed(1); }
+
+/* ============================================================
+   パラメータ
+   ============================================================ */
+function params(){
+  // モノラル音源は再生時に左右へ複製されて 3dB 大きく聞こえる。
+  // 同じ数値のままだとステレオより音が大きくなるので、規格どおり 3LU 下げる
+  // （Apple Podcasts / AES の推奨：ステレオ −16 LUFS / モノラル −19 LUFS）
+  const base = +$("s-lufs").value;
+  const monoAdj = state.channels === 1 ? -3 : 0;
+  return {
+    intro:    +$("s-intro").value,
+    fade:     +$("s-fade").value,
+    music:    +$("s-music").value,
+    duck:     +$("s-duck").value,
+    cf:       +$("s-cf").value,
+    lufsBase: base,
+    lufs:     base + monoAdj,
+    monoAdj,
+    tp:       +$("s-tp").value
+  };
+}
+
+/* 素材の音量。ラウドネスが取れないほど短い/静かな素材は平均音量で代用する */
+function srcLevel(s){
+  return s && isFinite(s.lufs) ? s.lufs : (s ? s.meanDb : -23);
+}
+
+/* モノラル素材をステレオで鳴らすと左右に複製されて 3.01dB 大きく聞こえる。
+   素材ごとにチャンネル数が違うので、これを揃えないと音量比較が 3dB ずれる。 */
+const chanDelta = (sc, oc) => sc === oc ? 0 : (sc === 1 ? 3.0103 : -3.0103);
+
+/* 「実際にミックスの中で鳴るときの音量」。これを基準に比べる */
+function mixLevel(s){
+  if (!s) return -23;
+  return srcLevel(s) + chanDelta(s.buf.numberOfChannels, state.channels);
+}
+
+/* 実素材があれば実寸、なければプレビュー用の仮の長さで時間構成を組む */
+function timings(){
+  const p = params();
+  const real = !!(state.voice && state.bgm);
+  const voiceDur  = state.voice ? state.voice.dur : 600;
+  const jingleDur = state.voice ? (state.jingle ? state.jingle.dur : 0)
+                                : 8;
+  const t1 = p.intro;
+  const t2 = p.intro + p.fade;
+  const voiceStart = t2;
+  const mixEnd = voiceStart + voiceDur;
+  const cf = jingleDur > 0 ? Math.min(p.cf, jingleDur, mixEnd) : 0;
+  const finalDur = jingleDur > 0 ? mixEnd + jingleDur - cf : mixEnd;
+
+  // 声を 0dB の基準にして、そこからの相対で全部を決める。
+  // こうしないとイントロの音量が「その人のBGMファイル次第」になり、声より大きく鳴ってしまう。
+  const vLv = mixLevel(state.voice);
+  const introDb  = p.music;             // 声と同じ大きさ＝0dB
+  const duckDb   = p.music - p.duck;    // 本編中のBGM
+  const jingleDb = p.music;             // ジングルもイントロと同じ大きさにそろえる
+
+  // BGMは曲全体の平均ではなく「実際にイントロとして鳴る区間」で測る。
+  // 出だしが静かな曲だと、全体平均で合わせてもイントロだけ小さく聞こえてしまうため。
+  let bgmLv = mixLevel(state.bgm);
+  if (state.bgm && state.bgm.introLufs != null){
+    const lv = state.bgm.introLufs + chanDelta(state.bgm.buf.numberOfChannels, state.channels);
+    // 頭が無音に近い曲で暴走しないよう、全体平均から±6dBまでに収める
+    bgmLv = bgmLv + clamp(lv - bgmLv, -6, 6);
+  }
+
+  // 素材それぞれを「声と同じ大きさ」に正規化するための倍率
+  const bgmNorm    = state.bgm    ? Math.pow(10, (vLv + p.music - bgmLv)/20)                  : 1;
+  const jingleNorm = state.jingle ? Math.pow(10, (vLv + p.music - mixLevel(state.jingle))/20) : 1;
+
+  return { ...p, real, voiceDur, jingleDur, t1, t2, voiceStart, mixEnd, cf, finalDur,
+           introDb, duckDb, jingleDb, bgmNorm, jingleNorm };
+}
+
+/* イントロとして実際に鳴る区間のラウドネスを測り直す。
+   イントロ秒数を動かすたびに必要になるので、少し待ってからまとめて実行する。 */
+let introJob = 0, introTimer = null;
+async function refreshIntroLevel(){
+  const s = state.bgm;
+  if (!s) return;
+  const p = params();
+  const win = Math.min(p.intro + p.fade, s.dur);
+  if (win < 0.5){ s.introLufs = null; s.introWin = win; draw(); return; }
+  if (s.introWin != null && Math.abs(s.introWin - win) < 0.05) return;
+
+  const my = ++introJob;
+  const sr = s.buf.sampleRate, nch = s.buf.numberOfChannels, n = Math.floor(win*sr);
+  const b = new OfflineAudioContext(nch, n, sr).createBuffer(nch, n, sr);
+  for (let c = 0; c < nch; c++) b.copyToChannel(s.buf.getChannelData(c).subarray(0, n), c);
+  const v = await measureLufs(b);
+  if (my !== introJob) return;          // もっと新しい要求が来ていたら捨てる
+  s.introWin = win;
+  s.introLufs = isFinite(v) ? v : null;
+  draw();
+}
+function scheduleIntroLevel(){
+  clearTimeout(introTimer);
+  introTimer = setTimeout(refreshIntroLevel, 180);
+}
+
+/* ============================================================
+   時間構成図
+   ============================================================ */
+const cv = $("tl");
+
+function buildScale(T, x0, w){
+  const headEnd   = Math.min(T.t2 + 8, T.finalDur);
+  const tailStart = Math.max(T.mixEnd - T.cf - 6, headEnd);
+  const broken    = (tailStart - headEnd) > 3;
+
+  if (!broken){
+    const k = w / Math.max(T.finalDur, .001);
+    return { broken:false, x: t => x0 + t*k };
+  }
+  const aW = w*0.44, bW = w*0.12, cW = w*0.44;
+  const ka = aW / Math.max(headEnd,.001);
+  const kc = cW / Math.max(T.finalDur - tailStart, .001);
+  return {
+    broken:true, headEnd, tailStart, aW, bW, cW, x0,
+    x: t => {
+      if (t <= headEnd)   return x0 + t*ka;
+      if (t >= tailStart) return x0 + aW + bW + (t - tailStart)*kc;
+      return x0 + aW + bW*((t - headEnd)/(tailStart - headEnd));
+    }
+  };
+}
+
+function css(n){ return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
+
+function draw(){
+  const T = timings();
+  const dpr = window.devicePixelRatio || 1;
+  const W = cv.clientWidth || 600;
+  const H = 208;
+  cv.width = Math.round(W*dpr); cv.height = Math.round(H*dpr);
+  cv.style.height = H + "px";
+  const g = cv.getContext("2d");
+  g.setTransform(dpr,0,0,dpr,0,0);
+  g.clearRect(0,0,W,H);
+
+  const cInk = css("--ink"), cInk2 = css("--ink-2"), cInk3 = css("--ink-3");
+  const cLine = css("--line"), cVoice = css("--voice"), cBgm = css("--bgm"), cSig = css("--signal");
+
+  const gut = 54;                 // 左のレーン名
+  const x0 = gut, w = W - gut - 8;
+  const S = buildScale(T, x0, w);
+  const X = t => clamp(S.x(t), x0, x0 + w);
+
+  const dim = T.real ? 1 : .55;
+  g.globalAlpha = 1;
+
+  // --- レーン座標（2段とも同じ高さ・同じdB目盛りにして、高さを見比べられるようにする）
+  const LH = 54;
+  const bgmTop = 26, bgmBase = bgmTop + LH;
+  const vTop = 100,  vBase = vTop + LH;
+
+  // dB → レーン内の高さ比。声を 0dB とした相対表示
+  const hOf = d => clamp((d + 50)/56, .04, 1);
+  const yIn = (base, d) => base - hOf(d)*LH;
+  const y0Bgm = yIn(bgmBase, 0), y0V = yIn(vBase, 0);   // 声と同じ大きさの位置
+
+  const lane = (path, color) => {
+    g.beginPath(); path();
+    g.closePath();
+    g.globalAlpha = .30*dim; g.fillStyle = color; g.fill();
+    g.globalAlpha = dim; g.strokeStyle = color; g.lineWidth = 1.5; g.stroke();
+    g.globalAlpha = 1;
+  };
+
+  // --- BGM レーン：音量の軌跡がそのまま上辺になる -------------------
+  const yG = d => yIn(bgmBase, d);
+  lane(() => {
+    g.moveTo(X(0), bgmBase);
+    g.lineTo(X(0), yG(T.introDb));
+    g.lineTo(X(T.t1), yG(T.introDb));
+    g.lineTo(X(T.t2), yG(T.duckDb));
+    if (T.cf > 0){
+      g.lineTo(X(T.mixEnd - T.cf), yG(T.duckDb));
+      g.lineTo(X(T.mixEnd), bgmBase);
+    } else {
+      g.lineTo(X(T.mixEnd), yG(T.duckDb));
+      g.lineTo(X(T.mixEnd), bgmBase);
+    }
+  }, cBgm);
+
+  g.strokeStyle = cLine; g.lineWidth = 1;
+  g.beginPath(); g.moveTo(x0, bgmBase + .5); g.lineTo(x0+w, bgmBase + .5); g.stroke();
+
+  // --- 声レーン ---------------------------------------------------
+  lane(() => {
+    g.moveTo(X(T.voiceStart), vBase);
+    g.lineTo(X(T.voiceStart), y0V);
+    if (T.cf > 0){
+      g.lineTo(X(T.mixEnd - T.cf), y0V);
+      g.lineTo(X(T.mixEnd), vBase);
+    } else {
+      g.lineTo(X(T.mixEnd), y0V);
+      g.lineTo(X(T.mixEnd), vBase);
+    }
+  }, cVoice);
+
+  // --- ジングルレーン（声と同じ段に置き、重なりを見せる）----------
+  if (T.jingleDur > 0){
+    const yj = yIn(vBase, T.jingleDb);
+    lane(() => {
+      g.moveTo(X(T.mixEnd - T.cf), vBase);
+      g.lineTo(X(T.mixEnd), yj);
+      g.lineTo(X(T.finalDur), yj);
+      g.lineTo(X(T.finalDur), vBase);
+    }, cSig);
+  }
+
+  g.strokeStyle = cLine; g.lineWidth = 1;
+  g.beginPath(); g.moveTo(x0, vBase + .5); g.lineTo(x0+w, vBase + .5); g.stroke();
+
+  // --- 「声と同じ大きさ」の基準線。イントロ／ジングルの上辺がここに並べばそろっている
+  g.save();
+  g.setLineDash([4,3]); g.lineWidth = 1; g.strokeStyle = cVoice; g.globalAlpha = .65;
+  [y0Bgm, y0V].forEach(y => {
+    g.beginPath(); g.moveTo(x0, y + .5); g.lineTo(x0 + w, y + .5); g.stroke();
+  });
+  g.restore();
+
+  // --- 中略マーク -------------------------------------------------
+  if (S.broken){
+    const bx = S.x0 + S.aW, bw = S.bW;
+    g.save();
+    g.fillStyle = css("--panel");
+    g.fillRect(bx+1, 12, bw-2, vBase-10);
+    g.strokeStyle = cLine; g.setLineDash([3,3]); g.lineWidth = 1;
+    g.beginPath(); g.moveTo(bx+.5, 14); g.lineTo(bx+.5, vBase); g.stroke();
+    g.beginPath(); g.moveTo(bx+bw-.5, 14); g.lineTo(bx+bw-.5, vBase); g.stroke();
+    g.restore();
+    g.fillStyle = cInk3;
+    g.font = "10px " + css("--font-mono");
+    g.textAlign = "center";
+    g.fillText("本編", bx + bw/2, vTop - 34);
+    g.fillText(fmtTime(Math.max(T.voiceDur,0)), bx + bw/2, vTop - 21);
+  }
+
+  // --- レーン名（左のガターに縦積み）-------------------------------
+  g.textAlign = "left";
+  g.font = "600 11px " + css("--font-ui");
+  g.fillStyle = cBgm;   g.fillText("BGM", 0, bgmTop + LH/2 + 4);
+  if (T.jingleDur > 0){
+    g.fillStyle = cVoice; g.fillText("声",      0, vTop + 18);
+    g.font = "600 10px " + css("--font-ui");
+    g.fillStyle = cSig;   g.fillText("ジングル", 0, vTop + 33);
+  } else {
+    g.fillStyle = cVoice; g.fillText("声", 0, vTop + LH/2 + 4);
+  }
+
+  // --- 目盛り -----------------------------------------------------
+  const ty = vBase + 30;
+  g.strokeStyle = cLine; g.beginPath(); g.moveTo(x0, ty-13.5); g.lineTo(x0+w, ty-13.5); g.stroke();
+
+  const marks = [
+    { t: 0,             l: "0:00",             a: "left"   },
+    { t: T.t1,          l: "イントロ " + T.intro.toFixed(1) + "s", a: "center" },
+    { t: T.voiceStart,  l: "声スタート",        a: "center" }
+  ];
+  if (T.cf > 0) marks.push({ t: T.mixEnd - T.cf, l: "つなぎ " + T.cf.toFixed(1) + "s", a: "center" });
+  marks.push({ t: T.finalDur, l: fmtClock(T.finalDur), a: "right" });
+
+  g.font = "10px " + css("--font-mono");
+  let lastR = -1e9;
+  marks.forEach(m => {
+    const x = X(m.t);
+    const est = g.measureText(m.l).width;
+    const left = m.a === "left" ? x : m.a === "right" ? x - est : x - est/2;
+    if (left < lastR + 6) return;
+    lastR = left + est;
+    g.strokeStyle = cLine;
+    g.beginPath(); g.moveTo(x+.5, ty-13.5); g.lineTo(x+.5, ty-8); g.stroke();
+    g.fillStyle = cInk3; g.textAlign = m.a;
+    g.fillText(m.l, x, ty+2);
+  });
+
+  // --- 音量の注記（すべて声を 0dB とした相対値）---------------------
+  g.font = "10px " + css("--font-mono");
+  g.textAlign = "left";
+  g.fillStyle = cVoice; g.globalAlpha = .8;
+  g.fillText("声と同じ大きさ", x0 + 3, y0Bgm - 4);
+  g.globalAlpha = 1;
+  g.textAlign = "right";
+  g.fillStyle = cInk3;
+  g.fillText("イントロ " + db(T.introDb) + " / 本編 " + db(T.duckDb) + " dB", x0 + w, bgmTop - 8);
+
+  // 図の下の説明文
+  const musicPhrase = T.music === 0 ? "声と同じ大きさに"
+                    : T.music > 0   ? `声より${T.music.toFixed(1)}dB大きく`
+                                    : `声より${Math.abs(T.music).toFixed(1)}dB小さく`;
+  $("diagNote").textContent = T.real
+    ? `イントロのBGM${T.jingleDur > 0 ? "とジングル" : ""}を${musicPhrase}そろえます。`
+      + `本編に入るとBGMは声より${T.duck.toFixed(1)}dB下がります。全体の長さは ${fmtTime(T.finalDur)} です。`
+    : "素材を入れると、この図が実際の長さで描き直されます。いまは10分の収録を想定した例を表示しています。";
+  $("diagState").textContent = T.real ? "実寸" : "プレビュー表示";
+}
+
+/* ============================================================
+   音量測定（ffmpeg volumedetect の mean_volume 相当）
+   ============================================================ */
+function meanVolumeDb(buf){
+  let sum = 0, n = 0;
+  for (let c = 0; c < buf.numberOfChannels; c++){
+    const d = buf.getChannelData(c);
+    for (let i = 0; i < d.length; i++) sum += d[i]*d[i];
+    n += d.length;
+  }
+  if (!n || sum <= 0) return -91;
+  return 10*Math.log10(sum/n);
+}
+
+/* ============================================================
+   ITU-R BS.1770-4 K特性フィルタ
+   ============================================================ */
+function shelfCoeffs(fs){
+  const f0 = 1681.974450955533, G = 3.999843853973347, Q = 0.7071752369554196;
+  const K = Math.tan(Math.PI*f0/fs);
+  const Vh = Math.pow(10, G/20);
+  const Vb = Math.pow(Vh, 0.4996667741545416);
+  const a0 = 1 + K/Q + K*K;
+  return {
+    b0: (Vh + Vb*K/Q + K*K)/a0,
+    b1: 2*(K*K - Vh)/a0,
+    b2: (Vh - Vb*K/Q + K*K)/a0,
+    a1: 2*(K*K - 1)/a0,
+    a2: (1 - K/Q + K*K)/a0
+  };
+}
+function hpCoeffs(fs){
+  const f0 = 38.13547087602444, Q = 0.5003270373238773;
+  const K = Math.tan(Math.PI*f0/fs);
+  const den = 1 + K/Q + K*K;
+  return { b0:1, b1:-2, b2:1, a1: 2*(K*K - 1)/den, a2: (1 - K/Q + K*K)/den };
+}
+
+async function measureLufs(buf, onP){
+  const fs = buf.sampleRate, nch = buf.numberOfChannels;
+  const sub = Math.round(fs*0.1);              // 100ms
+  const nSub = Math.floor(buf.length/sub);
+  if (nSub < 4) return -Infinity;
+
+  const sh = shelfCoeffs(fs), hp = hpCoeffs(fs);
+  const sums = [];
+  for (let c = 0; c < nch; c++) sums.push(new Float64Array(nSub));
+
+  for (let c = 0; c < nch; c++){
+    const x = buf.getChannelData(c), acc = sums[c];
+    let s1a = 0, s2a = 0, s1b = 0, s2b = 0;
+    for (let k0 = 0; k0 < nSub; k0 += 300){
+      const k1 = Math.min(k0 + 300, nSub);
+      for (let k = k0; k < k1; k++){
+        let e = 0;
+        const base = k*sub;
+        for (let n = 0; n < sub; n++){
+          const xn = x[base + n];
+          const y1 = sh.b0*xn + s1a;
+          s1a = sh.b1*xn - sh.a1*y1 + s2a;
+          s2a = sh.b2*xn - sh.a2*y1;
+          const y2 = hp.b0*y1 + s1b;
+          s1b = hp.b1*y1 - hp.a1*y2 + s2b;
+          s2b = hp.b2*y1 - hp.a2*y2;
+          e += y2*y2;
+        }
+        acc[k] = e;
+      }
+      if (onP) onP((c + k1/nSub)/nch);
+      await yieldUI();
+    }
+  }
+
+  // 400ms ブロック（100msステップ = 75%オーバーラップ）
+  const nB = nSub - 3;
+  const T = sub*4;
+  const z = [];                                 // z[c][block]
+  for (let c = 0; c < nch; c++) z.push(new Float64Array(nB));
+  const l = new Float64Array(nB);
+  for (let j = 0; j < nB; j++){
+    let tot = 0;
+    for (let c = 0; c < nch; c++){
+      const v = (sums[c][j] + sums[c][j+1] + sums[c][j+2] + sums[c][j+3]) / T;
+      z[c][j] = v; tot += v;
+    }
+    l[j] = tot > 0 ? -0.691 + 10*Math.log10(tot) : -Infinity;
+  }
+
+  // 絶対ゲート −70 LUFS
+  const abs = [];
+  for (let j = 0; j < nB; j++) if (l[j] > -70) abs.push(j);
+  if (!abs.length) return -Infinity;
+
+  let tot1 = 0;
+  for (let c = 0; c < nch; c++){
+    let s = 0; for (const j of abs) s += z[c][j];
+    tot1 += s/abs.length;
+  }
+  const gamma = -0.691 + 10*Math.log10(tot1) - 10;
+
+  // 相対ゲート
+  const keep = abs.filter(j => l[j] > gamma);
+  if (!keep.length) return -Infinity;
+  let tot2 = 0;
+  for (let c = 0; c < nch; c++){
+    let s = 0; for (const j of keep) s += z[c][j];
+    tot2 += s/keep.length;
+  }
+  return -0.691 + 10*Math.log10(tot2);
+}
+
+/* ============================================================
+   真のピーク（4倍オーバーサンプリング）
+   ============================================================ */
+function makeKernels(K){
+  return [0.25, 0.5, 0.75].map(p => {
+    const k = new Float64Array(2*K + 1);
+    let sum = 0;
+    for (let i = -K; i <= K; i++){
+      const t = p - i;
+      const s = Math.abs(t) < 1e-9 ? 1 : Math.sin(Math.PI*t)/(Math.PI*t);
+      const w = 0.5*(1 + Math.cos(Math.PI*t/(K + 1)));
+      k[i + K] = s*w;
+      sum += k[i + K];
+    }
+    // 窓で裾を削るとsincの交互符号の打ち消しが崩れ、係数和が1からずれる。
+    // 直流での利得を1に揃えないと、ピークを一律に過大評価してしまう。
+    if (sum !== 0) for (let i = 0; i < k.length; i++) k[i] /= sum;
+    return k;
+  });
+}
+
+async function measureTruePeak(buf, onP){
+  const K = 8, kern = makeKernels(K), nch = buf.numberOfChannels;
+  let sp = 0;
+  for (let c = 0; c < nch; c++){
+    const d = buf.getChannelData(c);
+    for (let i = 0; i < d.length; i++){ const a = d[i] < 0 ? -d[i] : d[i]; if (a > sp) sp = a; }
+    if (onP) onP((c + .5)/nch);
+    await yieldUI();
+  }
+  if (sp <= 0) return -Infinity;
+
+  // サンプル間のピークは波形の「山」の周辺にしか現れない。
+  // 局所的な極大だけを候補にして、その前後の区間を4倍補間して拾う。
+  const thr = sp*0.5;
+  let tp = sp;
+  const interp = (d, n, base, q) => {
+    const kk = kern[q];
+    const lo = base - K < 0 ? 0 : base - K;
+    const hi = base + K > n - 1 ? n - 1 : base + K;
+    let y = 0;
+    for (let m = lo; m <= hi; m++) y += d[m]*kk[m - base + K];
+    return y < 0 ? -y : y;
+  };
+  for (let c = 0; c < nch; c++){
+    const d = buf.getChannelData(c), n = d.length;
+    for (let i0 = 1; i0 < n - 1; i0 += 4_000_000){
+      const i1 = Math.min(i0 + 4_000_000, n - 1);
+      for (let i = i0; i < i1; i++){
+        const a = d[i] < 0 ? -d[i] : d[i];
+        if (a < thr) continue;
+        const pv = d[i-1] < 0 ? -d[i-1] : d[i-1];
+        const nv = d[i+1] < 0 ? -d[i+1] : d[i+1];
+        if (a < pv || a < nv) continue;
+        for (let q = 0; q < 3; q++){
+          let v = interp(d, n, i, q);     if (v > tp) tp = v;
+          v     = interp(d, n, i - 1, q); if (v > tp) tp = v;
+        }
+      }
+      if (onP) onP((c + .5 + .5*(i1/n))/nch);
+      await yieldUI();
+    }
+  }
+  return 20*Math.log10(tp);
+}
+
+/* ============================================================
+   先読みピークリミッター
+
+   目標の音量まで上げると天井を超えてしまう場合、全体を下げて逃げると
+   仕上がりが目標より何dBも小さくなる。突出した部分だけを抑えれば
+   本編の音量は目標どおりに保てる（ffmpeg の loudnorm が音割れしそうな
+   ときに動的モードへ切り替えるのと同じ考え方）。
+   ============================================================ */
+async function limitPeaks(buf, ceilLin, onP){
+  const nch = buf.numberOfChannels, n = buf.length, sr = buf.sampleRate;
+  const LA  = Math.max(1, Math.round(sr*0.002));   // 2ms 先読み
+  const rel = Math.exp(-1/(sr*0.12));              // 120ms かけて戻す
+  const ch  = [];
+  for (let c = 0; c < nch; c++) ch.push(buf.getChannelData(c));
+
+  const gAt = j => {
+    let p = 0;
+    for (let c = 0; c < nch; c++){ const a = ch[c][j] < 0 ? -ch[c][j] : ch[c][j]; if (a > p) p = a; }
+    return p > ceilLin ? ceilLin/p : 1;
+  };
+
+  // 先読み窓の最小ゲインを単調デックで O(n) に求める
+  const cap = LA + 2;
+  const dqI = new Int32Array(cap), dqV = new Float32Array(cap);
+  let head = 0, tail = 0, cnt = 0;
+  const push = j => {
+    const v = gAt(j);
+    while (cnt > 0){
+      const t = (tail - 1 + cap) % cap;
+      if (dqV[t] >= v){ tail = t; cnt--; } else break;
+    }
+    dqI[tail] = j; dqV[tail] = v; tail = (tail + 1) % cap; cnt++;
+  };
+
+  const first = Math.min(n - 1, LA);
+  for (let j = 0; j <= first; j++) push(j);
+
+  let s = 1;
+  for (let i0 = 0; i0 < n; i0 += 2_000_000){
+    const i1 = Math.min(i0 + 2_000_000, n);
+    for (let i = i0; i < i1; i++){
+      const j = i + LA;
+      if (i > 0 && j < n) push(j);
+      while (cnt > 0 && dqI[head] < i){ head = (head + 1) % cap; cnt--; }
+      const e = cnt > 0 ? dqV[head] : 1;
+      s = e < s ? e : e + (s - e)*rel;
+      if (s < 1) for (let c = 0; c < nch; c++) ch[c][i] *= s;
+    }
+    if (onP) onP(i1/n);
+    await yieldUI();
+  }
+}
+
+/* ============================================================
+   ミックス（ffmpeg のフィルタグラフと等価）
+   ============================================================ */
+async function renderMix(T, nch){
+  const total = Math.max(Math.ceil(T.finalDur*SR), 1);
+  const ctx = new OfflineAudioContext(nch, total, SR);
+
+  const bgmIntro  = T.bgmNorm;                                  // イントロ＝声と同じ大きさ
+  const bgmDucked = T.bgmNorm * Math.pow(10, -T.duck/20);        // 本編＝そこから duck だけ下げる
+
+  // 全体の余裕。最後に目標ラウドネスへ正規化するので、この値自体は仕上がりに影響しない。
+  // 大事なのは声・BGM・ジングルが「同じ倍率」を通ること（以前はジングルだけ素通りしていた）
+  const master = ctx.createGain();
+  master.gain.value = 0.5;
+  master.connect(ctx.destination);
+
+  // 本編の終わりでジングルへクロスフェード（tri = 直線）
+  const outFade = ctx.createGain();
+  outFade.gain.setValueAtTime(1, 0);
+  if (T.cf > 0){
+    outFade.gain.setValueAtTime(1, Math.max(T.mixEnd - T.cf, 0));
+    outFade.gain.linearRampToValueAtTime(0, T.mixEnd);
+  }
+  outFade.connect(master);
+
+  // 声
+  const vs = ctx.createBufferSource();
+  vs.buffer = state.voice.buf;
+  vs.connect(outFade);
+  vs.start(T.voiceStart);
+
+  // BGM（足りなければループ）
+  const bs = ctx.createBufferSource();
+  bs.buffer = state.bgm.buf;
+  bs.loop = true;
+  const bg = ctx.createGain();
+  bg.gain.setValueAtTime(bgmIntro, 0);
+  if (T.fade > 0){
+    bg.gain.setValueAtTime(bgmIntro, T.t1);
+    bg.gain.linearRampToValueAtTime(bgmDucked, T.t2);
+  } else {
+    bg.gain.setValueAtTime(bgmDucked, T.t1);
+  }
+  bs.connect(bg).connect(outFade);
+  bs.start(0);
+  bs.stop(T.mixEnd);
+
+  // ジングル
+  if (state.jingle && T.jingleDur > 0){
+    const js = ctx.createBufferSource();
+    js.buffer = state.jingle.buf;
+    const jg = ctx.createGain();
+    const t = Math.max(T.mixEnd - T.cf, 0);
+    if (T.cf > 0){
+      jg.gain.setValueAtTime(0, t);
+      jg.gain.linearRampToValueAtTime(T.jingleNorm, T.mixEnd);
+    } else {
+      jg.gain.setValueAtTime(T.jingleNorm, t);
+    }
+    js.connect(jg).connect(master);
+    js.start(t);
+  }
+
+  return ctx.startRendering();
+}
+
+/* ============================================================
+   WAV 書き出し（16bit / TPDFディザ付き）
+   ============================================================ */
+async function encodeWav(buf, onP){
+  const nch = buf.numberOfChannels, len = buf.length, sr = buf.sampleRate;
+  const dataSize = len*nch*2;
+  const ab = new ArrayBuffer(44 + dataSize);
+  const dv = new DataView(ab);
+  const str = (o, s) => { for (let i = 0; i < s.length; i++) dv.setUint8(o + i, s.charCodeAt(i)); };
+  str(0,"RIFF");  dv.setUint32(4, 36 + dataSize, true); str(8,"WAVE");
+  str(12,"fmt "); dv.setUint32(16, 16, true); dv.setUint16(20, 1, true);
+  dv.setUint16(22, nch, true); dv.setUint32(24, sr, true);
+  dv.setUint32(28, sr*nch*2, true); dv.setUint16(32, nch*2, true); dv.setUint16(34, 16, true);
+  str(36,"data"); dv.setUint32(40, dataSize, true);
+
+  const out = new Int16Array(ab, 44, len*nch);
+  const ch = [];
+  for (let c = 0; c < nch; c++) ch.push(buf.getChannelData(c));
+
+  const STEP = 1_000_000;
+  for (let i0 = 0; i0 < len; i0 += STEP){
+    const i1 = Math.min(i0 + STEP, len);
+    for (let i = i0; i < i1; i++){
+      for (let c = 0; c < nch; c++){
+        const d = (Math.random() + Math.random() - 1)/32768;
+        let s = ch[c][i] + d;
+        s = s < -1 ? -1 : s > 1 ? 1 : s;
+        let q = Math.round(s < 0 ? s*32768 : s*32767);
+        out[i*nch + c] = q < -32768 ? -32768 : q > 32767 ? 32767 : q;
+      }
+    }
+    if (onP) onP(i1/len);
+    await yieldUI();
+  }
+  return new Blob([ab], { type: "audio/wav" });
+}
+
+/* ============================================================
+   M4A（AAC）書き出し
+
+   ブラウザにMP3エンコーダは無い（どのブラウザも積んでいない）。
+   一方 AAC は WebCodecs で書き出せる。iPhoneのボイスメモと同じ形式で、
+   配信サービスもそのまま受け付けるので、WAVの1/10の容量で済む。
+   コンテナ（MP4）だけは規格どおりに自前で組む。
+   ============================================================ */
+const mp4 = {
+  u8:  (...v) => new Uint8Array(v),
+  u16: v => { const b = new Uint8Array(2); new DataView(b.buffer).setUint16(0, v); return b; },
+  u32: v => { const b = new Uint8Array(4); new DataView(b.buffer).setUint32(0, v >>> 0); return b; },
+  str: s => { const b = new Uint8Array(s.length); for (let i = 0; i < s.length; i++) b[i] = s.charCodeAt(i); return b; },
+  cat: arrs => {
+    let n = 0; for (const a of arrs) n += a.length;
+    const r = new Uint8Array(n); let o = 0;
+    for (const a of arrs){ r.set(a, o); o += a.length; }
+    return r;
+  },
+  box (type, ...parts){
+    const body = mp4.cat(parts);
+    return mp4.cat([mp4.u32(body.length + 8), mp4.str(type), body]);
+  }
+};
+
+function esdsBox(asc, avgBr){
+  const U = mp4.u8, C = mp4.cat, U32 = mp4.u32;
+  const dsi = C([U(0x05, asc.length), asc]);                    // DecoderSpecificInfo
+  const dcd = C([U(0x04, 13 + dsi.length, 0x40, 0x15, 0, 0, 0), // DecoderConfigDescriptor
+                 U32(avgBr), U32(avgBr), dsi]);
+  const sl  = U(0x06, 0x01, 0x02);                              // SLConfigDescriptor
+  const es  = C([U(0x03, 3 + dcd.length + sl.length, 0, 0, 0), dcd, sl]);
+  return mp4.box("esds", U32(0), es);
+}
+
+function buildM4a(frames, asc, sr, nch, bitrate){
+  const { u8, u16, u32, str, cat, box } = mp4;
+  const nS = frames.length;
+  const dur = nS*1024;
+  const MATRIX = cat([u32(0x10000),u32(0),u32(0), u32(0),u32(0x10000),u32(0), u32(0),u32(0),u32(0x40000000)]);
+
+  const sizes = new Uint8Array(nS*4);
+  const sdv = new DataView(sizes.buffer);
+  let mdatLen = 0;
+  for (let i = 0; i < nS; i++){ sdv.setUint32(i*4, frames[i].length); mdatLen += frames[i].length; }
+
+  const mp4a = box("mp4a",
+    u8(0,0,0,0,0,0), u16(1), u8(0,0,0,0,0,0,0,0),
+    u16(nch), u16(16), u16(0), u16(0), u32(sr*65536),
+    esdsBox(asc, bitrate));
+
+  const stbl = box("stbl",
+    box("stsd", u32(0), u32(1), mp4a),
+    box("stts", u32(0), u32(1), u32(nS), u32(1024)),
+    box("stsc", u32(0), u32(1), u32(1), u32(nS), u32(1)),
+    box("stsz", u32(0), u32(0), u32(nS), sizes),
+    box("stco", u32(0), u32(1), u32(0)));            // オフセットは後で埋める
+
+  const minf = box("minf", box("smhd", u32(0), u16(0), u16(0)),
+    box("dinf", box("dref", u32(0), u32(1), box("url ", u32(1)))), stbl);
+  const mdia = box("mdia",
+    box("mdhd", u32(0), u32(0), u32(0), u32(sr), u32(dur), u16(0x55C4), u16(0)),
+    box("hdlr", u32(0), u32(0), str("soun"), u32(0), u32(0), u32(0), u8(0)),
+    minf);
+  const tkhd = box("tkhd", u32(7), u32(0), u32(0), u32(1), u32(0), u32(dur),
+    u8(0,0,0,0,0,0,0,0), u16(0), u16(0), u16(0x0100), u16(0), MATRIX, u32(0), u32(0));
+  const moov = box("moov",
+    box("mvhd", u32(0), u32(0), u32(0), u32(sr), u32(dur), u32(0x10000), u16(0x0100),
+        u8(0,0,0,0,0,0,0,0,0,0), MATRIX, new Uint8Array(24), u32(2)),
+    box("trak", tkhd, mdia));
+
+  const ftyp = box("ftyp", str("M4A "), u32(0x200), str("M4A "), str("mp42"), str("isom"));
+
+  // mdat の中身が始まる位置を stco に書き戻す
+  const dataOffset = ftyp.length + moov.length + 8;
+  const stcoAt = moov.length - 4;                     // stco は moov の末尾
+  new DataView(moov.buffer, moov.byteOffset).setUint32(stcoAt, dataOffset);
+
+  const mdatHdr = cat([u32(mdatLen + 8), str("mdat")]);
+  return new Blob([ftyp, moov, mdatHdr, ...frames], { type: "audio/mp4" });
+}
+
+let AAC_OK = null;
+async function aacSupported(sr, nch, bitrate){
+  if (typeof AudioEncoder === "undefined") return false;
+  try {
+    const r = await AudioEncoder.isConfigSupported(
+      { codec: "mp4a.40.2", sampleRate: sr, numberOfChannels: nch, bitrate });
+    return !!r.supported;
+  } catch { return false; }
+}
+
+async function encodeM4a(buf, bitrate, onP){
+  const sr = buf.sampleRate, nch = buf.numberOfChannels, len = buf.length;
+  const frames = [];
+  let asc = null, failed = null;
+
+  const enc = new AudioEncoder({
+    output: (chunk, meta) => {
+      if (!asc && meta && meta.decoderConfig && meta.decoderConfig.description)
+        asc = new Uint8Array(meta.decoderConfig.description);
+      const b = new Uint8Array(chunk.byteLength);
+      chunk.copyTo(b);
+      frames.push(b);
+    },
+    error: e => { failed = e; }
+  });
+  enc.configure({ codec: "mp4a.40.2", sampleRate: sr, numberOfChannels: nch, bitrate });
+
+  const ch = [];
+  for (let c = 0; c < nch; c++) ch.push(buf.getChannelData(c));
+
+  const STEP = 1024*96;
+  for (let i = 0; i < len; i += STEP){
+    if (failed) throw failed;
+    const n = Math.min(STEP, len - i);
+    const data = new Float32Array(n*nch);
+    for (let c = 0; c < nch; c++) data.set(ch[c].subarray(i, i + n), c*n);
+    const ad = new AudioData({
+      format: "f32-planar", sampleRate: sr, numberOfFrames: n, numberOfChannels: nch,
+      timestamp: Math.round(i/sr*1e6), data
+    });
+    enc.encode(ad); ad.close();
+    if (onP) onP(i/len);
+    await yieldUI();
+  }
+  await enc.flush();
+  enc.close();
+  if (failed) throw failed;
+  if (!asc || !frames.length) throw new Error("AACの書き出しに失敗しました");
+  return buildM4a(frames, asc, sr, nch, bitrate);
+}
+
+/* ============================================================
+   ファイル読み込み
+   ============================================================ */
+async function decode(file){
+  const ab = await file.arrayBuffer();
+  const ctx = new OfflineAudioContext(1, 1, SR);
+  return await ctx.decodeAudioData(ab);
+}
+
+async function loadInto(kind, file){
+  const slot = document.querySelector(`.slot[data-kind="${kind}"]`);
+  const desc = slot.querySelector('[data-role="desc"]');
+  const act  = slot.querySelector('.slot-act');
+  desc.className = "slot-desc";
+  desc.textContent = "読み込み中…";
+  if (act) act.textContent = "";
+
+  try {
+    const buf = await decode(file);
+    const meanDb = meanVolumeDb(buf);
+    // 聴こえる大きさをそろえるにはラウドネス（LUFS）が要る。平均音量では音楽と話し声を比べられない
+    desc.textContent = "音量を測っています… 0%";
+    const lufs = await measureLufs(buf, p => {
+      desc.textContent = `音量を測っています… ${Math.round(p*100)}%`;
+    });
+    state[kind] = { file, buf, dur: buf.duration, meanDb, lufs, name: file.name };
+    renderSlot(kind);
+  } catch (e){
+    state[kind] = null;
+    desc.className = "slot-err";
+    desc.textContent = "この形式は読み込めませんでした。WAV / MP3 / M4A でお試しください。";
+    if (act) act.textContent = "選び直す";
+  }
+  sync();
+}
+
+function renderSlot(kind){
+  const s = state[kind];
+  const slot = document.querySelector(`.slot[data-kind="${kind}"]`);
+  const desc = slot.querySelector('[data-role="desc"]');
+  const act  = slot.querySelector('.slot-act');
+  const labels = { voice:"収録した本編の音声。スマホのボイスメモ（M4A）・MP3・WAV がそのまま使えます",
+                   bgm:"本編の下に流す曲。声より短くても自動でくり返します",
+                   jingle:"最後に流す締めの音。入れない場合はBGMのまま終わります" };
+  slot.querySelectorAll('.clear, .slot-meta').forEach(el => el.remove());
+
+  if (!s){
+    desc.className = "slot-desc";
+    desc.textContent = labels[kind];
+    if (act) act.textContent = "選ぶ";
+    return;
+  }
+  desc.className = "slot-file";
+  desc.textContent = s.name;
+  const meta = document.createElement("span");
+  meta.className = "slot-meta";
+  meta.textContent = `${fmtTime(s.dur)} · ${s.buf.numberOfChannels === 1 ? "モノラル" : "ステレオ"} · ${srcLevel(s).toFixed(1)} LUFS`;
+  desc.after(meta);
+  if (act) act.textContent = "変更";
+
+  const btn = document.createElement("button");
+  btn.className = "clear"; btn.type = "button";
+  btn.setAttribute("aria-label", "この素材を外す");
+  btn.textContent = "×";
+  btn.addEventListener("click", ev => {
+    ev.preventDefault(); ev.stopPropagation();
+    state[kind] = null;
+    $("f-" + kind).value = "";
+    renderSlot(kind); sync();
+  });
+  slot.querySelector(".slot-body").after(btn);
+  btn.style.position = "absolute";
+  btn.style.right = "6px"; btn.style.top = "6px";
+}
+
+/* ============================================================
+   UI 同期
+   ============================================================ */
+function sync(){
+  const p = params();
+  $("v-intro").textContent = p.intro.toFixed(1) + " 秒";
+  $("v-fade").textContent  = p.fade.toFixed(1) + " 秒";
+  $("v-music").textContent = (p.music === 0 ? "±0.0" : db(p.music)) + " dB";
+  $("v-duck").textContent  = "−" + p.duck.toFixed(1) + " dB";
+  $("v-cf").textContent    = p.cf.toFixed(1) + " 秒";
+  $("v-lufs").textContent  = "−" + Math.abs(p.lufsBase).toFixed(1) + " LUFS";
+  $("v-tp").textContent    = "−" + Math.abs(p.tp).toFixed(1) + " dBTP";
+  $("sumLufs").textContent = p.monoAdj
+    ? `−${Math.abs(p.lufs).toFixed(1)} LUFS（モノラルは規格どおり3LU下げます）`
+    : `−${Math.abs(p.lufs).toFixed(1)} LUFS`;
+
+  const n = (state.voice ? 1 : 0) + (state.bgm ? 1 : 0);
+  $("slotCount").textContent = n + " / 2";
+
+  const T = timings();
+  const ready = !!(state.voice && state.bgm);
+  const m4a = state.format === "m4a";
+  const wavBytes = 44 + Math.ceil(T.finalDur*SR)*state.channels*2;
+  const bytes = m4a ? Math.round(T.finalDur*bitrateFor()/8*1.02) : wavBytes;
+  const spec = m4a
+    ? `M4A（AAC ${bitrateFor()/1000}kbps）· ${state.channels === 1 ? "モノラル" : "ステレオ"}`
+    : `WAV 16bit / 44.1kHz · ${state.channels === 1 ? "モノラル" : "ステレオ"}`;
+  const heavy = ready && !m4a && wavBytes > 200*1024*1024;
+  $("est").innerHTML = ready
+    ? `${spec}<br>${fmtTime(T.finalDur)} · およそ ${fmtSize(bytes)}`
+      + (heavy ? `<br><span style="color:var(--warn)">M4Aなら ${fmtSize(Math.round(T.finalDur*bitrateFor()/8*1.02))} で済みます</span>` : "")
+    : `${spec}<br>—`;
+
+  const go = $("go");
+  go.disabled = !ready || state.busy;
+  go.textContent = state.busy ? "処理中…"
+                 : ready ? "ミックスして書き出す"
+                 : "声とBGMを入れてください";
+  draw();
+  scheduleIntroLevel();
+}
+
+/* ============================================================
+   実行
+   ============================================================ */
+function setProg(pct, label){
+  $("barFill").style.width = clamp(pct*100, 0, 100).toFixed(1) + "%";
+  $("progPct").textContent = Math.round(clamp(pct*100, 0, 100)) + "%";
+  if (label) $("progLabel").textContent = label;
+}
+function showAlert(msg, isErr){
+  const a = $("alert");
+  a.textContent = msg;
+  a.className = "alert on" + (isErr ? " err" : "");
+}
+function hideAlert(){ $("alert").className = "alert"; }
+
+async function run(){
+  if (state.busy) return;
+  state.busy = true; hideAlert(); sync();
+  $("prog").className = "prog on";
+  $("result").classList.remove("on");
+  setProg(0, "ミックスを組み立てています");
+
+  const T = timings();
+  const nch = state.channels;
+
+  try {
+    await yieldUI();
+
+    // 1. ミックス
+    const mixed = await renderMix(T, nch);
+    setProg(.20, "音量を測っています（K特性フィルタ）");
+    await yieldUI();
+
+    // 2. ラウドネス測定
+    const inLufs = await measureLufs(mixed, p => setProg(.20 + p*.24));
+    setProg(.44, "ピークを調べています");
+    await yieldUI();
+
+    // 3. 真のピーク
+    const inTp = await measureTruePeak(mixed, p => setProg(.44 + p*.14));
+    setProg(.58, "音量をそろえています");
+    await yieldUI();
+
+    // 4. 目標ラウドネスまで持ち上げる
+    const gain = T.lufs - inLufs;
+    const lin = Math.pow(10, gain/20);
+    for (let c = 0; c < mixed.numberOfChannels; c++){
+      const d = mixed.getChannelData(c);
+      for (let i = 0; i < d.length; i++) d[i] *= lin;
+      await yieldUI();
+    }
+
+    // 5. 天井を超える場合だけ、超えた部分を抑える
+    let outLufs = inLufs + gain, outTp = inTp + gain, limited = false;
+    if (isFinite(inTp) && outTp > T.tp){
+      limited = true;
+      setProg(.64, "大きすぎる部分を抑えています");
+      // サンプル間のピークを見込んで 0.3dB 低い天井で抑える
+      await limitPeaks(mixed, Math.pow(10, (T.tp - 0.3)/20), p => setProg(.64 + p*.10));
+      setProg(.74, "仕上がりを測り直しています");
+      outTp = await measureTruePeak(mixed, p => setProg(.74 + p*.06));
+      if (outTp > T.tp){
+        const trim = Math.pow(10, (T.tp - outTp)/20);
+        for (let c = 0; c < mixed.numberOfChannels; c++){
+          const d = mixed.getChannelData(c);
+          for (let i = 0; i < d.length; i++) d[i] *= trim;
+          await yieldUI();
+        }
+        outTp = T.tp;
+      }
+      outLufs = await measureLufs(mixed, p => setProg(.80 + p*.08));
+    }
+    // 6. ファイルに書き出す
+    let blob, ext = "wav";
+    if (state.format === "m4a"){
+      setProg(.88, "M4Aに書き出しています");
+      try {
+        blob = await encodeM4a(mixed, bitrateFor(), p => setProg(.88 + p*.12));
+        ext = "m4a";
+      } catch (e){
+        showAlert("M4Aの書き出しにこのブラウザが対応していなかったため、WAVで書き出しました。", false);
+        blob = await encodeWav(mixed, p => setProg(.88 + p*.12));
+      }
+    } else {
+      setProg(.88, "WAVに書き出しています");
+      blob = await encodeWav(mixed, p => setProg(.88 + p*.12));
+    }
+    setProg(1, "完了");
+
+    showResult({ blob, ext, T, inLufs, inTp, outLufs, outTp, gain, limited, nch });
+
+  } catch (e){
+    const m = String(e && e.message || e);
+    if (/allocat|memory|RangeError|Array buffer/i.test(m)){
+      showAlert("メモリが足りませんでした。書き出し形式を「モノラル」にするか、収録を分割してお試しください。", true);
+    } else {
+      showAlert("処理中にエラーが起きました：" + m, true);
+    }
+    $("prog").className = "prog";
+  } finally {
+    state.busy = false; sync();
+  }
+}
+
+function showResult(r){
+  const scaleMin = -30, scaleMax = -6;
+  const pos = v => clamp((v - scaleMin)/(scaleMax - scaleMin), 0, 1)*100;
+
+  $("band").style.left  = pos(r.T.lufs - 1) + "%";
+  $("band").style.width = (pos(r.T.lufs + 1) - pos(r.T.lufs - 1)) + "%";
+
+  $("pinIn").style.left = pos(r.inLufs) + "%";
+  $("pinInL").textContent = "元 " + r.inLufs.toFixed(1);
+  $("pinOut").style.left = pos(r.outLufs) + "%";
+  $("pinOutL").textContent = r.outLufs.toFixed(1);
+  // ラベルが重ならないよう、近すぎるときは上下にずらす
+  const near = Math.abs(pos(r.inLufs) - pos(r.outLufs)) < 14;
+  $("pinInL").style.top = near ? "-34px" : "-19px";
+
+  const cells = [
+    ["長さ", fmtTime(r.T.finalDur)],
+    ["ラウドネス", r.outLufs.toFixed(1) + " LUFS"],
+    ["真のピーク", (isFinite(r.outTp) ? r.outTp.toFixed(1) : "—") + " dBTP"],
+    ["かけた音量", db(r.gain) + " dB"],
+    ["ファイル", fmtSize(r.blob.size)]
+  ];
+  $("stats").innerHTML = cells.map(([l,v]) =>
+    `<div class="stat"><div class="stat-l">${l}</div><div class="stat-v">${v}</div></div>`).join("");
+
+  if (state.url) URL.revokeObjectURL(state.url);
+  state.url = URL.createObjectURL(r.blob);
+  $("player").src = state.url;
+
+  const base = state.voice.name.replace(/\.[^.]+$/, "");
+  const a = $("dl");
+  a.href = state.url;
+  a.download = `${base}_mixed.${r.ext}`;
+  a.textContent = `ダウンロード（${r.ext.toUpperCase()} · ${fmtSize(r.blob.size)}）`;
+
+  const short = r.T.lufs - r.outLufs;
+  const size = r.ext === "m4a"
+    ? `配信サービスにはこのままアップロードできます。`
+    : `容量を減らしたい場合は、ファイル形式を「M4A」にすると1/10ほどになります。`;
+  if (r.limited && short > 1.0){
+    $("dlNote").textContent =
+      `音量は ${r.outLufs.toFixed(1)} LUFS で、標準より ${short.toFixed(1)}dB 小さめです。`
+      + `突出して大きい部分を抑えても目標に届かなかったため、これ以上上げると音が割れます。` + size;
+    showAlert(`書き出せましたが、標準より ${short.toFixed(1)}dB 小さい仕上がりです。`
+      + `収録に極端に大きい音（マイクへの接触音など）が含まれている可能性があります。その部分を削ると改善します。`);
+  } else if (r.limited){
+    $("dlNote").textContent =
+      `大きすぎる部分だけを自動で抑えて、音量を標準の ${r.T.lufs.toFixed(0)} LUFS に合わせました。` + size;
+  } else {
+    $("dlNote").textContent = `音量を標準の ${r.T.lufs.toFixed(0)} LUFS に合わせました。` + size;
+  }
+
+  $("result").classList.add("on");
+  $("result").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+/* ============================================================
+   イベント配線
+   ============================================================ */
+["voice","bgm","jingle"].forEach(kind => {
+  const input = $("f-" + kind);
+  const slot = document.querySelector(`.slot[data-kind="${kind}"]`);
+  input.addEventListener("change", e => {
+    const f = e.target.files && e.target.files[0];
+    if (f) loadInto(kind, f);
+  });
+  ["dragenter","dragover"].forEach(ev =>
+    slot.addEventListener(ev, e => { e.preventDefault(); slot.classList.add("drag"); }));
+  ["dragleave","drop"].forEach(ev =>
+    slot.addEventListener(ev, e => { e.preventDefault(); slot.classList.remove("drag"); }));
+  slot.addEventListener("drop", e => {
+    const f = e.dataTransfer.files && e.dataTransfer.files[0];
+    if (f) loadInto(kind, f);
+  });
+});
+
+["s-intro","s-fade","s-music","s-duck","s-cf","s-lufs","s-tp"].forEach(id =>
+  $(id).addEventListener("input", sync));
+
+function pickPair(onId, offId, apply){
+  $(onId).setAttribute("aria-pressed","true");
+  $(offId).setAttribute("aria-pressed","false");
+  apply(); sync();
+}
+$("b-st").addEventListener("click",  () => pickPair("b-st","b-mo", () => state.channels = 2));
+$("b-mo").addEventListener("click",  () => pickPair("b-mo","b-st", () => state.channels = 1));
+$("b-m4a").addEventListener("click", () => pickPair("b-m4a","b-wav", () => state.format = "m4a"));
+$("b-wav").addEventListener("click", () => pickPair("b-wav","b-m4a", () => state.format = "wav"));
+
+$("go").addEventListener("click", run);
+
+/* 指で操作する端末では、長尺での失敗に先に触れておく */
+if (matchMedia("(pointer:coarse)").matches) $("mobileHint").hidden = false;
+
+/* このブラウザがAACを書き出せるか確認し、駄目ならWAVに寄せる */
+(async () => {
+  AAC_OK = (await aacSupported(SR, 2, 192000)) && (await aacSupported(SR, 1, 128000));
+  if (!AAC_OK){
+    state.format = "wav";
+    $("b-m4a").disabled = true;
+    $("b-m4a").title = "このブラウザはM4Aの書き出しに対応していません";
+    pickPair("b-wav","b-m4a", () => {});
+    $("dlNote").textContent = "";
+    showAlert("このブラウザはM4Aの書き出しに対応していないため、WAVのみになります。"
+      + "小さいファイルが必要な場合は Chrome か Edge をお使いください。");
+  }
+})();
+
+let rz;
+window.addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(draw, 120); });
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", draw);
+new MutationObserver(draw).observe(document.documentElement, { attributes:true, attributeFilter:["data-theme"] });
+
+sync();
+</script>
+
+</body>
+</html>
