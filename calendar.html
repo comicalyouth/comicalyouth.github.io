@@ -24,7 +24,7 @@
     .header h1 { font-size: 1.45rem; font-weight: bold; margin-bottom: 6px; }
     .header p { font-size: 0.84rem; opacity: 0.9; line-height: 1.6; }
 
-    .container { max-width: 680px; margin: 0 auto; padding: 20px 14px 60px; }
+    .container { max-width: 680px; margin: 0 auto; padding: 20px 8px 60px; }
 
     /* ===== 月ナビ ===== */
     .month-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
@@ -35,46 +35,47 @@
     .month-nav-btn:hover { background: #E8257A; color: white; }
     .month-title { font-size: 1.2rem; font-weight: bold; }
 
-    /* ===== インスタボタン ===== */
+    /* ===== 画像保存ボタン（運営用の裏方機能なので目立たせすぎない） ===== */
+    .instagram-btn-row { display: flex; gap: 8px; margin-bottom: 16px; }
     .instagram-btn {
-      display: block; width: 100%;
-      background: linear-gradient(135deg, #E8257A, #b565c5);
-      color: white; border: none; border-radius: 10px; padding: 9px;
-      font-size: 0.85rem; font-weight: bold; cursor: pointer;
-      margin-bottom: 16px; letter-spacing: 0.05em; transition: opacity 0.15s;
+      flex: 1;
+      background: #fff; border: 1px solid #e5b9cf; border-radius: 8px;
+      color: #b5568a; padding: 6px 8px;
+      font-size: 0.68rem; font-weight: bold; cursor: pointer;
+      letter-spacing: 0; transition: opacity 0.15s;
     }
-    .instagram-btn:hover { opacity: 0.85; }
+    .instagram-btn:hover { opacity: 0.7; }
 
     /* ===== カレンダー撮影対象 ===== */
     #calendar-capture {
-      background: white; border-radius: 16px; padding: 14px;
+      background: white; border-radius: 16px; padding: 12px 8px;
       margin-bottom: 24px; box-shadow: 0 2px 16px rgba(232,37,122,0.08);
     }
     .cal-brand {
       display: flex; align-items: center; gap: 8px;
       margin-bottom: 10px; padding-bottom: 10px; border-bottom: 2px solid #fde8f2;
     }
-    .cal-brand-name { font-size: 0.82rem; font-weight: bold; color: #E8257A; }
-    .cal-month-label { font-size: 1.05rem; font-weight: bold; margin-left: auto; }
+    .cal-brand-name { font-size: 1rem; font-weight: bold; color: #E8257A; }
+    .cal-month-label { font-size: 1.25rem; font-weight: bold; margin-left: auto; }
 
     .cal-weekdays { display: grid; grid-template-columns: repeat(7, 1fr); margin-bottom: 3px; }
-    .cal-weekday { text-align: center; font-size: 0.7rem; font-weight: bold; padding: 3px 0; color: #aaa; }
+    .cal-weekday { text-align: center; font-size: 0.82rem; font-weight: bold; padding: 3px 0; color: #999; }
     .cal-weekday.sun { color: #E8257A; }
     .cal-weekday.sat { color: #5B8FD6; }
 
-    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); grid-auto-rows: 84px; gap: 2px; }
+    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); grid-auto-rows: 128px; gap: 2px; }
     .cal-cell {
       height: 100%; overflow: hidden;
       display: flex; flex-direction: column; align-items: center;
-      justify-content: flex-start; padding: 5px 2px 4px;
-      border-radius: 7px; font-size: 0.82rem; position: relative;
+      justify-content: flex-start; padding: 6px 1px 4px;
+      border-radius: 7px; font-size: 0.95rem; position: relative;
       transition: background 0.12s;
     }
     .cal-banner {
       align-self: end; justify-self: stretch;
-      margin: 0 2px 3px; padding: 2px 3px;
+      margin: 0 2px 3px; padding: 3px 4px;
       color: #fff;
-      font-size: 0.5rem; font-weight: bold; text-align: center;
+      font-size: 0.62rem; font-weight: bold; text-align: center;
       border-radius: 5px; line-height: 1.3;
       pointer-events: none; z-index: 2;
       overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
@@ -95,14 +96,14 @@
       border: 2px solid #F5C800;
     }
     .cal-today-label {
-      font-size: 0.42rem;
+      font-size: 0.52rem;
       font-weight: bold;
       color: #B08800;
       letter-spacing: 0.03em;
       line-height: 1;
       margin-top: 1px;
     }
-    .cal-num { font-size: 0.82rem; font-weight: bold; line-height: 1; margin-bottom: 3px; }
+    .cal-num { font-size: 1.05rem; font-weight: bold; line-height: 1; margin-bottom: 4px; }
     .cal-cell.sun .cal-num { color: #E8257A; }
     .cal-cell.sat .cal-num { color: #5B8FD6; }
     .cal-cell.today .cal-num,
@@ -111,20 +112,50 @@
 
     /* 拠点カラーバッジ（JS側でbg色をinline styleで設定） */
     .cal-badge {
-      font-size: 0.5rem; color: white;
-      border-radius: 6px; padding: 1px 4px; line-height: 1.5;
-      max-width: 96%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-      font-weight: bold; text-align: center;
+      font-size: 0.6rem; color: white; letter-spacing: -0.05em;
+      border-radius: 5px; padding: 0 1px; height: 16px; line-height: 16px;
+      max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+      font-weight: bold; text-align: center; flex: none;
     }
     .cal-badge.event-name {
-      margin-top: 2px; background: rgba(0,0,0,0.15);
+      margin-top: 3px; background: rgba(0,0,0,0.15);
+    }
+    .cal-badge + .cal-badge {
+      margin-top: 3px;
     }
     .cal-time {
-      font-size: 0.45rem; color: #888; margin-top: 2px; line-height: 1.2; text-align: center;
+      font-size: 0.62rem; color: #777; margin-top: 3px; line-height: 1.25; text-align: center;
     }
     .cal-food-icon {
-      font-size: 0.48rem; margin-top: 2px; line-height: 1.3;
+      font-size: 0.62rem; margin-top: 2px; line-height: 1.3;
       color: #E65100; font-weight: bold; text-align: center;
+    }
+
+    /* 画像書き出し時だけ「場所」を主役にする（HPの実機幅では省略の恐れがあるため常用はしない）
+       ・場所バッジはマス全体を使うくらい大きく
+       ・時間はHP側ではクリックで見られるため非表示、代わりに場所の視認性を最優先 */
+    #calendar-capture.capture-mode .cal-cell { padding: 6px 3px 5px; }
+    #calendar-capture.capture-mode .cal-grid { grid-auto-rows: 210px; }
+    #calendar-capture.capture-mode .cal-weekday { font-size: 1rem; }
+    #calendar-capture.capture-mode .cal-num { font-size: 1.25rem; margin-bottom: 5px; }
+    #calendar-capture.capture-mode .cal-badge {
+      flex: 1 1 auto; width: 100%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem; line-height: 1.15; height: auto;
+      padding: 4px 3px; white-space: normal; word-break: keep-all;
+      letter-spacing: 0; border-radius: 10px;
+    }
+    /* イベント名バッジ（例：ご飯会）は表示しない。食事情報は下の.cal-food-iconに一本化して見た目を揃える */
+    #calendar-capture.capture-mode .cal-badge + .cal-badge { display: none; }
+    #calendar-capture.capture-mode .cal-time { display: none; }
+    /* ご飯あり／食事券ありは、場所バッジの塗りつぶしの上に重ねて小さく表示する（ジャンプ率：場所名1.5remの半分以下）
+       拠点はどれも濃い色で塗られているため、クリーム色のタグにして全拠点共通に統一する */
+    #calendar-capture.capture-mode .cal-food-icon {
+      position: absolute; left: 8px; right: 8px; bottom: 30px; margin: 0;
+      font-size: 0.7rem; font-weight: bold; line-height: 1.3;
+      color: #6B4E1E; background: #FFF3D6;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+      border-radius: 6px; padding: 2px 4px; text-align: center; z-index: 3;
     }
     .cal-cell.today .cal-badge { background: rgba(255,255,255,0.3) !important; }
     .cal-cell.today .cal-time  { color: rgba(255,255,255,0.8); }
@@ -353,9 +384,14 @@
     <button class="month-nav-btn" onclick="changeMonth(1)">＞</button>
   </div>
 
-  <button class="instagram-btn" onclick="saveInstagramImage()">
-    📸カレンダー画像を保存
-  </button>
+  <div class="instagram-btn-row">
+    <button class="instagram-btn instagram-btn-1" onclick="saveCalendarPageImage()">
+      📸①カレンダー画像
+    </button>
+    <button class="instagram-btn instagram-btn-2" onclick="saveScheduleListImage()">
+      📋②場所と時間リスト
+    </button>
+  </div>
 
   <!-- カレンダー（撮影対象） -->
   <div id="calendar-capture">
@@ -596,6 +632,7 @@ const DATE_OVERRIDES = [
 // 特定の日付の定期開催をお休みにする（その日限定／毎月繰り返さない）
 const SKIP_DATES = [
   { date: "2026-08-05", placeId: "eiheiji", reason: "8月はお休み" },
+  { date: "2026-09-20", placeId: "vio", reason: "9月はお休み" },
 ];
 
 // 複数日にかかるイベントを、カレンダー上で日付の境目に中央揃えの帯として表示する
@@ -1241,68 +1278,9 @@ function updateSchema(events) {
 }
 
 // ============================================================
-//  インスタ画像出力
+//  画像出力（① カレンダー本体／② 場所と時間リスト）
+//  方針：装飾は最小限にし、「何月か一目でわかる」「文字が読める」の2点を最優先する
 // ============================================================
-// 手書き風の波線（アンダーライン装飾）
-function drawWavyLine(ctx, x1, x2, y, amplitude, color, lineWidth) {
-  ctx.save();
-  ctx.strokeStyle = color;
-  ctx.lineWidth = lineWidth;
-  ctx.lineCap = "round";
-  ctx.beginPath();
-  const segments = Math.max(3, Math.round((x2 - x1) / 24));
-  const step = (x2 - x1) / segments;
-  ctx.moveTo(x1, y);
-  for (let i = 0; i < segments; i++) {
-    const cx = x1 + step * (i + 0.5);
-    const cy = y + (i % 2 === 0 ? -amplitude : amplitude);
-    const ex = x1 + step * (i + 1);
-    ctx.quadraticCurveTo(cx, cy, ex, y);
-  }
-  ctx.stroke();
-  ctx.restore();
-}
-
-// 左上の手書き風スクリブル（きらめき・落書き風の飾り）
-function drawScribbles(ctx, x, y) {
-  ctx.save();
-  ctx.strokeStyle = "rgba(43,43,43,0.45)";
-  ctx.lineWidth = 4;
-  ctx.lineCap = "round";
-  for (let i = 0; i < 3; i++) {
-    ctx.beginPath();
-    const sx = x + i * 22;
-    const sy = y - i * 6;
-    ctx.moveTo(sx, sy + 26);
-    ctx.quadraticCurveTo(sx + 6, sy, sx + 14, sy + 4);
-    ctx.stroke();
-  }
-  ctx.restore();
-}
-
-// 回転させた「NEW」シールタグ
-function drawNewTag(ctx, cx, cy) {
-  ctx.save();
-  ctx.translate(cx, cy);
-  ctx.rotate(-8 * Math.PI / 180);
-  const w = 128, h = 54, r = 10;
-  ctx.fillStyle = "#3FAE84";
-  ctx.beginPath();
-  ctx.moveTo(-w/2 + r, -h/2);
-  ctx.arcTo(w/2, -h/2, w/2, h/2, r);
-  ctx.arcTo(w/2, h/2, -w/2, h/2, r);
-  ctx.arcTo(-w/2, h/2, -w/2, -h/2, r);
-  ctx.arcTo(-w/2, -h/2, w/2, -h/2, r);
-  ctx.closePath();
-  ctx.fill();
-  ctx.fillStyle = "#ffffff";
-  ctx.font = "900 30px 'M PLUS Rounded 1c', sans-serif";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillText("NEW", 0, 2);
-  ctx.restore();
-}
-
 function roundRectPath(ctx, x, y, w, h, r) {
   ctx.beginPath();
   ctx.moveTo(x + r, y);
@@ -1313,9 +1291,28 @@ function roundRectPath(ctx, x, y, w, h, r) {
   ctx.closePath();
 }
 
-async function saveInstagramImage() {
+async function downloadCanvas(outCanvas, filename) {
+  const blob = await new Promise(resolve => outCanvas.toBlob(resolve, "image/png"));
+  if (!blob) return;
+  const file = new File([blob], filename, { type: "image/png" });
+  // スマホ（iOS Safari等）は <a download> + data URL が機能しないことが多いため、
+  // 共有シート経由で「画像を保存」できるWeb Share APIを優先する
+  if (navigator.canShare && navigator.canShare({ files: [file] })) {
+    await navigator.share({ files: [file], title: "こみかるカレンダー" }).catch(() => {});
+  } else {
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.download = filename;
+    link.href = url;
+    link.click();
+    setTimeout(() => URL.revokeObjectURL(url), 10000);
+  }
+}
+
+// ① カレンダー本体の画像（余白なし・幅いっぱいに配置、「◯年◯月」を大きく明記）
+async function saveCalendarPageImage() {
   const el  = document.getElementById("calendar-capture");
-  const btn = document.querySelector(".instagram-btn");
+  const btn = document.querySelector(".instagram-btn-1");
   btn.textContent = "📸 画像生成中...";
   btn.disabled = true;
 
@@ -1330,26 +1327,53 @@ async function saveInstagramImage() {
     todayCell.className = todayCell.className.replace(/\btoday\b/, fallbackClass);
   }
 
+  // 撮影する端末の画面幅によってセル内の折り返し量が変わり、画像の縦横比が暴れるのを防ぐため、
+  // 撮影中だけ幅を固定する（スマホから押しても常に同じ見た目の画像になる）
+  const originalInlineWidth = el.style.width;
+  const originalInlineMaxWidth = el.style.maxWidth;
+  el.style.width = "640px";
+  el.style.maxWidth = "640px";
+  el.classList.add("capture-mode");
+
   const restore = () => {
     todayLabels.forEach(elm => elm.style.display = "");
     if (todayCell) todayCell.className = todayCellOriginalClass;
-    btn.textContent = "📸カレンダー画像を保存";
+    el.style.width = originalInlineWidth;
+    el.style.maxWidth = originalInlineMaxWidth;
+    el.classList.remove("capture-mode");
+    btn.textContent = "📸①カレンダー画像";
     btn.disabled = false;
   };
 
   try {
-    // 手書き風フォントを、キャンバス描画前に確実に読み込んでおく
-    await Promise.all([
-      document.fonts.load("900 80px 'M PLUS Rounded 1c'"),
-      document.fonts.load("800 30px 'M PLUS Rounded 1c'"),
-      document.fonts.load("400 36px 'Yomogi'"),
-    ]);
+    await document.fonts.load("900 80px 'M PLUS Rounded 1c'");
 
     const canvas = await html2canvas(el, { scale: 3, backgroundColor: "#ffffff", useCORS: true, logging: false });
 
-    // インスタ用に4:5の縦長比率へ合成。クリーム背景＋手書き風の見出しで
-    // 「フレッシュさ×ゆるさ」のサムネイルらしい雰囲気を作る
-    const targetW = 1080, targetH = 1350;
+    const targetW = 1080;
+    const sideMargin = 40;
+    const cardPad = 16;
+
+    // カレンダーを幅いっぱいに配置し、高さは中身に合わせて決める（縦に間延び・左右の余白を作らない）
+    const drawW = targetW - sideMargin * 2 - cardPad * 2;
+    const scale = drawW / canvas.width;
+    const drawH = canvas.height * scale;
+
+    // 「何年何月か」を大きく一目でわかるように見出しを先頭に固定
+    const titleText = `${currentYear}年${currentMonth + 1}月`;
+    const titleFontPx = 78;
+    const subText = "こみかるユース福井 イベントカレンダー";
+    const subFontPx = 30;
+
+    const topMargin = 44;
+    const titleY = topMargin + titleFontPx * 0.86;
+    const subY = titleY + subFontPx + 14;
+    const cardY = subY + 26;
+    const cardW = drawW + cardPad * 2;
+    const cardH = drawH + cardPad * 2;
+    const bottomMargin = 44;
+    const targetH = Math.round(cardY + cardH + bottomMargin);
+
     const outCanvas = document.createElement("canvas");
     outCanvas.width = targetW;
     outCanvas.height = targetH;
@@ -1358,105 +1382,151 @@ async function saveInstagramImage() {
     ctx.fillStyle = "#FBF3EA";
     ctx.fillRect(0, 0, targetW, targetH);
 
-    drawScribbles(ctx, 50, 26);
-
-    // 見出し「◯月のカレンダー」（横幅の8割程度まで拡大し、中央揃えで据わりよく見せる）
     ctx.textAlign = "center";
     ctx.textBaseline = "alphabetic";
     ctx.fillStyle = "#2B2B2B";
-    const headlineMargin = 56;
-    const headlineMaxWidth = targetW - headlineMargin * 2 - 100;
-    let headlineSize = 60;
-    const headlineText = `${currentMonth + 1}月のカレンダー`;
-    ctx.font = `900 ${headlineSize}px 'M PLUS Rounded 1c', sans-serif`;
-    while (ctx.measureText(headlineText).width < headlineMaxWidth && headlineSize < 120) {
-      headlineSize += 2;
-      ctx.font = `900 ${headlineSize}px 'M PLUS Rounded 1c', sans-serif`;
-    }
-    while (ctx.measureText(headlineText).width > headlineMaxWidth && headlineSize > 40) {
-      headlineSize -= 2;
-      ctx.font = `900 ${headlineSize}px 'M PLUS Rounded 1c', sans-serif`;
-    }
-    const headlineY = 46 + headlineSize * 0.86;
-    ctx.fillText(headlineText, targetW / 2, headlineY);
+    ctx.font = `900 ${titleFontPx}px 'M PLUS Rounded 1c', sans-serif`;
+    ctx.fillText(titleText, targetW / 2, titleY);
 
-    // 「できました」（手書き風・アクセントカラー・波線つき）
-    const subText = "できました";
-    ctx.font = "400 36px 'Yomogi', sans-serif";
-    ctx.fillStyle = "#2F8F72";
-    ctx.textAlign = "right";
-    const subX = targetW - 60;
-    const subY = headlineY + 60;
-    ctx.fillText(subText, subX, subY);
-    const subWidth = ctx.measureText(subText).width;
-    drawWavyLine(ctx, subX - subWidth - 4, subX + 4, subY + 10, 3, "#2F8F72", 3);
+    ctx.font = `bold ${subFontPx}px 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif`;
+    ctx.fillStyle = "#E8257A";
+    ctx.fillText(subText, targetW / 2, subY);
 
-    // カレンダー本体を収める白いカード
-    const cardY = subY + 50;
-    const cardX = 40, cardW = targetW - 80, cardH = targetH - cardY - 150;
+    const cardX = (targetW - cardW) / 2;
     ctx.save();
     ctx.shadowColor = "rgba(43,43,43,0.12)";
-    ctx.shadowBlur = 30;
-    ctx.shadowOffsetY = 10;
+    ctx.shadowBlur = 22;
+    ctx.shadowOffsetY = 8;
     ctx.fillStyle = "#ffffff";
-    roundRectPath(ctx, cardX, cardY, cardW, cardH, 24);
+    roundRectPath(ctx, cardX, cardY, cardW, cardH, 20);
     ctx.fill();
     ctx.restore();
 
-    const padding = 26;
-    const boxX = cardX + padding, boxY = cardY + padding;
-    const boxW = cardW - padding * 2, boxH = cardH - padding * 2;
-    const scale  = Math.min(boxW / canvas.width, boxH / canvas.height);
-    const drawW  = canvas.width * scale;
-    const drawH  = canvas.height * scale;
-    const offsetX = boxX + (boxW - drawW) / 2;
-    const offsetY = boxY + (boxH - drawH) / 2;
-    ctx.drawImage(canvas, offsetX, offsetY, drawW, drawH);
+    ctx.drawImage(canvas, cardX + cardPad, cardY + cardPad, drawW, drawH);
 
-    // 「NEW」シールタグ（カード右上に少しはみ出す形で）
-    drawNewTag(ctx, cardX + cardW - 60, cardY + 6);
-
-    // 下部：見てね！＋保存アイコン＋ロゴ
-    const footerY = cardY + cardH + 68;
-    ctx.textAlign = "right";
-    ctx.textBaseline = "middle";
-    ctx.font = "400 32px 'Yomogi', sans-serif";
-    ctx.fillStyle = "#2B2B2B";
-    ctx.fillText("見てね！", targetW - 100, footerY);
-
-    ctx.beginPath();
-    ctx.arc(targetW - 56, footerY, 28, 0, Math.PI * 2);
-    ctx.fillStyle = "#2B2B2B";
-    ctx.fill();
-    ctx.fillStyle = "#ffffff";
-    ctx.textAlign = "center";
-    ctx.font = "20px sans-serif";
-    ctx.fillText("↓", targetW - 56, footerY + 1);
-
-    ctx.textAlign = "left";
-    ctx.font = "20px 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif";
-    ctx.fillStyle = "#999999";
-    ctx.fillText("こみかるユース福井", 56, footerY);
-
-    const filename = `こみかる_${currentYear}年${currentMonth+1}月.png`;
-    const blob = await new Promise(resolve => outCanvas.toBlob(resolve, "image/png"));
-    if (!blob) { restore(); return; }
-    const file = new File([blob], filename, { type: "image/png" });
-
-    // スマホ（iOS Safari等）は <a download> + data URL が機能しないことが多いため、
-    // 共有シート経由で「画像を保存」できるWeb Share APIを優先する
-    if (navigator.canShare && navigator.canShare({ files: [file] })) {
-      await navigator.share({ files: [file], title: "こみかるカレンダー" }).catch(() => {});
-    } else {
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.download = filename;
-      link.href = url;
-      link.click();
-      setTimeout(() => URL.revokeObjectURL(url), 10000);
-    }
+    await downloadCanvas(outCanvas, `こみかる_${currentYear}年${currentMonth + 1}月_カレンダー.png`);
   } finally {
     restore();
+  }
+}
+
+// ② 場所と時間の一覧画像（バッジでは省略される拠点名・時間・注意事項を、大きな文字でそのまま読ませる）
+async function saveScheduleListImage() {
+  const btn = document.querySelector(".instagram-btn-2");
+  btn.textContent = "📋 画像生成中...";
+  btn.disabled = true;
+
+  try {
+    await document.fonts.load("900 40px 'M PLUS Rounded 1c'");
+
+    const weekdays = ["日", "月", "火", "水", "木", "金", "土"];
+    const targetW = 1080;
+    const sideMargin = 44;
+    const rowGap = 16;
+
+    const rows = allEvents.map(ev => {
+      const d = new Date(ev.date);
+      const place = PLACES[ev.placeId] || {};
+      const noteParts = [];
+      if (ev.eventName) noteParts.push(ev.eventName);
+      if (place.meal) noteParts.push(place.meal);
+      const coupon = ev.overrideCoupon || place.coupon;
+      if (coupon) noteParts.push(coupon);
+      const noteText = noteParts.join("　");
+      const rowH = noteText ? 118 : 84;
+      return { ev, d, place, noteText, rowH };
+    });
+
+    const topMargin = 44;
+    const titleFontPx = 54;
+    const subFontPx = 28;
+    const listTop = topMargin + titleFontPx + subFontPx + 46;
+    const bottomMargin = 44;
+    const listH = rows.length
+      ? rows.reduce((sum, r) => sum + r.rowH + rowGap, 0) - rowGap
+      : 80;
+    const targetH = Math.round(listTop + listH + bottomMargin);
+
+    const outCanvas = document.createElement("canvas");
+    outCanvas.width = targetW;
+    outCanvas.height = targetH;
+    const ctx = outCanvas.getContext("2d");
+
+    ctx.fillStyle = "#FBF3EA";
+    ctx.fillRect(0, 0, targetW, targetH);
+
+    ctx.textAlign = "center";
+    ctx.textBaseline = "alphabetic";
+    ctx.fillStyle = "#2B2B2B";
+    ctx.font = `900 ${titleFontPx}px 'M PLUS Rounded 1c', sans-serif`;
+    const titleY = topMargin + titleFontPx * 0.86;
+    ctx.fillText(`${currentYear}年${currentMonth + 1}月の場所と時間`, targetW / 2, titleY);
+
+    ctx.font = `bold ${subFontPx}px 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif`;
+    ctx.fillStyle = "#E8257A";
+    ctx.fillText("こみかるユース福井", targetW / 2, titleY + subFontPx + 14);
+
+    if (!rows.length) {
+      ctx.font = `bold 32px 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif`;
+      ctx.fillStyle = "#999999";
+      ctx.fillText("この月のスケジュールはまだ登録されていません", targetW / 2, listTop + 40);
+    }
+
+    let y = listTop;
+    const rowX = sideMargin;
+    const rowW = targetW - sideMargin * 2;
+    rows.forEach(({ ev, d, place, noteText, rowH }) => {
+      ctx.save();
+      ctx.shadowColor = "rgba(43,43,43,0.08)";
+      ctx.shadowBlur = 10;
+      ctx.shadowOffsetY = 3;
+      ctx.fillStyle = "#ffffff";
+      roundRectPath(ctx, rowX, y, rowW, rowH, 16);
+      ctx.fill();
+      ctx.restore();
+
+      ctx.fillStyle = place.hex || "#E8257A";
+      roundRectPath(ctx, rowX, y, 10, rowH, 5);
+      ctx.fill();
+
+      const textX = rowX + 30;
+      ctx.textAlign = "left";
+      ctx.textBaseline = "alphabetic";
+
+      // 日付・曜日
+      ctx.font = `900 34px 'M PLUS Rounded 1c', sans-serif`;
+      ctx.fillStyle = "#2B2B2B";
+      const dateLabel = `${d.getMonth() + 1}/${d.getDate()}(${weekdays[d.getDay()]})`;
+      ctx.fillText(dateLabel, textX, y + 46);
+      const dateW = ctx.measureText(dateLabel).width;
+
+      // 拠点名
+      ctx.font = `bold 34px 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif`;
+      ctx.fillStyle = place.hex || "#E8257A";
+      const placeName = place.label || ev.placeId;
+      ctx.fillText(placeName, textX + dateW + 22, y + 46);
+
+      // 時間（右寄せ）
+      ctx.textAlign = "right";
+      ctx.font = `bold 32px 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif`;
+      ctx.fillStyle = "#555555";
+      ctx.fillText(`${ev.timeStart}〜${ev.timeEnd}`, rowX + rowW - 24, y + 46);
+
+      // 補足（イベント名・ご飯・クーポンなど）
+      if (noteText) {
+        ctx.textAlign = "left";
+        ctx.font = `bold 27px 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif`;
+        ctx.fillStyle = "#E86A1A";
+        ctx.fillText(noteText, textX, y + 90);
+      }
+
+      y += rowH + rowGap;
+    });
+
+    await downloadCanvas(outCanvas, `こみかる_${currentYear}年${currentMonth + 1}月_場所と時間.png`);
+  } finally {
+    btn.textContent = "📋②場所と時間リスト";
+    btn.disabled = false;
   }
 }
 
