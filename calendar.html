@@ -1331,8 +1331,8 @@ async function saveCalendarPageImage() {
   // 撮影中だけ幅を固定する（スマホから押しても常に同じ見た目の画像になる）
   const originalInlineWidth = el.style.width;
   const originalInlineMaxWidth = el.style.maxWidth;
-  el.style.width = "640px";
-  el.style.maxWidth = "640px";
+  el.style.width = "980px";
+  el.style.maxWidth = "980px";
   el.classList.add("capture-mode");
 
   const restore = () => {
@@ -1350,29 +1350,34 @@ async function saveCalendarPageImage() {
 
     const canvas = await html2canvas(el, { scale: 3, backgroundColor: "#ffffff", useCORS: true, logging: false });
 
-    const targetW = 1080;
+    // インスタ投稿サイズ（4:5）に固定する
+    const targetW = 1080, targetH = 1350;
     const sideMargin = 40;
     const cardPad = 16;
 
-    // カレンダーを幅いっぱいに配置し、高さは中身に合わせて決める（縦に間延び・左右の余白を作らない）
-    const drawW = targetW - sideMargin * 2 - cardPad * 2;
-    const scale = drawW / canvas.width;
-    const drawH = canvas.height * scale;
-
     // 「何年何月か」を大きく一目でわかるように見出しを先頭に固定
     const titleText = `${currentYear}年${currentMonth + 1}月`;
-    const titleFontPx = 78;
+    const titleFontPx = 66;
     const subText = "こみかるユース福井 イベントカレンダー";
-    const subFontPx = 30;
+    const subFontPx = 26;
 
-    const topMargin = 44;
+    const topMargin = 36;
     const titleY = topMargin + titleFontPx * 0.86;
-    const subY = titleY + subFontPx + 14;
-    const cardY = subY + 26;
+    const subY = titleY + subFontPx + 12;
+    const bandTop = subY + 22;
+    const bottomMargin = 36;
+    const bandH = targetH - bandTop - bottomMargin;
+
+    // カレンダーの縦横比に合わせて、この帯の中に収まる最大サイズへスケールし、中央に配置する
+    const availW = targetW - sideMargin * 2 - cardPad * 2;
+    const availH = bandH - cardPad * 2;
+    const scale = Math.min(availW / canvas.width, availH / canvas.height);
+    const drawW = canvas.width * scale;
+    const drawH = canvas.height * scale;
     const cardW = drawW + cardPad * 2;
     const cardH = drawH + cardPad * 2;
-    const bottomMargin = 44;
-    const targetH = Math.round(cardY + cardH + bottomMargin);
+    const cardX = (targetW - cardW) / 2;
+    const cardY = bandTop + (bandH - cardH) / 2;
 
     const outCanvas = document.createElement("canvas");
     outCanvas.width = targetW;
@@ -1392,7 +1397,6 @@ async function saveCalendarPageImage() {
     ctx.fillStyle = "#E8257A";
     ctx.fillText(subText, targetW / 2, subY);
 
-    const cardX = (targetW - cardW) / 2;
     ctx.save();
     ctx.shadowColor = "rgba(43,43,43,0.12)";
     ctx.shadowBlur = 22;
@@ -1445,15 +1449,16 @@ async function saveScheduleListImage() {
     const listH = rows.length
       ? rows.reduce((sum, r) => sum + r.rowH + rowGap, 0) - rowGap
       : 80;
-    const targetH = Math.round(listTop + listH + bottomMargin);
+    const naturalH = Math.round(listTop + listH + bottomMargin);
 
-    const outCanvas = document.createElement("canvas");
-    outCanvas.width = targetW;
-    outCanvas.height = targetH;
-    const ctx = outCanvas.getContext("2d");
+    // まず中身の分量に合わせた自然な高さでリストを描き、後でインスタ4:5の枠に収める
+    const listCanvas = document.createElement("canvas");
+    listCanvas.width = targetW;
+    listCanvas.height = naturalH;
+    const ctx = listCanvas.getContext("2d");
 
     ctx.fillStyle = "#FBF3EA";
-    ctx.fillRect(0, 0, targetW, targetH);
+    ctx.fillRect(0, 0, targetW, naturalH);
 
     ctx.textAlign = "center";
     ctx.textBaseline = "alphabetic";
@@ -1522,6 +1527,23 @@ async function saveScheduleListImage() {
 
       y += rowH + rowGap;
     });
+
+    // インスタ投稿サイズ（4:5）の枠を作り、リストが縦横比に合わせて収まる最大サイズへスケールして中央に配置する
+    const targetH = 1350;
+    const outCanvas = document.createElement("canvas");
+    outCanvas.width = targetW;
+    outCanvas.height = targetH;
+    const outCtx = outCanvas.getContext("2d");
+    outCtx.fillStyle = "#FBF3EA";
+    outCtx.fillRect(0, 0, targetW, targetH);
+    const fitScale = Math.min(targetW / listCanvas.width, targetH / listCanvas.height);
+    const outDrawW = listCanvas.width * fitScale;
+    const outDrawH = listCanvas.height * fitScale;
+    outCtx.drawImage(
+      listCanvas,
+      (targetW - outDrawW) / 2, (targetH - outDrawH) / 2,
+      outDrawW, outDrawH
+    );
 
     await downloadCanvas(outCanvas, `こみかる_${currentYear}年${currentMonth + 1}月_場所と時間.png`);
   } finally {
