@@ -1298,7 +1298,10 @@ async function downloadCanvas(outCanvas, filename) {
   const file = new File([blob], filename, { type: "image/png" });
   // スマホ（iOS Safari等）は <a download> + data URL が機能しないことが多いため、
   // 共有シート経由で「画像を保存」できるWeb Share APIを優先する
-  if (navigator.canShare && navigator.canShare({ files: [file] })) {
+  // ※ navigator.canShare はWindows版Chrome/Edge等のPCブラウザでもtrueを返すことがあり、
+  //    判定をモバイル端末に絞らないとPCでも毎回OSの共有シートが開いてしまう
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  if (isMobile && navigator.canShare && navigator.canShare({ files: [file] })) {
     await navigator.share({ files: [file], title: "こみかるカレンダー" }).catch(() => {});
   } else {
     const url = URL.createObjectURL(blob);
